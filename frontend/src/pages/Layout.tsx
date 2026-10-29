@@ -3,10 +3,12 @@ import fireAxe from '@public/fire_axe_decal.webp';
 import styles from './css/Layout.module.css';
 import { Link } from 'react-router-dom';
 import { MdLogout } from "react-icons/md";
+import type { NavLinks } from '@/types/NavLinks';
+import AsideNavLink from '@/components/AsideNavLink';
 
 type Props = {
   children: React.ReactNode;
-  tab: 'HOME' | 'ABOUT';
+  tab: NavLinks;
 };
 
 const Layout = (props:Props): React.JSX.Element => {
@@ -24,52 +26,51 @@ const Layout = (props:Props): React.JSX.Element => {
             Player's Possession
           </span>
         </div>
+
+        <nav className={styles.nav}>
+          <ul className={styles.ul}>
+            <li className={styles.li}> 
+              <Link to={'/'} className={`${styles.link}`}> 
+                <MdLogout size={20}/>
+              </Link> 
+            </li>
+          </ul>
+        </nav>
       </header>
       
-      <div className={styles.main_aside}>
+      <div className={styles.main_footer_aside}>
         <aside className={styles.aside}>
           <nav className={styles.nav}>
             <ul className={styles.ul}>
-              <li className={styles.li}> 
-                <Link to={'/home'} className={
-                  props.tab === 'HOME' 
-                  ? styles.selected_link
-                  : styles.unselected_link
-                }> 
-                  Home 
-                </Link> 
-              </li>
-
-              <li className={styles.li}> 
-                <Link to={'/about'} className={
-                  props.tab === 'ABOUT' 
-                  ? styles.selected_link
-                  : styles.unselected_link
-                }> 
-                  About 
-                </Link> 
-              </li>
+              <AsideNavLink
+                to='/home'
+                label='Home'
+                tab='HOME'
+                currentTab={props.tab}
+              />
               
-              <li className={`${styles.li} ${styles.li_logout}`}> 
-                <Link to={'/'} className={styles.unselected_link}> 
-                  <MdLogout size={20}/> 
-                </Link> 
-              </li>
+              <AsideNavLink
+                to='/about'
+                label='About'
+                tab='ABOUT'
+                currentTab={props.tab}
+              />
             </ul>
           </nav>
         </aside>
+        
+        <div className={styles.main_footer}>
+          <main className={styles.main}>
+            { props.children }
+          </main>
 
-        <main className={styles.main}>
-          { props.children }
-        </main>
+          <footer className={styles.footer}>
+            <span className={styles.copyright}>
+              &copy; 2026 Leony Leandro Barros, All Rights Reserved
+            </span>
+          </footer>
+        </div>
       </div>
-
-
-      <footer className={styles.footer}>
-        <span className={styles.copyright}>
-          &copy; 2026 Leony Leandro Barros, All Rights Reserved
-        </span>
-      </footer>
     </div>
   )
 }

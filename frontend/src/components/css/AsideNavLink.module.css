@@ -1,0 +1,30 @@
+.li {
+  width: 100%;
+
+  .unselected_link,
+  .selected_link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .selected_link {
+    background-color: #cc8e69;
+    color: #4b241b;
+    font-weight: 700;
+    cursor: default;
+  }
+
+  .unselected_link {
+    color: #fff;
+    transition: background-color 150ms ease;
+
+    &:hover {
+      background-color: #8b5e3c;
+    }
+  }
+}
