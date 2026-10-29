@@ -1,0 +1,60 @@
+.container {
+  display: grid;
+  place-items: center;
+
+  min-height: 100vh;
+
+  background-image: url('../../assets/mainland.webp');
+  background-size: cover;
+
+  .form_container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    background-color: rgba(204, 141, 105, 0.930);
+    /* background-image: url('../../assets/oak_wood_texture.jpg'); */
+
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.251);
+
+    width: 100%;
+    max-width: 300px;
+
+    padding: 16px;
+
+    border-radius: 10px;
+    border: 2px solid rgb(114, 79, 59);
+
+    .login_h1 {
+      color: rgb(255, 255, 255);
+      text-shadow: 1px 2px 1px rgba(0, 0, 0, 0.502);
+    }
+
+    .inputs_container {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+
+    .dont_have_an_account {
+      font-size: small;
+      display: flex;
+      gap: 4px;
+
+      color: rgb(253, 251, 251);
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.498);
+
+      margin-top: 8px;
+
+      .sign_up {
+        color: rgba(234, 184, 146);
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

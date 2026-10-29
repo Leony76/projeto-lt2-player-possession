@@ -1,8 +1,13 @@
 import React from 'react'
+import Layout from './Layout'
 
 const About = (): React.JSX.Element => {
   return (
-    <div>About</div>
+    <Layout tab='ABOUT'>
+      <div>
+        Eai
+      </div>
+    </Layout>
   )
 }
 

@@ -1,0 +1,127 @@
+.container {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: rgb(204, 142, 105);
+
+    padding: 5px 20px 5px 5px;
+
+    border-bottom: 3px solid #761B23;
+
+    .logo_site_title_container {
+      display: flex;
+      align-items: center;
+
+      .logo {
+        width: 40px;
+        height: 40px;
+      }
+  
+      .site_title {
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.493);
+      }
+    }
+  }
+
+  .main_aside {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 24px;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    box-sizing: border-box;
+    align-items: stretch;
+
+    .aside {
+      background-color: #694028;
+      border-right: 3px solid #cc8e69;
+      padding: 10px;
+      align-self: start;
+      height: 100%;
+
+      .nav {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        .ul {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          gap: 4px;
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          .li {
+            width: 100%;
+
+            .unselected_link,
+            .selected_link {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 10px 12px;
+              border-radius: 5px;
+              text-decoration: none;
+              box-sizing: border-box;
+            }
+
+            .selected_link {
+              background-color: #cc8e69;
+              color: #4b241b;
+              font-weight: 700;
+              cursor: default;
+            }
+
+            .unselected_link {
+              color: #fff;
+              transition: background-color 150ms ease;
+
+              &:hover {
+                background-color: #8b5e3c;
+              }
+            }
+          }
+
+          .li_logout {
+            margin-top: auto;
+          }
+        }
+      }
+    }
+
+    .main {
+      min-width: 0;
+      width: 100%;
+      max-width: 1080px;
+      margin-inline: auto;
+    }
+  }
+  
+  .footer {
+    display: flex;
+    justify-content: center;
+
+    padding: 10px 0px;
+
+    background-color: rgb(105, 64, 40);
+    
+    border-top: 3px solid #CC8E69;
+
+    .copyright {
+      color: white;
+    }
+  }
+}
+

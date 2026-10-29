@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .label {
+    color: rgba(234, 184, 146);
+    text-shadow: 1px 2px 1px black;
+  }
+  
+  .input {
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: rgb(152, 120, 95);
+    color: rgb(114, 79, 59);
+    background-color: rgba(234, 184, 146);
+
+    &:focus {
+      outline: none;
+      background-color: rgb(232, 203, 180);
+    }
+  }
+
+  .input:-webkit-autofill,
+  .input:-webkit-autofill:hover,
+  .input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px rgb(234, 184, 146) inset !important;
+    -webkit-text-fill-color: rgb(114, 79, 59) !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+
+
