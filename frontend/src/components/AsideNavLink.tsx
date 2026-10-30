@@ -25,6 +25,7 @@ const AsideNavLink = (props:Props): React.JSX.Element => {
     <li className={styles.li}> 
       <Link 
         to={props.to} 
+        title={props.label}
         aria-current={isSelected ? 'page' : undefined}
         className={
           isSelected 

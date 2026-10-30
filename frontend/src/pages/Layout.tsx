@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 import { MdLogout } from "react-icons/md";
 import type { NavLinks } from '@/types/NavLinks';
 import AsideNavLink from '@/components/AsideNavLink';
+import imgPlaceholder3 from '@/assets/img/placeholder_3.png'
+import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat';
+import { FaWallet } from 'react-icons/fa';
 
 type Props = {
   children: React.ReactNode;
@@ -15,22 +18,65 @@ const Layout = (props:Props): React.JSX.Element => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <div className={styles.logo_site_title_container}>
+        <figure 
+        title="Player's Possession"
+        className={styles.logo_site_title_container}
+        >
           <img 
             src={fireAxe} 
             className={styles.logo}
             alt="Player's Possession"
           />
   
-          <span className={styles.site_title}>
+          <figcaption className={styles.site_title}>
             Player's Possession
-          </span>
-        </div>
+          </figcaption>
+        </figure>
 
         <nav className={styles.nav}>
           <ul className={styles.ul}>
+            <li className={styles.li}>
+              <button     
+              title='Lumber Bucks'      
+              onClick={() => {}}
+              type='button'
+              className={styles.user_lumber_bucks_container}
+              >
+                <div className={styles.icon}>
+                  <FaWallet />
+                </div>
+
+                <span className={styles.lumber_bucks}>
+                  { toLumberBucksFormat(7823123) }
+                </span>
+              </button>
+            </li>
+
+            <li className={styles.li}>
+              <Link 
+              title='Profile'
+              to={'/profile'}
+              className={styles.logged_user_username_profile_image_container}>
+                <span className={styles.username}>
+                  {'Nika jasndklsan sadjnasjkdn saldkjnaslkdjnalksdnjsdj'}
+                </span>
+
+                <figure className={styles.logged_user_profile_image_container}>
+                  <img 
+                    className={styles.profile_image}
+                    src={imgPlaceholder3} 
+                    alt={'Nika'} 
+                  />
+                </figure>
+              </Link>
+            </li>
+
             <li className={styles.li}> 
-              <Link to={'/'} className={`${styles.link}`}> 
+              <Link 
+              title='Sign Out'
+              to={'/'} 
+              className={`${styles.signout}`}
+              > 
                 <MdLogout size={20}/>
               </Link> 
             </li>

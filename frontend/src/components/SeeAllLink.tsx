@@ -12,6 +12,7 @@ const SeeAllLink = (props:Props): React.JSX.Element => {
     <Link 
     to={props.to} 
     className={styles.see_all_container}
+    title='See All'
     >
       <span className={styles.label}>
         See All

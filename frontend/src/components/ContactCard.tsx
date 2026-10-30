@@ -11,7 +11,8 @@ const ContactCard = (props:Props): React.JSX.Element => {
   return (
     <Link 
     className={styles.container}
-    to={'/home'}
+    title={props.username}
+    to={`/profile/${props.username}`}
     >
       <figure className={styles.profile_image_container}>
         <img 

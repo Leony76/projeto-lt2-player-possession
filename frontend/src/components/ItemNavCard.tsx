@@ -38,7 +38,7 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
 
   return (
     <div className={styles.container}>
-      <figure className={styles.image_container}>
+      <figure className={styles.image_container} title='Image'>
         <img 
           className={styles.image}
           src={props.imageURL} 
@@ -49,6 +49,7 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
       <Link 
       to={`/item/${props.id}`}
       className={styles.link_name}
+      title='Name - See more details'
       >
         <h3 className={styles.name}>
           { props.name }
@@ -56,7 +57,9 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
       </Link>
 
       <div className={styles.category_subcategory_container}>
-        <span className={`
+        <span 
+        title='Category'
+        className={`
           ${styles.category} 
           ${tagColorByCategory[props.category]}
         `}>
@@ -64,6 +67,7 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
         </span>
 
         <span 
+        title='Subcategory'
         className={`
           ${styles.subcategory} 
           ${tagColorBySubcategory[props.subcategory]}
@@ -72,11 +76,11 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
         </span>
       </div>
 
-      <p className={styles.description}>
+      <p className={styles.description} title='Description'>
         { props.description }
       </p>
 
-      <div className={styles.original_market_price_container}>
+      <div className={styles.original_market_price_container} title='Original Price'>
         <span className={styles.original_price}>
           <span className={styles.icon}>
             <FaStamp size={14}/>
@@ -85,7 +89,7 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
           { toLumberBucksFormat(props.originalPrice) }
         </span>
 
-        <span className={styles.market_price}>
+        <span className={styles.market_price} title='Market Price'>
           <span className={styles.icon}>
             <SiCardmarket size={14}/>
           </span>
@@ -95,18 +99,18 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
       </div>
       
       <div className={styles.units_increment_decrement_container}>
-        <p className={styles.units}>
+        <p className={styles.units} title='Units'>
           { props.units }x
         </p>
 
         <div className={styles.increment_decrement_container}>
-          <button className={styles.increment}>
+          <button className={styles.increment} title='Add Unit'>
             <FaPlus />
           </button>
           
           {'|'}
 
-          <button className={styles.decrement}>
+          <button className={styles.decrement} title='Subtract Unit'>
             <FaMinus />
           </button>
         </div>

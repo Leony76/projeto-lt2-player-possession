@@ -6,11 +6,10 @@ import PageTitle from '@/components/PageTitle';
 import imgPlaceholder from '@/assets/img/placeholder_1.png';
 import imgPlaceholder2 from '@/assets/img/placeholder_2.png';
 import ContactCard from '@/components/ContactCard';
-import NewContactButton from '@/components/NewContactButton';
-import { FaArrowRight } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import AddContactButton from '@/components/AddContactButton';
 import ItemNavCard from '@/components/ItemNavCard';
 import SeeAllLink from '@/components/SeeAllLink';
+import AddItemNavCard from '@/components/AddItemNavCard';
 
 const Home = (): React.JSX.Element => {
   return (
@@ -23,7 +22,7 @@ const Home = (): React.JSX.Element => {
       
         <section className={styles.contacts}>
           <div className={styles.label_see_all_container}>
-            <h2 className={styles.label}>
+            <h2 className={styles.label} title={`Contacts (${67})`}>
               Contacts (67)
             </h2>
 
@@ -33,7 +32,7 @@ const Home = (): React.JSX.Element => {
           <nav className={styles.nav}>
             <ul className={styles.ul}>
               <li className={styles.li}>
-                <NewContactButton/>
+                <AddContactButton/>
               </li>
 
               {[0,1,2,3,4,5,6,7].map((index) => (
@@ -53,7 +52,7 @@ const Home = (): React.JSX.Element => {
 
         <section className={styles.my_items}>
           <div className={styles.label_see_all_container}>
-            <h2 className={styles.label}>
+            <h2 className={styles.label} title='My Items'>
               My Items
             </h2>
 
@@ -62,6 +61,12 @@ const Home = (): React.JSX.Element => {
 
           <nav className={styles.nav}>
             <ul className={styles.ul}>
+              <li 
+              className={styles.li}
+              >
+                <AddItemNavCard/>
+              </li>
+
               {[0,1].map((index) => (
                 <li 
                 className={styles.li}

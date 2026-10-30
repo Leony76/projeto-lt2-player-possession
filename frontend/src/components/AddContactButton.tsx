@@ -1,13 +1,14 @@
 import React from 'react'
-import styles from './css/NewContactButton.module.css';
+import styles from './css/AddContactButton.module.css';
 import { FaPlus } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
 
-const NewContactButton = (): React.JSX.Element => {
+const AddContactButton = (): React.JSX.Element => {
   return (
     <Link 
-    to={'/home'}
+    to={'/contact/add'}
     className={styles.container}
+    title='New Contact'
     >
       <div className={styles.add_image}>
         <FaPlus color='#CC8E69' size={25}/>
@@ -20,4 +21,4 @@ const NewContactButton = (): React.JSX.Element => {
   )
 }
 
-export default NewContactButton
+export default AddContactButton

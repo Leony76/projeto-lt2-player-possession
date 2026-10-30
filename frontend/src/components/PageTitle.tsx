@@ -11,7 +11,10 @@ const PageTitle = (props:Props): React.JSX.Element => {
   const Icon = props.Icon;
 
   return (
-    <h1 className={styles.h1}>
+    <h1 
+    title={props.title}
+    className={styles.h1}
+    >
       <span className={styles.icon}>
         <Icon/>
       </span>

@@ -26,5 +26,8 @@
     &:hover {
       background-color: #8b5e3c;
     }
+    &:active {
+      background-color: #8b5e3c84;
+    }
   }
 }
