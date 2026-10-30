@@ -4,7 +4,7 @@
 
   min-height: 100vh;
 
-  background-image: url('../../assets/mainland.webp');
+  background-image: url('../../assets/img/mainland.webp');
   background-size: cover;
 
   .form_container {

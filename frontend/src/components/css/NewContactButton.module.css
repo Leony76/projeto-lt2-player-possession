@@ -1,0 +1,50 @@
+.container {   
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: fit-content;
+  cursor: pointer;
+  transition: 0.25s ease;
+
+  text-decoration: none;
+  
+  &:hover {
+    scale: 1.05;
+    filter: brightness(1.1);
+  } 
+  &:active {
+    scale: 1;
+    filter: brightness(1);
+  }
+  
+  .add_image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    transition: 0.25s ease;
+
+    border: 1px solid #CC8E69;
+    border-radius: 50%;
+
+    color: #CC8E69;
+
+    width: 95px;
+    height: 95px;
+    overflow: hidden;
+
+    &:hover {
+      background-color: #cc8d6928;
+    }
+  }
+
+  .label {
+    font-size: 14px;
+    color: #CC8E69;
+    text-align: center;
+    max-width: 110px;       
+    white-space: nowrap;      
+    overflow: hidden;         
+    text-overflow: ellipsis;
+  }      
+}

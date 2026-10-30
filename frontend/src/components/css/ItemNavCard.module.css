@@ -1,0 +1,183 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+
+  background-color: #cc8d691b;
+
+  width: 150px;
+
+  border: 1px solid #cc8d69;
+  border-radius: 8px;
+  
+  padding: 8px;
+
+  transition: 0.25s ease;
+
+  &:hover {
+    scale: 1.025;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.192);
+  }
+  
+  .image_container {
+    border-radius: 8px;
+    border: 1px solid #cc8d69;
+    background-color: #cc8d6929;
+    height: 140px;
+    padding: 2px;
+    
+    .image {
+      border-radius: 8px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .link_name {
+    text-decoration: none;
+    color: #821E26;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+
+    .name {
+      color: #821E26;
+      font-size: 16px;
+      max-width: 150px;     
+      white-space: nowrap;    
+      overflow: hidden;         
+      text-overflow: ellipsis;  
+    }
+  }
+
+  .category_subcategory_container {
+    display: flex;
+    gap: 4px;
+
+    .category, .subcategory {
+      border: 1px solid black;
+      border-radius: 10px;
+      padding: 1px 6px;
+      font-size: small;  
+    }
+
+    .loose {
+      background-color: rgba(255, 0, 0, 0.11);
+      color: red;
+      border-color: red;
+    }
+
+    .placeble {
+      background-color: rgba(0, 170, 255, 0.11);
+      color: rgb(0, 170, 255);
+      border-color: rgb(0, 170, 255);
+    }
+    
+    .axe {
+      background-color: rgba(255, 123, 0, 0.11);
+      color: rgb(255, 123, 0);
+      border-color: rgb(255, 123, 0);
+    }
+
+    .event {
+      background-color: rgba(242, 0, 255, 0.11);
+      color: rgb(242, 0, 255);
+      border-color: rgb(242, 0, 255);
+    }
+    
+    .plank {
+      background-color: #cc8d691f;
+      color: #cc8d69;
+      border-color: #cc8d69;
+    }
+    
+    .logic {
+      background-color: rgba(0, 255, 251, 0.11);
+      color: rgb(0, 255, 251);
+      border-color: rgb(0, 255, 251);
+    }
+    
+    .misc {
+      background-color: rgba(238, 255, 0, 0.11);
+      color: rgb(157, 168, 0);
+      border-color: rgb(157, 168, 0);
+    }
+  }
+
+  .description {
+    font-size: 13px;
+    color: #821E26;
+    font-style: italic;
+    max-width: 150px;     
+    white-space: nowrap;    
+    overflow: hidden;         
+    text-overflow: ellipsis;  
+  }
+
+  .original_market_price_container{
+    display: flex;
+    flex-direction: column;
+
+    .original_price, .market_price { 
+      font-size: 14.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: green;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.151);
+
+      .icon {
+        filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.151));
+      }
+    }
+  }
+
+  .units_increment_decrement_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    .units {
+      font-size: 24px;
+      color: orangered;
+      font-weight: 600;
+      font-style: italic;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.151);
+    }
+
+    .increment_decrement_container {
+      display: flex;
+      gap: 4px;
+
+      .increment, .decrement {
+        border-radius: 4px;
+        display: flex;
+        padding: 2px;
+        cursor: pointer;
+
+        &:hover {
+          scale: 1.1;
+          filter: brightness(1.1);
+        }
+        &:active {
+          scale: 1;
+          filter: brightness(0.8);
+        }
+      }
+
+      .increment {
+        border: 2px solid green;
+        color: green;
+      }
+      
+      .decrement {
+        border: 2px solid red;
+        color: red;
+      }
+    }
+  }
+}

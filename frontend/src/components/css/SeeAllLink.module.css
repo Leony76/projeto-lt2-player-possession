@@ -1,0 +1,22 @@
+.see_all_container {
+  display: flex;
+  padding: 4px 8px;
+  border-radius: 4px;
+  align-items: center;
+  gap: 5px;
+
+  text-decoration: none;
+  transition: 0.25s ease;
+
+  &:hover {
+    background-color: #cc8d6924;
+  } 
+  &:active {
+    background-color: #cc8d690a;
+  }
+
+  .label {
+    color: #CC8E69;
+    font-size: 18px;
+  }
+}
