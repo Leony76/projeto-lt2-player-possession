@@ -1,4 +1,4 @@
-import type { ItemsSubcategory } from "@/types/ItemsSubcategory";
+import type { ItemsSubcategory } from "@/types/ItemsSubcategory.type";
 
 export const ITEM_SUBCATEGORY_MAP: Record<ItemsSubcategory, string> = {
   AXE   : 'Axe',

@@ -1,13 +1,14 @@
 import React from 'react';
 import fireAxe from '@public/fire_axe_decal.webp';
 import styles from './css/Layout.module.css';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, redirect } from 'react-router-dom';
 import { MdLogout } from "react-icons/md";
-import type { NavLinks } from '@/types/NavLinks';
+import type { NavLinks } from '@/types/NavLinks.type';
 import AsideNavLink from '@/components/AsideNavLink';
 import imgPlaceholder3 from '@/assets/img/placeholder_3.png'
-import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat';
+import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import { FaWallet } from 'react-icons/fa';
+import { useAuth } from '@/contexts/AuthContext';
 
 type Props = {
   children: React.ReactNode;
@@ -15,6 +16,11 @@ type Props = {
 };
 
 const Layout = (props:Props): React.JSX.Element => {
+
+  const { user, signOut } = useAuth();
+
+  if (!user) return <Navigate to={'/'}/>;
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -47,7 +53,7 @@ const Layout = (props:Props): React.JSX.Element => {
                 </div>
 
                 <span className={styles.lumber_bucks}>
-                  { toLumberBucksFormat(7823123) }
+                  { toLumberBucksFormat(user.lumberBucks) }
                 </span>
               </button>
             </li>
@@ -58,27 +64,27 @@ const Layout = (props:Props): React.JSX.Element => {
               to={'/profile'}
               className={styles.logged_user_username_profile_image_container}>
                 <span className={styles.username}>
-                  {'Nika jasndklsan sadjnasjkdn saldkjnaslkdjnalksdnjsdj'}
+                  {user.name}
                 </span>
 
                 <figure className={styles.logged_user_profile_image_container}>
                   <img 
                     className={styles.profile_image}
-                    src={imgPlaceholder3} 
-                    alt={'Nika'} 
+                    src={user.profileImageURL ?? 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Portrait_Placeholder.png/250px-Portrait_Placeholder.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail'} 
+                    alt={user.name} 
                   />
                 </figure>
               </Link>
             </li>
 
             <li className={styles.li}> 
-              <Link 
+              <button 
               title='Sign Out'
-              to={'/'} 
               className={`${styles.signout}`}
+              onClick={signOut}
               > 
                 <MdLogout size={20}/>
-              </Link> 
+              </button> 
             </li>
           </ul>
         </nav>

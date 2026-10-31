@@ -13,8 +13,44 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  name            String   @unique
+  profileImageURL String?  @map("profile_image_url")
+  lumberBucks     Int      @map("lumber_bucks") @default(0)
+  passwordHash    String   @map("password_hash")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  items           Item[]   @relation("UserItems")
+
+  @@map("users")
+}
+
+model Item {
+  id            Int               @id @default(autoincrement())
+  imageURL      String            @map("image_url")
+  name          String            @unique
+  description   String 
+  originalPrice Int               @map("original_price")
+  marketPrice   Int               @map("market_price")
+  category      ItemCategory
+  subcategory   ItemSubcategory
+  units         Int 
+
+  users         User[]            @relation("UserItems")
+
+  @@map("items")
+}
+
+enum ItemCategory {
+  PLACEBLE
+  LOOSE
+}
+
+enum ItemSubcategory {
+  PLANK
+  AXE 
+  EVENT 
+  LOGIC 
+  MISC
 }

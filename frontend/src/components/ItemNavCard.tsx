@@ -1,12 +1,12 @@
 import React from 'react'
 import styles from './css/ItemNavCard.module.css';
-import type { ItemsCategory } from '@/types/ItemsCategory';
-import type { ItemsSubcategory } from '@/types/ItemsSubcategory';
-import { ITEMS_CATEGORY_MAP } from '@/maps/ItemCategoryMap';
-import { ITEM_SUBCATEGORY_MAP } from '@/maps/ItemSubcategoryMap';
+import type { ItemsCategory } from '@/types/ItemsCategory.type';
+import type { ItemsSubcategory } from '@/types/ItemsSubcategory.type';
+import { ITEMS_CATEGORY_MAP } from '@/maps/ItemCategory.map';
+import { ITEM_SUBCATEGORY_MAP } from '@/maps/ItemSubcategory.map';
 import { FaMinus, FaPlus, FaStamp } from "react-icons/fa";
 import { SiCardmarket } from 'react-icons/si';
-import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat';
+import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import { Link } from 'react-router-dom';
 
 type Props = {

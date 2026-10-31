@@ -1,20 +1,28 @@
 import React from 'react';
 import styles from './css/Button.module.css';
 
-type Props = {
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   label: string;
 };
 
 const Button = ({
-  label
+  label,
+  type = "button",
+  disabled,
+  ...rest
 }: Props): React.JSX.Element => {
   return (
-    <button className={styles.container}>
+    <button 
+      type={type} 
+      disabled={disabled}
+      className={styles.container} 
+      {...rest} 
+    >
       <span className={styles.label}>
-        { label }
+        {label}
       </span>
     </button>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

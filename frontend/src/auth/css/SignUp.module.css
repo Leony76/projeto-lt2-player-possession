@@ -34,7 +34,7 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
-      margin-bottom: 8px;
+      /* margin-bottom: 8px; */
     }
 
     .already_have_an_account {

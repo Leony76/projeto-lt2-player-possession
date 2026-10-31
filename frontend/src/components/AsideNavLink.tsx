@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styles from './css/AsideNavLink.module.css';
-import type { NavLinks } from '@/types/NavLinks';
+import type { NavLinks } from '@/types/NavLinks.type';
 import { FaHome, FaInfoCircle } from 'react-icons/fa';
 
 
