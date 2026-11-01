@@ -14,16 +14,17 @@ import type { LoggedUserMainInfos } from "@/dtos/loggedUserMainInfos.dto";
 import type { UserCredentials } from "@/dtos/userCredentials.dto";
 
 interface AuthContextValue {
-  user: LoggedUserMainInfos | null;
-  loading: boolean;
-  signIn: (credentials: UserCredentials) => Promise<void>;
-  signOut: () => Promise<void>;
-  refreshUser: () => Promise<void>;
+  user        : LoggedUserMainInfos | null;
+  loading     : boolean;
+  signIn      : (credentials: UserCredentials) => Promise<void>;
+  signOut     : () => Promise<void>;
+  refreshUser : () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+
   const [user, setUser] = useState<LoggedUserMainInfos | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -43,6 +44,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+
+
   useEffect(() => {
     refreshUser()
       .catch(() => {
@@ -51,19 +54,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .finally(() => setLoading(false));
   }, [refreshUser]);
 
+
+
   const signIn = useCallback(async (credentials: UserCredentials) => {
-    const authenticatedUser = await AuthService.signIn(credentials);
-    setUser(authenticatedUser);
+    setLoading(true);
+
+    try {
+      const authenticatedUser = await AuthService.signIn(credentials);
+      setUser(authenticatedUser);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+
+
   const signOut = useCallback(async () => {
-    await AuthService.signOut();
-    setUser(null);
+    setLoading(true);
+
+    try {
+      await AuthService.signOut();
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, signIn, signOut, refreshUser }}
+    value={{ user, loading, signIn, signOut, refreshUser }}
     >
       {children}
     </AuthContext.Provider>

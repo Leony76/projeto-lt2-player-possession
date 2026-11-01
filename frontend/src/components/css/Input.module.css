@@ -45,6 +45,7 @@
       padding: 5px;
       width: 100%;
       border: none;
+      background-color: rgba(234, 184, 146);
 
       &:focus {
         outline: none;

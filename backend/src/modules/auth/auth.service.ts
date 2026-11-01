@@ -13,7 +13,7 @@ export class AuthService {
     const nameAlreadyTaken = await AuthRepository.userExistsByName(username);
 
     if (nameAlreadyTaken) {
-      throw new AuthError(409, "Name Already Taken!")
+      throw new AuthError(409, "Name already taken")
     }   
 
     const passwordHash = await argon2.hash(password);
@@ -30,7 +30,7 @@ export class AuthService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === "P2002"
       ) {
-        throw new AuthError(409, "Name Already Taken!");
+        throw new AuthError(409, "Name already taken");
       }
 
       throw error;

@@ -2,7 +2,7 @@ import type { LoggedUserMainInfos } from "../../dtos/loggedUserMainInfos.dto.js"
 
 export class AuthMapper {
 
-  public static async toPublicUser(user: LoggedUserMainInfos): Promise<LoggedUserMainInfos> {
+  public static toPublicUser(user: LoggedUserMainInfos): LoggedUserMainInfos {
     return {
       id              : user.id,
       name            : user.name,

@@ -6,7 +6,7 @@
   color: #CC8E69;
   
   .icon {
-    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.708));
+    filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
   }
   
   .span {

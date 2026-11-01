@@ -1,0 +1,14 @@
+.section_title {
+  display: flex;
+  gap: 4px;
+  color: #694028;
+  font-size: 25px;
+
+  .icon {
+    font-size: 26px;
+  }
+
+  .label {
+    
+  }
+}

@@ -9,6 +9,7 @@ import { signInSchema, type SignInFormData } from "../schemas/auth.schema";
 import { useAuth } from '@/contexts/AuthContext'
 import { handleError } from '@/utils/handleError.util'
 import ErrorMessage from '@/components/ErrorMessage'
+import { FaSignInAlt } from 'react-icons/fa'
 
 const SignIn = (): React.JSX.Element => {
 
@@ -77,6 +78,8 @@ const SignIn = (): React.JSX.Element => {
           label={isSubmitting ? "Processing..." : "Sign In"}
           type="submit"
           disabled={isSubmitting} 
+          buttonStyle='FORM'
+          icon={() => <FaSignInAlt />}
         />
 
         <p className={styles.dont_have_an_account}>

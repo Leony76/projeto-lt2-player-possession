@@ -9,6 +9,7 @@ import { type SignUpFormData, signUpSchema } from "../schemas/auth.schema";
 import { AuthService } from '@/services/auth.service'
 import { handleError } from '@/utils/handleError.util'
 import ErrorMessage from '@/components/ErrorMessage'
+import { GiArchiveRegister } from 'react-icons/gi'
 
 const SignUp = (): React.JSX.Element => {
 
@@ -81,6 +82,8 @@ const SignUp = (): React.JSX.Element => {
           label={isSubmitting ? "Processing..." : "Sign Up"}
           type='submit'
           disabled={isSubmitting}
+          buttonStyle='FORM'
+          icon={() => <GiArchiveRegister size={17}/>}
         />
 
         <p className={styles.already_have_an_account}>

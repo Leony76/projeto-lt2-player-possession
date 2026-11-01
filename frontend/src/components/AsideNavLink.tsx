@@ -9,7 +9,7 @@ type Props = {
   to         : `/${string}`;
   label      : string;
   tab        : NavLinks;
-  currentTab : NavLinks;
+  currentTab?: NavLinks;
 };
 
 const AsideNavLink = (props:Props): React.JSX.Element => {

@@ -5,6 +5,7 @@ import About from './pages/About';
 import SignIn from './auth/SignIn';
 import SignUp from './auth/SignUp';
 import { ProtectedRoute } from './components/routes/ProtectedRoute';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -30,6 +31,16 @@ function App() {
             path="/about" 
             element={ <About /> } 
           />
+
+          <Route 
+            path="/profile" 
+            element={ <Profile /> } 
+          />
+
+          {/* <Route 
+            path="/contact-profile/:id" 
+            element={ <ContactProfile /> } 
+          /> */}
         </Route>
       </Routes>
     </>

@@ -1,23 +1,26 @@
 import React from 'react';
 import fireAxe from '@public/fire_axe_decal.webp';
 import styles from './css/Layout.module.css';
-import { Link, Navigate, redirect } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { MdLogout } from "react-icons/md";
 import type { NavLinks } from '@/types/NavLinks.type';
 import AsideNavLink from '@/components/AsideNavLink';
-import imgPlaceholder3 from '@/assets/img/placeholder_3.png'
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import { FaWallet } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
+import PageLoading from '@/components/PageLoading';
+import profileImagePlaceholder from '@/assets/img/profile_image_placeholder.png';
 
 type Props = {
-  children: React.ReactNode;
-  tab: NavLinks;
+  children : React.ReactNode;
+  tab     ?: NavLinks;
 };
 
 const Layout = (props:Props): React.JSX.Element => {
 
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
+
+  if (loading) return <PageLoading/>;
 
   if (!user) return <Navigate to={'/'}/>;
 
@@ -70,7 +73,7 @@ const Layout = (props:Props): React.JSX.Element => {
                 <figure className={styles.logged_user_profile_image_container}>
                   <img 
                     className={styles.profile_image}
-                    src={user.profileImageURL ?? 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Portrait_Placeholder.png/250px-Portrait_Placeholder.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail'} 
+                    src={user.profileImageURL ?? profileImagePlaceholder} 
                     alt={user.name} 
                   />
                 </figure>
