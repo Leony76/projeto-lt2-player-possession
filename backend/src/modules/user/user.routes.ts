@@ -12,4 +12,16 @@ router.patch(
   UserController.editProfileImage,
 );
 
+router.patch(
+  "/profile/edit-username/verify-availability", 
+  requireAuth,
+  UserController.verifyUsernameAvailability,
+);
+
+router.patch(
+  "/profile/edit-username", 
+  requireAuth,
+  UserController.editUsername,
+);
+
 export default router;

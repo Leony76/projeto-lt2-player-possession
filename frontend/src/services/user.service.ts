@@ -1,6 +1,7 @@
 import type { SuccessfulOperationResponse } from "@shared/dtos/operationResult.dto";
 import { api } from "@/lib/api";
 import type { EditProfileImageRequest, EditProfileImageResponse } from "@shared/dtos/editProfileImage.dto";
+import type { EditUsernameRequest, EditUsernameResponse } from "@shared/dtos/editUsername.dto";
 
 export class UserService {
 
@@ -18,9 +19,40 @@ export class UserService {
     const { data } = await api.patch<
       SuccessfulOperationResponse<
         EditProfileImageResponse>>(
-          "/user/profile/update-image", formData
+          "/user/profile/update-image", 
+          formData
         );
 
+    return data;
+  }
+
+
+
+  public static async verifyUsernameAvailability(
+    request: { username: string }
+  ) {
+    const { data } = await api.patch<
+      SuccessfulOperationResponse<
+        { username: string }>>(
+          "/user/profile/edit-username/verify-availability",
+          request
+        );
+      
+    return data;
+  }
+
+
+
+  public static async editUsername(
+    request : EditUsernameRequest
+  ) {
+    const { data } = await api.patch<
+      SuccessfulOperationResponse<
+        EditUsernameResponse>>(
+          "/user/profile/edit-username",
+          request
+        );
+      
     return data;
   }
 }

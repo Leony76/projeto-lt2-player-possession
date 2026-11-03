@@ -47,7 +47,7 @@ const EditImageModal = ({
 
 
 
-  const handleURLChange = (value: string) => {
+  const handleURLChange = (value: string): void => {
     setImageURL(value);
     setImageFile(null);
     setImageError("");

@@ -18,4 +18,33 @@ export class UserRepository {
       }
     })
   }
+
+
+
+  public static async verifyUsernameAvailability(
+    username: string,
+  ) {
+    return await prisma.user.findUnique({
+      where  : { name: username },
+      select : { name: true     },
+    })
+  }
+
+
+
+  public static async editUsername(
+    username : string,
+    userId   : number,
+  ) {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: username,
+      },
+      select: {
+        name : true,
+        id   : true,
+      }
+    })
+  }
 }

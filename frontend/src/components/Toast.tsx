@@ -70,22 +70,24 @@ const Toast = ({
 
   return (
     <div
-      className={[
-        styles.toast,
-        styles[type],
-        visible && !closing ? styles.visible : "",
-        closing ? styles.closing : "",
-      ].filter(Boolean).join(" ")}
-      role={type === "ERROR" ? "alert" : "status"}
-      aria-live={type === "ERROR" || type === "WARNING" ? "assertive" : "polite"}
-      onTransitionEnd={handleTransitionEnd}
+    className={[
+      styles.toast,
+      styles[type],
+      visible && !closing ? styles.visible : "",
+      closing ? styles.closing : "",
+    ].filter(Boolean).join(" ")}
+    role={type === "ERROR" ? "alert" : "status"}
+    aria-live={type === "ERROR" || type === "WARNING" ? "assertive" : "polite"}
+    onTransitionEnd={handleTransitionEnd}
     >
-      <Icon className={styles.icon} />
+      <div className={styles.icon_title_message_container}>
+        <div className={styles.icon_title_container}>
+          <Icon className={styles.icon} />
 
-      <div className={styles.content}>
-        <strong className={styles.title}>
-          { title }
-        </strong>
+          <strong className={styles.title}>
+            { title }
+          </strong>
+        </div>
 
         <p className={styles.message}>
           { message} 

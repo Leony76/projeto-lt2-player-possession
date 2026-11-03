@@ -55,7 +55,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .finally(() => setLoading(false));
   }, [refreshUser]);
 
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setUser(null);
+    };
 
+    window.addEventListener("session-expired", handleSessionExpired);
+
+    return () => {
+      window.removeEventListener("session-expired", handleSessionExpired);
+    };
+  }, []);
 
   const signIn = useCallback(async (credentials: UserCredentials) => {
     setLoading(true);
