@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import styles from './css/Profile.module.css';
 import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
@@ -8,32 +7,65 @@ import { Navigate } from 'react-router-dom';
 import profileImagePlaceholder from '@/assets/img/profile_image_placeholder.png';
 import Button from '@/components/Button';
 import { RiImageEditFill } from 'react-icons/ri';
+import { useState } from "react";
 import { MdEditSquare, MdOutlinePublic, MdPublicOff } from 'react-icons/md';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import SectionTitle from '@/components/SectionTitle';
 import ImageExpand from '@/components/ImageExpand';
-import ModalBody from '@/components/ModalBody';
-import Input from '@/components/Input';
+import ConfirmationModal from '@/components/ConfirmationModal';
+import { UserService } from '@/services/user.service';
+import { handleAxiosError } from '@/utils/handleAxiosError.util';
+import EditImageModal from '@/components/EditImageModal';
+import { useToast } from '@/contexts/ToastContext';
+
+type SelectedImage = {
+  file?     : File;
+  imageURL? : string;
+};
 
 type Modals = 
 | 'EDIT_PROFILE_IMAGE' 
 | 'CONFIRM_EDIT_PROFILE_IMAGE'
+| 'PROFILE_IMAGE_EXPAND'
 ;
 
 const Profile = (): React.JSX.Element => {
 
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const { showToast } = useToast();
 
   if (!user) return <Navigate to={'/'}/>
 
-  const [expandImage, setExpandImage] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(null);
+  const [isSavingImage, setIsSavingImage] = useState<boolean>(false);
   const [modal, setModal] = useState<Modals | null>(null);
 
 
+  const handleEditProfileImage = async () => {
+    if (!selectedImage) return;
 
-  const updateProfileImage = async() => {
+    setIsSavingImage(true);
 
-  }
+    try {
+      const response = selectedImage.file
+        ? await UserService.editProfileImage({ file     : selectedImage.file      })
+        : await UserService.editProfileImage({ imageURL : selectedImage.imageURL! })
+      ;
+
+      updateUser({
+        profileImageURL: response.body.profileImageURL,
+      });
+
+      showToast("SUCCESS", response.message);
+
+      setSelectedImage(null);
+      setModal(null);
+    } catch (error: unknown) {
+      showToast("ERROR", handleAxiosError(error));
+    } finally {
+      setIsSavingImage(false);
+    }
+  };
 
 
 
@@ -50,50 +82,43 @@ const Profile = (): React.JSX.Element => {
   return (
     <Layout >
       <>
-      { expandImage && 
+      { modal === 'PROFILE_IMAGE_EXPAND' && 
         <ImageExpand 
-          onClick={() => setExpandImage(false)}
+          onClick={() => setModal(null)}
           imageURL={user.profileImageURL ?? profileImagePlaceholder} 
           label={user.name}
         />
       }
 
-      { modal === 'EDIT_PROFILE_IMAGE' &&
-        <ModalBody
-        XCloseButton
-        onClose={() => setModal(null)}
-        title='Edit Image'
-        gap='8px'
-        >
-          <div>
-            <figure className={styles.new_profile_image_preview_container}>
-              <img 
-                className={styles.new_profile_image_preview}
-                src="" 
-                alt="" 
-              />
-            </figure>
 
-            <Input
-              label='Image URL'
-            />
 
-            or
+      {modal === "EDIT_PROFILE_IMAGE" && (
+        <EditImageModal
+          initialImage={user.profileImageURL || profileImagePlaceholder}
+          isSaving={isSavingImage}
+          onClose={() => {
+            setSelectedImage(null);
+            setModal(null);
+          }}
+          onConfirm={(image) => {
+            setSelectedImage(image);
+            setModal("CONFIRM_EDIT_PROFILE_IMAGE");
+          }}
+        />
+      )}
 
-            <Button
-              label='Upload'
-              buttonStyle='DEFAULT'
-              onClick={() => {}}
-            />
 
-            <Button
-              label='Edit'
-              buttonStyle='DEFAULT'
-              onClick={() => {}}
-            />         
-          </div>
-        </ModalBody>
-      }
+
+      {modal === "CONFIRM_EDIT_PROFILE_IMAGE" && (
+        <ConfirmationModal
+          loading={isSavingImage}
+          message="Are you sure you want to change your current profile image?"
+          onConfirm={handleEditProfileImage}
+          onCancel={() => {
+            setModal("EDIT_PROFILE_IMAGE");
+          }}
+        />
+      )}
 
       <div className={styles.container}>
         <PageTitle
@@ -104,7 +129,7 @@ const Profile = (): React.JSX.Element => {
         <div className={styles.main_container}>
           <div className={styles.profile_image_container}>
             <button 
-            onClick={() => setExpandImage(true)}
+            onClick={() => setModal('PROFILE_IMAGE_EXPAND')}
             className={styles.profile_image_inner_container}
             >
               <img 

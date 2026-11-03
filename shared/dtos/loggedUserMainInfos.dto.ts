@@ -1,4 +1,4 @@
-export type LoggedUserMainInfos = {
+export type LoggedUserMainInfosResponse = {
   readonly id     : number;
   name            : string;
   profileImageURL : string | null;

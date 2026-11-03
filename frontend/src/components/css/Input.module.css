@@ -46,6 +46,10 @@
       width: 100%;
       border: none;
       background-color: rgba(234, 184, 146);
+      
+      &::placeholder {
+        color: rgba(114, 79, 59, 0.493);
+      }
 
       &:focus {
         outline: none;

@@ -1,0 +1,9 @@
+.message {
+  color: #CC8E69;
+  font-size: 14px;
+}
+
+.confirm_cancel_buttons_container {
+  display: flex;
+  gap: 8px;
+}

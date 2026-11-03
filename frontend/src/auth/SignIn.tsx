@@ -30,19 +30,25 @@ const SignIn = (): React.JSX.Element => {
   });
 
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onSubmit = async(data: SignInFormData) => {
     try {
+      if (loading) return
+      setLoading(true);
+      
       await signIn(data);
-
+      
       const destination = location.state?.from?.pathname;
-
+      
       navigate(
         typeof destination === "string" ? destination : "/home",
         { replace: true },
       );
     } catch (error: unknown) {
       setErrorMessage(handleError(error));
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -60,6 +66,7 @@ const SignIn = (): React.JSX.Element => {
           <Input
             label='Username'
             type='text'
+            placeholder='ex: username_123'
             error={errors.username?.message}
             {...register("username")}
           />
@@ -67,6 +74,7 @@ const SignIn = (): React.JSX.Element => {
           <Input
             label='Password'
             type='password'
+            placeholder='********'
             error={errors.password?.message}
             {...register("password")}
           />
@@ -79,6 +87,7 @@ const SignIn = (): React.JSX.Element => {
           type="submit"
           disabled={isSubmitting} 
           buttonStyle='FORM'
+          loading={loading}
           icon={() => <FaSignInAlt />}
         />
 

@@ -29,9 +29,13 @@ const SignUp = (): React.JSX.Element => {
   });
 
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
+  const [loading, setLoading] = useState<boolean>(false);
+
   const onSubmit = async(data: SignUpFormData) => {
     try {
+      if (loading) return;
+      setLoading(true);
+
       await AuthService.signUp({
         username: data.username,
         password: data.password,
@@ -40,6 +44,8 @@ const SignUp = (): React.JSX.Element => {
       navigate("/");
     } catch (error: unknown) {
       setErrorMessage(handleError(error));
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -57,6 +63,7 @@ const SignUp = (): React.JSX.Element => {
           <Input
             label='Username'
             type='text'
+            placeholder='ex: username_123'
             {...register("username")}
             error={errors.username?.message}
           />
@@ -64,13 +71,15 @@ const SignUp = (): React.JSX.Element => {
           <Input
             label='Password'
             type='password'
+            placeholder='********'
             {...register("password")}
             error={errors.password?.message}
-          />
+            />
 
           <Input
             label='Repeat Password'
             type='password'
+            placeholder='********'
             {...register("confirmPassword")}
             error={errors.confirmPassword?.message}
           />
@@ -83,6 +92,7 @@ const SignUp = (): React.JSX.Element => {
           type='submit'
           disabled={isSubmitting}
           buttonStyle='FORM'
+          loading={loading}
           icon={() => <GiArchiveRegister size={17}/>}
         />
 

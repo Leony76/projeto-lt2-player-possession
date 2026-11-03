@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './css/ItemNavCard.module.css';
-import type { ItemsCategory } from '@/types/ItemsCategory.type';
-import type { ItemsSubcategory } from '@/types/ItemsSubcategory.type';
+import type { ItemsCategory } from '@/types/itemsCategory.type';
+import type { ItemsSubcategory } from '@/types/itemsSubcategory.type';
 import { ITEMS_CATEGORY_MAP } from '@/maps/ItemCategory.map';
 import { ITEM_SUBCATEGORY_MAP } from '@/maps/ItemSubcategory.map';
 import { FaMinus, FaPlus, FaStamp } from "react-icons/fa";

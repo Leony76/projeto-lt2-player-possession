@@ -1,13 +1,17 @@
 import type { Request, Response, NextFunction } from "express";
 
-export class AuthError extends Error {
+export class APIError extends Error {
   constructor(
     public statusCode: number,
     message: string,
   ) {
     super(message);
+
+    this.name = "APIError";
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
+
 
 export const errorMiddleware = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof Error && err.name === "ZodError") {

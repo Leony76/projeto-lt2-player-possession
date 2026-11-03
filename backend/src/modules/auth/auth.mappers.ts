@@ -1,8 +1,10 @@
-import type { LoggedUserMainInfos } from "../../dtos/loggedUserMainInfos.dto.js";
+import type { LoggedUserMainInfosResponse } from "@shared/dtos/loggedUserMainInfos.dto.js";
 
 export class AuthMapper {
 
-  public static toPublicUser(user: LoggedUserMainInfos): LoggedUserMainInfos {
+  public static toPublicUser(
+    user : LoggedUserMainInfosResponse
+  ): LoggedUserMainInfosResponse {
     return {
       id              : user.id,
       name            : user.name,

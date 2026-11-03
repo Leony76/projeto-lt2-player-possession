@@ -10,22 +10,23 @@ import {
 
 import axios from "axios";
 import { AuthService } from "../services/auth.service";
-import type { LoggedUserMainInfos } from "@/dtos/loggedUserMainInfos.dto";
-import type { UserCredentials } from "@/dtos/userCredentials.dto";
+import type { LoggedUserMainInfosResponse } from "@shared/dtos/loggedUserMainInfos.dto";
+import type { UserCredentials } from "@/types/userCredentials.type";
 
 interface AuthContextValue {
-  user        : LoggedUserMainInfos | null;
+  user        : LoggedUserMainInfosResponse | null;
   loading     : boolean;
   signIn      : (credentials: UserCredentials) => Promise<void>;
   signOut     : () => Promise<void>;
   refreshUser : () => Promise<void>;
+  updateUser  : (data: Partial<LoggedUserMainInfosResponse>) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
-  const [user, setUser] = useState<LoggedUserMainInfos | null>(null);
+  const [user, setUser] = useState<LoggedUserMainInfosResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refreshUser = useCallback(async () => {
@@ -69,6 +70,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
 
+  const updateUser = useCallback((
+    data: Partial<LoggedUserMainInfosResponse>
+  ) => {
+    setUser(currentUser => {
+      if (!currentUser) return null;
+
+      return {
+        ...currentUser,
+        ...data,
+      };
+    });
+  }, []);
+
+
+
   const signOut = useCallback(async () => {
     setLoading(true);
 
@@ -84,7 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-    value={{ user, loading, signIn, signOut, refreshUser }}
+    value={{ user, loading, signIn, signOut, refreshUser, updateUser }}
     >
       {children}
     </AuthContext.Provider>

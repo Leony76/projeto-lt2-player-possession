@@ -2,18 +2,21 @@ import argon2 from "argon2";
 import { Prisma } from "../../generated/prisma/client.js";
 import { AuthRepository } from "./auth.repository.js";
 import { AuthMapper } from "./auth.mappers.js"; 
-import { assertJWTSecretIsConfigured, generateToken } from "../../config/jwt.js";
-import { AuthError } from "../../middlewares/error.middleware.js";
+import { assertJWTSecretIsConfigured, generateToken } from "../../config/jwt.config.js";
+import { APIError } from "../../middlewares/error.middleware.js";
 
 assertJWTSecretIsConfigured();
 
 export class AuthService {
   
-  public static async signUp(username: string, password: string) {
+  public static async signUp(
+    username : string, 
+    password : string
+  ) {
     const nameAlreadyTaken = await AuthRepository.userExistsByName(username);
 
     if (nameAlreadyTaken) {
-      throw new AuthError(409, "Name already taken")
+      throw new APIError(409, "Name already taken")
     }   
 
     const passwordHash = await argon2.hash(password);
@@ -30,7 +33,7 @@ export class AuthService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === "P2002"
       ) {
-        throw new AuthError(409, "Name already taken");
+        throw new APIError(409, "Name already taken");
       }
 
       throw error;
@@ -39,7 +42,10 @@ export class AuthService {
 
 
 
-  public static async signIn(username: string, password: string) {
+  public static async signIn(
+    username : string, 
+    password : string
+  ) {
     const user = await AuthRepository.findUserByName(username);
 
     if (
@@ -47,7 +53,7 @@ export class AuthService {
       ||
       !(await argon2.verify(user.passwordHash, password))
     ) {
-      throw new AuthError(401, "Invalid Credentials");
+      throw new APIError(401, "Invalid Credentials");
     }
 
     const token = generateToken(user.id);
@@ -60,11 +66,13 @@ export class AuthService {
 
 
   
-  public static async getLoggedUser(userId: number) {
+  public static async getLoggedUser(
+    userId : number
+  ) {
     const user = await AuthRepository.findUserById(userId);
 
     if (!user) {
-      throw new AuthError(401, 'User not found');
+      throw new APIError(401, 'User not found');
     }
 
     return AuthMapper.toPublicUser(user);

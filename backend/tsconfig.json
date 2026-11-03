@@ -2,8 +2,14 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
+    "rootDir": "..",
     "outDir": "./dist",
+
+    "baseUrl" : ".",
+    "paths"   : {
+      "@backend/*": ["src/*"],
+      "@shared/*": ["../shared/*"]
+    },
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -25,6 +31,7 @@
     "declaration": true,
     "declarationMap": true,
 
+    "ignoreDeprecations": "6.0",
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
@@ -47,5 +54,5 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
   },
-  "include": ["src"]
+  "include": ["src", "../shared"]
 }

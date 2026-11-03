@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styles from './css/Input.module.css'
 import { MdError } from 'react-icons/md';
 import { IoMdEye } from 'react-icons/io';
+import ErrorMessage from './ErrorMessage';
 
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -57,17 +58,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(({
         }
       </div>
 
-      { error &&
-        <span className={styles.error}>
-          <div className={styles.icon}>
-            <MdError />
-          </div>
-
-          <span className={styles.label}>
-            { error }
-          </span>
-        </span>
-      }
+      { error && <ErrorMessage error={error}/>}
     </div>
   );
 });

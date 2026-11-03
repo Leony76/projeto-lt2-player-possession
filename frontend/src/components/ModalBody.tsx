@@ -4,7 +4,7 @@ import { IoClose } from 'react-icons/io5';
 
 type Props = {
   children     : React.ReactNode;
-  XCloseButton : boolean;
+  XCloseButton?: boolean;
   title        : string;
   onClose      : () => void;
   gap         ?: `${number}px`

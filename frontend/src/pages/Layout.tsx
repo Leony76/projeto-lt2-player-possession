@@ -3,7 +3,7 @@ import fireAxe from '@public/fire_axe_decal.webp';
 import styles from './css/Layout.module.css';
 import { Link, Navigate } from 'react-router-dom';
 import { MdLogout } from "react-icons/md";
-import type { NavLinks } from '@/types/NavLinks.type';
+import type { NavLinks } from '@/types/navLinks.type';
 import AsideNavLink from '@/components/AsideNavLink';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import { FaWallet } from 'react-icons/fa';

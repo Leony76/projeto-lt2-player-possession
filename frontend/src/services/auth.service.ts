@@ -1,11 +1,11 @@
-import type { LoggedUserMainInfos } from "@/dtos/loggedUserMainInfos.dto";
-import type { UserCredentials } from "@/dtos/userCredentials.dto";
+import type { LoggedUserMainInfosResponse } from "@shared/dtos/loggedUserMainInfos.dto";
+import type { UserCredentials } from "@/types/userCredentials.type";
 import { api } from "@/lib/api";
 
 export class AuthService {
 
   public static async signUp(credentials: UserCredentials) {
-    const { data } = await api.post<{user: LoggedUserMainInfos}>(
+    const { data } = await api.post<{user: LoggedUserMainInfosResponse}>(
       "/auth/sign-up",
       credentials
     );
@@ -16,7 +16,7 @@ export class AuthService {
 
 
   public static async signIn(credentials: UserCredentials) {
-    const { data } = await api.post<{user: LoggedUserMainInfos}>(
+    const { data } = await api.post<{user: LoggedUserMainInfosResponse}>(
       "/auth/sign-in",
       credentials
     );
@@ -27,7 +27,7 @@ export class AuthService {
 
 
   public static async me() {
-    const { data } = await api.get<{ user: LoggedUserMainInfos }>(
+    const { data } = await api.get<{ user: LoggedUserMainInfosResponse }>(
       "/auth/me",
     );
 
