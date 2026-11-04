@@ -4,11 +4,11 @@ import { MdHideImage } from "react-icons/md";
 import { RiImageEditFill, RiImageUploadFill } from "react-icons/ri";
 import profileImagePlaceholder from '@/assets/img/profile_image_placeholder.png';
 import ModalBody from "./ModalBody";
-import Input from "./Input";
-import Button from "./Button";
-import ErrorMessage from "./ErrorMessage";
-import styles from "./css/EditImageModal.module.css";
-import ImageExpand from "./ImageExpand";
+import Input from "../Input";
+import Button from "../Button";
+import ErrorMessage from "../ErrorMessage";
+import styles from "../css/EditImageModal.module.css";
+import ImageExpand from "../ImageExpand";
 
 type Props = {
   initialImage? : string;

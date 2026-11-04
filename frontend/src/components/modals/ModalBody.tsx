@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './css/ModalBody.module.css';
+import styles from '../css/ModalBody.module.css';
 import { IoClose } from 'react-icons/io5';
 
 type Props = {

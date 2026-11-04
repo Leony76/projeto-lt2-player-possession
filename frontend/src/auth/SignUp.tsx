@@ -5,7 +5,7 @@ import Button from '@/components/Button'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type SignUpFormData, signUpSchema } from "../schemas/auth.schema";
+import { type SignUpFormData, signUpSchema } from "@shared/schemas/auth.schema";
 import { AuthService } from '@/services/auth.service'
 import { handleError } from '@/utils/handleError.util'
 import ErrorMessage from '@/components/ErrorMessage'

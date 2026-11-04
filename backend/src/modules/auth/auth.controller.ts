@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AuthService } from "./auth.service.js";
-import { authSchema } from "./auth.schema.js";
+import { signInSchema } from '@shared/schemas/auth.schema.js';
 import { cookieOptions } from "../../config/cookies.config.js";
 
 export class AuthController {
@@ -9,7 +9,7 @@ export class AuthController {
     req  : Request, 
     res  : Response, 
   ) {
-    const data = authSchema.parse(req.body);
+    const data = req.body;
 
     const user = await AuthService.signUp(
       data.username,
@@ -25,7 +25,7 @@ export class AuthController {
     req  : Request, 
     res  : Response, 
   ) {
-    const data = authSchema.parse(req.body);
+    const data = req.body;
 
     const result = await AuthService.signIn(
       data.username,

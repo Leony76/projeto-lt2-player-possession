@@ -47,4 +47,30 @@ export class UserRepository {
       }
     })
   }
+
+
+
+  public static async editLumberBucks(
+    lumberBucks : number,
+    userId      : number,
+  ) {
+    return await prisma.user.update({
+      where : { id: userId        },
+      data  : { lumberBucks       },
+      select: { lumberBucks: true },
+    })
+  }
+
+
+
+  public static async editPassword(
+    passwordHash : string,
+    userId       : number,
+  ) {
+    return await prisma.user.update({
+      where : { id: userId        },
+      data  : { passwordHash      },
+      select: { id: true          },
+    })
+  }
 }

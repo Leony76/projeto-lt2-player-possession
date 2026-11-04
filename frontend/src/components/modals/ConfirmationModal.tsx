@@ -1,7 +1,7 @@
 import React from 'react'
-import styles from './css/ConfirmationModal.module.css';
+import styles from '../css/ConfirmationModal.module.css';
 import ModalBody from './ModalBody';
-import Button from './Button';
+import Button from '../Button';
 import { FaCheckCircle } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md';
 
