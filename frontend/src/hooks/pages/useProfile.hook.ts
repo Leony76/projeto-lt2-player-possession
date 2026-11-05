@@ -92,6 +92,9 @@ export const useProfile = () => {
 
   const verifyUsernameAvailabilityToEdit = usernameForm.handleSubmit(async (data) => {
     try {
+      if (isSaving) return;
+      setIsSaving(true);
+
       const result = await UserService.verifyUsernameAvailability({
         username: data.username,
       });
@@ -102,6 +105,8 @@ export const useProfile = () => {
       }
     } catch (error: unknown) {
       setFieldError(handleAxiosError(error));
+    } finally {
+      setIsSaving(false);
     }
   });
 
@@ -110,7 +115,6 @@ export const useProfile = () => {
   const editUsername = async(username: string): Promise<void> => {  
     try {
       if (isSaving) return;
-  
       setIsSaving(true);
 
       if (usernameForm.getValues('username') === null) {
@@ -143,7 +147,6 @@ export const useProfile = () => {
 
   const editLumberBucks = async (lumberBucks: number): Promise<void> => {
     if (isSaving) return;
-
     setIsSaving(true);
 
     try {

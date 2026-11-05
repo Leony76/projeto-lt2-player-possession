@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .toolbar_container {
+    display: flex;
+    gap: 4px;
+    
+    border-bottom: 1px solid #cc8d697f;
+    padding-bottom: 20px;
+  }
+
+  .nav {
+    .ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .li {
+        min-width: 0;
+      }
+    }
+  }
+}

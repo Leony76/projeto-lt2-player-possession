@@ -76,8 +76,8 @@ const Home = (): React.JSX.Element => {
                     id={12}
                     imageURL={imgPlaceholder2}
                     name={'Maria bonita de la aprma'}
-                    category={'LOOSE'}
-                    subcategory={'PLANK'}
+                    state={'BOXED'}
+                    category={'WOBBLE_BOBBLE'}
                     description={'"She\'s just bealtiful sadasd dxasd asdas"'}
                     originalPrice={69000}
                     marketPrice={690000}

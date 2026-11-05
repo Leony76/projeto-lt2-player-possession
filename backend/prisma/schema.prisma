@@ -15,42 +15,84 @@ datasource db {
 model User {
   id              Int      @id @default(autoincrement())
   name            String   @unique
+
   profileImageURL String?  @map("profile_image_url")
   lumberBucks     Int      @map("lumber_bucks") @default(0)
+
   passwordHash    String   @map("password_hash")
+
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
-  items           Item[]   @relation("UserItems")
+  items           UserItem[]   
 
   @@map("users")
 }
 
-model Item {
-  id            Int               @id @default(autoincrement())
-  imageURL      String            @map("image_url")
-  name          String            @unique
-  description   String 
-  originalPrice Int               @map("original_price")
-  marketPrice   Int               @map("market_price")
-  category      ItemCategory
-  subcategory   ItemSubcategory
-  units         Int 
+model UserItem {
+  id        Int      @id @default(autoincrement())
 
-  users         User[]            @relation("UserItems")
+  userId    Int      @map("user_id")
+  itemId    Int      @map("item_id")
+
+  units     Int      @default(1)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, itemId])
+  @@map("user_items")
+}
+
+model Item {
+  id                      Int           @id @default(autoincrement())
+
+  name                    String        @unique
+  category                ItemCategory
+  state                   ItemState
+
+  originalPrice           Int        @map("original_price")
+  averageMarketPrice      Int        @map("average_market_price")
+  averageTruckloadPrice   Int        @map("average_truckload_price")
+
+  releaseYear             Int        @map("release_year")
+  
+  description             String 
+
+  imageURL                String     @map("image_url")
+
+  createdAt               DateTime   @default(now()) @map("created_at")
+  updatedAt               DateTime   @updatedAt @map("updated_at")
+
+  users         UserItem[]           
 
   @@map("items")
 }
 
 enum ItemCategory {
-  PLACEBLE
-  LOOSE
+  AXE 
+  BALL
+  BOOK
+  CANDY
+  CANDY_CANE
+  FOOD
+  FINE_ART
+  GAME
+  HOME
+  PUMPKIN
+  WOBBLE_BOBBLES
+  VEHICLE 
+  MISCELLANEOUS
+  LOGIC
+  CONVEYOR
+  WOOD
 }
 
-enum ItemSubcategory {
-  PLANK
-  AXE 
-  EVENT 
-  LOGIC 
-  MISC
+enum ItemState {
+  GIFT
+  BOXED
+  LOOSE
 }

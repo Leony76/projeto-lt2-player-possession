@@ -6,6 +6,9 @@ import SignIn from './auth/SignIn';
 import SignUp from './auth/SignUp';
 import { ProtectedRoute } from './components/routes/ProtectedRoute';
 import Profile from './pages/Profile';
+import Items from './pages/Items';
+import MyItems from './pages/MyItems';
+import ItemDetails from './pages/ItemDetails';
 
 function App() {
   return (
@@ -37,10 +40,20 @@ function App() {
             element={ <Profile /> } 
           />
 
-          {/* <Route 
-            path="/contact-profile/:id" 
-            element={ <ContactProfile /> } 
-          /> */}
+          <Route 
+            path="/items" 
+            element={ <Items /> } 
+          /> 
+
+          <Route 
+            path="/my-items" 
+            element={ <MyItems /> } 
+          /> 
+
+          <Route
+            path="/item/:id"
+            element={<ItemDetails />}
+          />
         </Route>
       </Routes>
     </>

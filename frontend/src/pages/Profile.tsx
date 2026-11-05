@@ -57,6 +57,7 @@ const Profile = (): React.JSX.Element => {
 
             <div className={styles.edit_profile_image_button}>
               <Button
+                title='Edit profile image'
                 buttonStyle='DEFAULT'
                 label='Edit'
                 onClick={() => setters.setModal('EDIT_PROFILE_IMAGE')}
@@ -90,6 +91,7 @@ const Profile = (): React.JSX.Element => {
                     >
                       { !isId &&
                         <button 
+                        title='Edit'
                         className={styles.edit_button}
                         onClick={() => setters.setModal(modalField[item.label])}
                         >
@@ -129,6 +131,7 @@ const Profile = (): React.JSX.Element => {
                     key={index}
                     >
                       <button 
+                      title='Edit'
                       className={styles.edit_button}
                       onClick={() => setters.setModal(modalField[item.label])}
                       >

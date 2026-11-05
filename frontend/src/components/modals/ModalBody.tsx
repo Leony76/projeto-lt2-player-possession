@@ -21,12 +21,13 @@ const ModalBody = (props:Props): React.JSX.Element => {
       onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.modal_title_x_close_button_container}>
-          <h2 className={styles.title}>
+          <h2 className={styles.title} title={ props.title }>
             { props.title }
           </h2>
 
           { props.XCloseButton &&
             <button 
+            title='Close'
             className={styles.icon}
             onClick={props.onClose}
             >

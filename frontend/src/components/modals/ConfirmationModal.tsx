@@ -19,12 +19,13 @@ const ConfirmationModal = (props:Props): React.JSX.Element => {
     title='Confirm Action'
     gap='16px'
     >
-      <p className={styles.message}>
+      <p className={styles.message} title='Confirm Message'>
         { props.message }
       </p>
 
       <div className={styles.confirm_cancel_buttons_container}>
         <Button
+          title='Confirm'
           buttonStyle='DEFAULT'
           label={props.loading ? 'Processing...' : 'Confirm'}
           loading={props.loading}
@@ -40,6 +41,7 @@ const ConfirmationModal = (props:Props): React.JSX.Element => {
         />
 
         <Button
+          title='Cancel'
           buttonStyle='DEFAULT'
           label='Cancel'
           onClick={!props.loading ? props.onCancel : () => {}}

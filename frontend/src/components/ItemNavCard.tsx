@@ -1,39 +1,40 @@
 import React from 'react'
 import styles from './css/ItemNavCard.module.css';
-import type { ItemsCategory } from '@/types/itemsCategory.type';
-import type { ItemsSubcategory } from '@/types/itemsSubcategory.type';
-import { ITEMS_CATEGORY_MAP } from '@/maps/ItemCategory.map';
-import { ITEM_SUBCATEGORY_MAP } from '@/maps/ItemSubcategory.map';
+import { ITEMS_CATEGORY_MAP, type ItemsCategory } from '@/maps/select/filters/ItemCategory.map';
+import { ITEMS_STATE_MAP, type ItemsState } from '@/maps/select/filters/ItemSubcategory.map';
 import { FaMinus, FaPlus, FaStamp } from "react-icons/fa";
 import { SiCardmarket } from 'react-icons/si';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import { Link } from 'react-router-dom';
+import { type UserItemResponse as Item } from '@shared/dtos/item.dto';
 
-type Props = {
-  readonly   id : number; 
-  imageURL      : string;
-  name          : string;
-  category      : ItemsCategory;
-  subcategory   : ItemsSubcategory;
-  description   : string;
-  originalPrice : number;
-  marketPrice   : number;
-  units         : number;
-};
+type Props = Item;
 
 const ItemNavCard = (props:Props): React.JSX.Element => {
 
-  const tagColorByCategory: Record<ItemsCategory, string> = {
-    LOOSE    : styles.loose,
-    PLACEBLE : styles.placeble,
+  const tagColorByCategory: Record<Exclude<ItemsCategory, '_'>, string> = {
+    AXE           : styles.axe ,
+    BALL          : styles.ball ,
+    BOOK          : styles.book ,
+    CANDY         : styles.candy ,
+    CANDY_CANE    : styles.candy_cane ,
+    FINE_ART      : styles.fine_art , 
+    FOOD          : styles.food,
+    GAME          : styles.game,
+    HOME          : styles.home,
+    MISCELLANEOUS : styles.miscellaneous,
+    PUMPKIN       : styles.pumpkin,
+    VEHICLE       : styles.vehicle,
+    WOBBLE_BOBBLE : styles.wobble_bobble,
+    CONVEYOR      : styles.conveyor,
+    LOGIC         : styles.logic,
+    WOOD          : styles.wood,
   };
 
-  const tagColorBySubcategory: Record<ItemsSubcategory, string> = {
-    AXE   : styles.axe,
-    EVENT : styles.event,
-    LOGIC : styles.logic,
-    MISC  : styles.misc,
-    PLANK : styles.plank,
+  const tagColorByState: Record<Exclude<ItemsState, '_'>, string> = {
+    BOXED : styles.boxed,
+    GIFT  : styles.gift,
+    LOOSE : styles.loose,
   };
 
   return (
@@ -56,23 +57,23 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
         </h3>
       </Link>
 
-      <div className={styles.category_subcategory_container}>
+      <div className={styles.category_state_container}>
         <span 
         title='Category'
         className={`
           ${styles.category} 
           ${tagColorByCategory[props.category]}
         `}>
-          { ITEMS_CATEGORY_MAP[props.category] }
+          { ITEMS_CATEGORY_MAP[props.category]}
         </span>
 
         <span 
-        title='Subcategory'
+        title='State'
         className={`
-          ${styles.subcategory} 
-          ${tagColorBySubcategory[props.subcategory]}
+          ${styles.state} 
+          ${tagColorByState[props.state]}
         `}>
-          { ITEM_SUBCATEGORY_MAP[props.subcategory] }
+          { ITEMS_STATE_MAP[props.state] }
         </span>
       </div>
 

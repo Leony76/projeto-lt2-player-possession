@@ -4,7 +4,7 @@
   gap: 6px;
   text-decoration: none;
 
-  background-color: #cc8d691b;
+  background-color: #FAF3EF;
 
   width: 150px;
 
@@ -53,16 +53,115 @@
     }
   }
 
-  .category_subcategory_container {
+  .category_state_container {
     display: flex;
+    flex-wrap: wrap;
     gap: 4px;
 
-    .category, .subcategory {
+    .category, .state {
       border: 1px solid black;
       border-radius: 10px;
       padding: 1px 6px;
       font-size: small;  
     }
+
+    .axe {
+      background-color: rgba(255, 123, 0, 0.11);
+      color: rgb(255, 123, 0);
+      border-color: rgb(255, 123, 0);
+    }
+    
+    .ball {
+      background-color: rgba(212, 199, 188, 0.11);
+      color: rgb(143, 134, 127);
+      border-color: rgb(143, 134, 127);
+    }
+
+    .book {
+      background-color: rgba(143, 134, 127, 0.11);
+      color: rgb(81, 76, 72);
+      border-color: rgb(79, 74, 70);
+    }
+
+    .candy {
+      background-color: rgba(255, 136, 136, 0.11);
+      color: rgb(254, 133, 133);
+      border-color: rgb(254, 133, 133);
+    }
+
+    .candy_cane {
+      background-color: rgba(255, 93, 93, 0.11);
+      color: rgb(255, 93, 93);
+      border-color: rgb(255, 93, 93);
+    }
+
+    .fine_art {
+      background-color: rgba(117, 255, 93, 0.11);
+      color: rgba(85, 184, 67, 0.995);
+      border-color: rgba(85, 184, 67, 0.995);
+    }
+
+    .food {
+      background-color: #cc8d691f;
+      color: #cc8d69;
+      border-color: #cc8d69;
+    }
+
+    .game {
+      background-color: rgba(0, 170, 255, 0.11);
+      color: rgb(0, 170, 255);
+      border-color: rgb(0, 170, 255);
+    }
+
+    .home {
+      background-color: #ccc2691f;
+      color: #9c9551;
+      border-color: #938c4c;
+    }
+
+    .miscellaneous {
+      background-color: rgba(255, 115, 0, 0.11);
+      color: rgb(255, 115, 0);
+      border-color: rgb(255, 115, 0);
+    }
+
+    .pumpkin {
+      background-color: rgba(255, 115, 0, 0.11);
+      color: rgb(255, 157, 78);
+      border-color: rgb(255, 157, 78);
+    }
+    
+    .vehicle {
+      background-color: rgba(119, 115, 112, 0.11);
+      color: rgb(119, 115, 112);
+      border-color: rgb(119, 115, 112);
+    }
+    
+    .wobble_bobble {
+      background-color: rgba(152, 0, 253, 0.11);
+      color: rgb(152, 0, 253);
+      border-color: rgb(152, 0, 253);
+    }
+
+    .logic {
+      background-color: rgba(56, 172, 180, 0.123);
+      color: rgb(56, 172, 180);
+      border-color: rgb(56, 172, 180);
+    }
+    
+    .conveyor {
+      background-color: rgba(119, 115, 112, 0.11);
+      color: rgb(119, 115, 112);
+      border-color: rgb(119, 115, 112);
+    }
+    
+    .wood {
+      background-color: #cc8d691f;
+      color: #8b6148;
+      border-color: #8b6148;
+    }
+
+
 
     .loose {
       background-color: rgba(255, 0, 0, 0.11);
@@ -70,40 +169,16 @@
       border-color: red;
     }
 
-    .placeble {
-      background-color: rgba(0, 170, 255, 0.11);
-      color: rgb(0, 170, 255);
-      border-color: rgb(0, 170, 255);
-    }
-    
-    .axe {
-      background-color: rgba(255, 123, 0, 0.11);
-      color: rgb(255, 123, 0);
-      border-color: rgb(255, 123, 0);
-    }
-
-    .event {
+    .gift {
       background-color: rgba(242, 0, 255, 0.11);
       color: rgb(242, 0, 255);
       border-color: rgb(242, 0, 255);
     }
-    
-    .plank {
-      background-color: #cc8d691f;
-      color: #cc8d69;
-      border-color: #cc8d69;
-    }
-    
-    .logic {
-      background-color: rgba(0, 255, 251, 0.11);
-      color: rgb(0, 255, 251);
-      border-color: rgb(0, 255, 251);
-    }
-    
-    .misc {
-      background-color: rgba(238, 255, 0, 0.11);
-      color: rgb(157, 168, 0);
-      border-color: rgb(157, 168, 0);
+
+    .boxed {
+      background-color: rgba(119, 115, 112, 0.11);
+      color: rgb(119, 115, 112);
+      border-color: rgb(119, 115, 112);
     }
   }
 

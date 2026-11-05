@@ -107,6 +107,7 @@ const ProfileModals = ({ profile }: Props): React.JSX.Element | null => {
             <Button
               buttonStyle="FORM"
               label="Edit"
+              loading={states.isSaving}
               type="submit"
               disabled={!!forms.usernameForm.formState.errors.username}
               icon={() => <FaEdit />}
@@ -170,6 +171,7 @@ const ProfileModals = ({ profile }: Props): React.JSX.Element | null => {
 
             <Button
               buttonStyle="FORM"
+              loading={states.isSaving}
               label="Edit"
               type="submit"
               disabled={!!forms.lumberBucksForm.formState.errors.lumberBucks}
@@ -230,6 +232,7 @@ const ProfileModals = ({ profile }: Props): React.JSX.Element | null => {
 
             <Button
               buttonStyle="FORM"
+              loading={states.isSaving}
               label="Verify"
               type="submit"
               disabled={!!forms.passwordForm.formState.errors.password}
@@ -280,6 +283,7 @@ const ProfileModals = ({ profile }: Props): React.JSX.Element | null => {
 
             <Button
               buttonStyle="FORM"
+              loading={states.isSaving}
               label="Edit"
               type="submit"
               disabled={!!forms.newPasswordForm.formState.errors.newPassword}

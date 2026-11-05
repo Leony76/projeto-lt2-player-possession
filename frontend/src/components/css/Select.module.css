@@ -1,0 +1,91 @@
+.container {
+  position: relative;
+
+  .select_container {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    color: #CC8E69;
+
+    cursor: pointer;
+
+    border: 1px solid #CC8E69;
+    border-radius: 10px;
+    background-color: #F8F0EB;
+
+    &[data-open="true"] {
+      border-radius: 10px 10px 0px 0px;
+    }
+
+    .selected_option {
+      
+    }
+
+    .chevron_down_icon {
+
+    }
+  }
+
+  .options_container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    max-height: 156px;
+    
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    border: 1px solid #D49E80;
+    border-radius: 0px 0px 10px 10px;
+    background-color: #F8F0EB;
+
+    clip-path: inset(0 round 0px 0px 10px 10px);
+
+    scrollbar-width: thin; 
+    scrollbar-color: #CC8E69 #F8F0EB;
+
+    &::-webkit-scrollbar {
+      width: 8px; 
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent; 
+      margin: 6px 0; 
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #CC8E69;
+      border-radius: 4px; 
+      border: 2px solid transparent; 
+      background-clip: padding-box;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #b07855; 
+    }
+
+    .option {
+      font-size: 12px;
+      padding: 4px;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      color: #CC8E69;
+
+      &:hover {
+        background-color: #cc8d6924;
+      }
+
+      &[data-selected="true"] {
+        background-color: #cc8d69d3;
+        color: white;
+        font-weight: 600;
+      }
+    }
+  }
+}

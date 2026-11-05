@@ -130,11 +130,12 @@ const EditImageModal = ({
       gap="8px"
     >
       <figure
-        onClick={() => setImageExpand(true)}
-        className={styles.edit_image_preview_container}
-        style={{
-          cursor: imageLoadError ? "not-allowed" : "zoom-in",
-        }}
+      title="Zoom in"
+      onClick={() => setImageExpand(true)}
+      className={styles.edit_image_preview_container}
+      style={{
+        cursor: imageLoadError ? "not-allowed" : "zoom-in",
+      }}
       >
         {imagePreview && !imageLoadError ? (
           <img
@@ -155,6 +156,7 @@ const EditImageModal = ({
       </figure>
 
       <Input
+        title="Image URL"
         label="Image URL"
         type="url"
         value={imageURL}
@@ -170,9 +172,10 @@ const EditImageModal = ({
         onChange={handleImageUpload}
       />
 
-      <span className={styles.__or__edit_form}>or</span>
+      <span title="--or--" className={styles.__or__edit_form}>or</span>
 
       <Button
+        title="Upload local image"
         label="Upload"
         buttonStyle="DEFAULT"
         icon={() => <RiImageUploadFill />}
@@ -182,7 +185,8 @@ const EditImageModal = ({
       {imageError && <ErrorMessage error={imageError} />}
 
       <Button
-        label={isSaving ? "Saving..." : "Edit"}
+        title="Procced"
+        label={isSaving ? "Processing..." : "Edit"}
         buttonStyle="FORM"
         disabled={isSaving || !hasImage || !!imageError}
         onClick={handleConfirm}

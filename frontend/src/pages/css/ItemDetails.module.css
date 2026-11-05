@@ -1,0 +1,234 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  
+  .page_title_history_back_container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    .history_back_button {
+      display: flex;
+      scale: 2;
+      padding: 2px;
+      border: none;
+      background-color: transparent;
+      color: #CC8E69;
+      border-radius: 4px;
+      transition: 0.25s ease;
+      cursor: pointer;
+
+      &:hover {
+        color: #cc7f52;
+        background-color: #cc8d691d;
+      }
+    }
+  }
+
+  .main_infos_container {
+    display: flex;
+    gap: 32px;
+    flex: 1;
+
+    .item_image_container {
+      display: flex;
+      padding: 2px;
+      border: 2px solid #CC8E69;
+      align-self: center;
+
+      flex: 1;
+
+      width: 370px;
+      transition: 0.25s ease;
+
+      cursor: zoom-in;
+
+      &:hover {
+        scale: 1.005;
+        filter: brightness(1.2);
+      }
+      
+      .item_image {
+        border: 2px solid #CC8E69;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background-color: #cc8d691d;
+      }
+    }
+
+    .item_descriptive_infos_container {
+      flex: 2;
+
+      dl {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .item {
+          display: flex;
+          gap: 8px;
+
+          &::before {
+            content: '•';
+            color: #761B23;
+          }
+
+          dt {
+            color: #CC8E69;
+            font-weight: 600;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.169);
+          }
+          
+          .category_state_tag {
+            border: 1px solid;
+            border-radius: 10px;
+            padding: 1px 6px;
+            font-size: small;  
+          }
+
+          .axe {
+            background-color: rgba(255, 123, 0, 0.11);
+            color: rgb(255, 123, 0);
+            border-color: rgb(255, 123, 0);
+          }
+          
+          .ball {
+            background-color: rgba(212, 199, 188, 0.11);
+            color: rgb(143, 134, 127);
+            border-color: rgb(143, 134, 127);
+          }
+
+          .book {
+            background-color: rgba(143, 134, 127, 0.11);
+            color: rgb(81, 76, 72);
+            border-color: rgb(79, 74, 70);
+          }
+
+          .candy {
+            background-color: rgba(255, 136, 136, 0.11);
+            color: rgb(254, 133, 133);
+            border-color: rgb(254, 133, 133);
+          }
+
+          .candy_cane {
+            background-color: rgba(255, 93, 93, 0.11);
+            color: rgb(255, 93, 93);
+            border-color: rgb(255, 93, 93);
+          }
+
+          .fine_art {
+            background-color: rgba(117, 255, 93, 0.11);
+            color: rgba(85, 184, 67, 0.995);
+            border-color: rgba(85, 184, 67, 0.995);
+          }
+
+          .food {
+            background-color: #cc8d691f;
+            color: #cc8d69;
+            border-color: #cc8d69;
+          }
+
+          .game {
+            background-color: rgba(0, 170, 255, 0.11);
+            color: rgb(0, 170, 255);
+            border-color: rgb(0, 170, 255);
+          }
+
+          .home {
+            background-color: #ccc2691f;
+            color: #9c9551;
+            border-color: #938c4c;
+          }
+
+          .miscellaneous {
+            background-color: rgba(255, 115, 0, 0.11);
+            color: rgb(255, 115, 0);
+            border-color: rgb(255, 115, 0);
+          }
+
+          .pumpkin {
+            background-color: rgba(255, 115, 0, 0.11);
+            color: rgb(255, 157, 78);
+            border-color: rgb(255, 157, 78);
+          }
+          
+          .vehicle {
+            background-color: rgba(119, 115, 112, 0.11);
+            color: rgb(119, 115, 112);
+            border-color: rgb(119, 115, 112);
+          }
+          
+          .wobble_bobble {
+            background-color: rgba(152, 0, 253, 0.11);
+            color: rgb(152, 0, 253);
+            border-color: rgb(152, 0, 253);
+          }
+
+          .logic {
+            background-color: rgba(56, 172, 180, 0.123);
+            color: rgb(56, 172, 180);
+            border-color: rgb(56, 172, 180);
+          }
+          
+          .conveyor {
+            background-color: rgba(119, 115, 112, 0.11);
+            color: rgb(119, 115, 112);
+            border-color: rgb(119, 115, 112);
+          }
+          
+          .wood {
+            background-color: #cc8d691f;
+            color: #8b6148;
+            border-color: #8b6148;
+          }
+
+
+
+          .loose {
+            background-color: rgba(255, 0, 0, 0.11);
+            color: red;
+            border-color: red;
+          }
+
+          .gift {
+            background-color: rgba(242, 0, 255, 0.11);
+            color: rgb(242, 0, 255);
+            border-color: rgb(242, 0, 255);
+          }
+
+          .boxed {
+            background-color: rgba(119, 115, 112, 0.11);
+            color: rgb(119, 115, 112);
+            border-color: rgb(119, 115, 112);
+          }
+
+          dd {
+            color: #761B23;
+
+            &[data-description="true"] {
+              color: #878787;
+              font-style: italic;
+            }
+
+            &[data-money="true"] {
+              color: #00e200;
+              text-shadow: 1px 1px 1px black;
+            }
+
+            &[data-units-user-has="true"] {
+              color: #FE591B;
+              font-weight: 600;
+            }
+
+            &[data-release-year="true"] {
+              color: #0056cf;
+            }
+          }
+        }
+      }
+    }
+  }
+}

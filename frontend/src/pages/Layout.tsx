@@ -105,6 +105,20 @@ const Layout = (props:Props): React.JSX.Element => {
               />
               
               <AsideNavLink
+                to='/items'
+                label='Items'
+                tab='ITEMS'
+                currentTab={props.tab}
+              />
+
+              <AsideNavLink
+                to='/my-items'
+                label='My Items'
+                tab='MY_ITEMS'
+                currentTab={props.tab}
+              />
+
+              <AsideNavLink
                 to='/about'
                 label='About'
                 tab='ABOUT'
