@@ -9,7 +9,7 @@ export class UserService {
 
   public static async editProfileImage(
     request: Pick<EditProfileImageRequest, 'file' | 'imageURL'>
-  ) {
+  ): Promise<SuccessfulOperationResponse<EditProfileImageResponse>> {
     const formData = new FormData();
     
     if (request.file) {
@@ -32,7 +32,7 @@ export class UserService {
 
   public static async verifyUsernameAvailability(
     request: { username: string }
-  ) {
+  ): Promise<SuccessfulOperationResponse<{ username: string }>> {
     const { data } = await api.post<
       SuccessfulOperationResponse<
         { username: string }>>(
@@ -47,7 +47,7 @@ export class UserService {
 
   public static async editUsername(
     request : EditUsernameRequest
-  ) {
+  ): Promise<SuccessfulOperationResponse<EditUsernameResponse>> {
     const { data } = await api.patch<
       SuccessfulOperationResponse<
         EditUsernameResponse>>(
@@ -62,7 +62,7 @@ export class UserService {
 
   public static async editLumberBucks(
     request : EditLumberBucksRequest
-  ) {
+  ): Promise<SuccessfulOperationResponse<EditLumberBucksResponse>> {
     const { data } = await api.patch<
       SuccessfulOperationResponse<
         EditLumberBucksResponse>>(
@@ -77,7 +77,7 @@ export class UserService {
 
   public static async passwordVerificationBeforeEdit(
     request : PasswordVerificationRequest
-  ) {
+  ): Promise<SuccessfulOperationResponse<PasswordVerificationResponse>> {
     const { data } = await api.post<
       SuccessfulOperationResponse<
         PasswordVerificationResponse>>(
@@ -92,7 +92,7 @@ export class UserService {
 
   public static async editPassword(
     request : EditPasswordRequest
-  ) {
+  ): Promise<SuccessfulOperationResponse<EditPasswordResponse>> {
     const { data } = await api.patch<
       SuccessfulOperationResponse<
         EditPasswordResponse>>(

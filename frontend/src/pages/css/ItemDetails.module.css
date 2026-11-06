@@ -61,6 +61,11 @@
 
     .item_descriptive_infos_container {
       flex: 2;
+      display: flex;
+      padding: 16px 0px;
+      flex-direction: column;
+      justify-content: space-between;
+
 
       dl {
         display: flex;
@@ -226,6 +231,26 @@
             &[data-release-year="true"] {
               color: #0056cf;
             }
+          }
+        }
+      }
+
+      .add_item_container {
+        width: fit-content;
+
+        .new_item_units_container {
+          display: flex;
+          gap: 16px;
+
+          input {
+            background-color: #cc7f5233;
+            border-radius: 4px;
+            border: 1px solid #cc7f52;
+            width: 67px;
+            padding: 0px 4px;
+            text-align: center;
+            color: #761B23;
+            font-weight: 600;
           }
         }
       }

@@ -6,7 +6,7 @@ import { FaPlus } from 'react-icons/fa';
 const AddItemNavCard = (): React.JSX.Element => {
   return (
     <Link 
-    to={'/item/add'}
+    to={'/items'}
     className={styles.container}>
       <div className={styles.inner_container} title='New Item'>
         <div className={styles.icon}>      

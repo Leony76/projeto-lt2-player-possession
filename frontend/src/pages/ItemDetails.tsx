@@ -1,33 +1,134 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './css/ItemDetails.module.css'
 import Layout from './Layout'
 import PageTitle from '@/components/PageTitle'
 import { BiDetail } from 'react-icons/bi'
-import { FaArrowLeft } from 'react-icons/fa'
+import { FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
 import ImageExpand from '@/components/ImageExpand'
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util'
-import type { ItemsCategoryLabel } from '@shared/filters/items/itemCategory.map'
-import type { ItemsStateLabel } from '@shared/filters/items/itemState.map'
+import { ITEMS_CATEGORY_MAP, type ItemsCategoryLabel } from '@shared/maps/filters/items/itemCategory.map'
+import { ITEMS_STATE_MAP, type ItemsStateLabel } from '@shared/maps/filters/items/itemState.map'
+import type { ItemDetailsResponse } from '@shared/dtos/item.dto'
+import { ItemService } from '@/services/item.service'
+import { handleAxiosError } from '@/utils/handleAxiosError.util'
+import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates'
+import Button from '@/components/Button'
+import { IoAddCircle } from 'react-icons/io5'
+import IncrementDecrementButtons from '@/components/IncrementDecrementButtons'
+import { useToast } from '@/contexts/ToastContext'
+import { updateUnitsSchema } from '@shared/schemas/item.schema'
 
 const ItemDetails = (): React.JSX.Element => {
 
   const navigate = useNavigate();
   const { id } = useParams();
+  const { showToast } = useToast();
 
-  const [imageExpand, setImageExpand] = useState<boolean>(false); 
+  const [imageExpand, setImageExpand] = useState<boolean>(false);
+  const [item, setItem] = useState<ItemDetailsResponse | null>(null);
+  const [itemNewUnitsAmount, setItemNewUnitsAmount] = useState<number>(0);
+  const [itemNewUnitsAmountOnInput, setItemNewUnitsAmountOnInput] = useState<string>("0");
+  const [isEditingUnits, setIsEditingUnits] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    ( async() => {
+      try {
+        const item = await ItemService.getItemDetails(Number(id));
+
+        setItemNewUnitsAmount(item.unitsLoggedUserHas);
+        setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
+        setItem(item);
+      } catch (error:unknown) {
+        setError(handleAxiosError(error));
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [id]);
+
+  useEffect(() => {
+    setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
+  }, [itemNewUnitsAmount]);
+
+  const handleAddNewItemUnitsAmount = async (): Promise<void> => {
+    if (loading || !item) return;
+
+    const validation = updateUnitsSchema.safeParse({
+      units: itemNewUnitsAmount,
+    });
+
+    if (!validation.success) {
+      showToast('ERROR', validation.error.issues[0].message);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await ItemService.updateUserItemUnits(
+        item.id, 
+        validation.data.units
+      );
+
+      if (!response.success) throw new Error('Unable to update item units');
+
+      setItem(prev => prev 
+        ? {
+          ...prev,
+          unitsLoggedUserHas: validation.data.units,
+        } : null
+      );
+
+      setIsEditingUnits(false);
+      showToast('SUCCESS', response.message);     
+    } catch (error: unknown) {
+      showToast('ERROR', handleAxiosError(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const validateNewUnits = (units: number): boolean => {
+    const result = updateUnitsSchema.safeParse({ units });
+
+    if (!result.success) {
+      showToast('ERROR', result.error.issues[0].message);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleOnBlurUnitsInput = () => {
+    if (itemNewUnitsAmountOnInput === '') {
+      setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
+      return;
+    }
+
+    const amount = Number(itemNewUnitsAmountOnInput);
+
+    if (!validateNewUnits(amount)) {
+      setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
+      return;
+    }
+
+    setItemNewUnitsAmount(amount);
+  };
 
   const ITEMS_DESCRIPTIVE_INFOS_MAP: Record<string, string | number> = {
-    'Name:'                    : 'Fire axe',
-    'Category:'                : 'Candy',
-    'State:'                   : 'Loose',
-    'Original price:'          : toLumberBucksFormat(14000),
-    'Average market price:'    : toLumberBucksFormat(35000),
-    'Average truckload price:' : toLumberBucksFormat(3500000),
-    'Average truckload price (1x1):' : toLumberBucksFormat(4500000),
-    'Release year:'            : 2016,
-    'Units you have:'          : 324,
-    'Description:'             : `"Cut a little wood, cut a lot of wood. You're a lumber person, and you know how to get the job done."`,
+    'Name:'                          : item?.name!,
+    'Category:'                      : ITEMS_CATEGORY_MAP[item?.category!],
+    'State:'                         : ITEMS_STATE_MAP[item?.state!],
+    'Original price:'                : toLumberBucksFormat(item?.originalPrice!),
+    'Average market price:'          : toLumberBucksFormat(item?.averageMarketPrice!),
+    'Average truckload price:'       : toLumberBucksFormat(item?.averageTruckloadPrice!),
+    'Average truckload price (1x1):' : toLumberBucksFormat(item?.averageTruckloadPrice1x1!),
+    'Release year:'                  : item?.releaseYear!,
+    'Units you have:'                : item?.unitsLoggedUserHas!,
+    'Description:'                   : `"${item?.description ?? ''}"`,
   };
 
   const tagColorByCategory: Record<Exclude<ItemsCategoryLabel, 'Category'>, string> = {
@@ -55,13 +156,15 @@ const ItemDetails = (): React.JSX.Element => {
     Loose : styles.loose,
   };
 
+  const isWoodCategory = item?.category === 'WOOD';
+
   return (
     <Layout>
       <>
-      { imageExpand &&
+      { (imageExpand && item) &&
         <ImageExpand
-          imageURL='https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/54/THUMBBOXfireaxe.png/revision/latest?cb=20220117183957'
-          label='Fire axe'
+          imageURL={item.imageURL}
+          label={item.name}
           onClick={() => setImageExpand(false)}
         />
       }
@@ -80,64 +183,152 @@ const ItemDetails = (): React.JSX.Element => {
           />
         </div>
 
-        <div className={styles.main_infos_container}>
-          <figure 
-          role='button'
-          onClick={() => setImageExpand(true)}
-          className={styles.item_image_container}
-          >
-            <img 
-              className={styles.item_image}
-              src="https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/54/THUMBBOXfireaxe.png/revision/latest?cb=20220117183957" 
-              alt="placeholder" 
-            />
-          </figure>
+        {(loading && !item) && <LoadingState label='item details'/> }
 
-          <section className={styles.item_descriptive_infos_container}>
-            <dl>
-              { Object.entries(ITEMS_DESCRIPTIVE_INFOS_MAP).map(([label, detail]) => {
-                
-                const moneyClassName = 
-                  label === 'Original price:'          || 
-                  label === 'Average market price:'    || 
-                  label === 'Average truckload price:' || 
-                  label === 'Average truckload price (1x1):'
-                ;
+        {(!loading && error) && <ErrorState error={error}/>}
 
-                const stateCategoryClassName =
-                  label === 'Category:'
-                  ? `${tagColorByCategory[detail as Exclude<ItemsCategoryLabel, 'Category'>]} ${styles.category_state_tag}`
-                  : label === 'State:'
-                  ? `${tagColorByState[detail as Exclude<ItemsStateLabel, 'State'>]} ${styles.category_state_tag}`
-                  : ''
-                ;
+        {(!loading && !error && item) &&       
+          <div className={styles.main_infos_container}>
+            <figure 
+            role='button'
+            onClick={() => setImageExpand(true)}
+            className={styles.item_image_container}
+            >
+              <img 
+                className={styles.item_image}
+                src={item.imageURL} 
+                alt={item.name} 
+              />
+            </figure>
 
-                if (
-                  label === 'Average truckload price (1x1):' &&
-                  ITEMS_DESCRIPTIVE_INFOS_MAP['Category:'] !== 'Wood'
-                ) return null;          
+            <section className={styles.item_descriptive_infos_container}>
+              <dl>
+                { Object.entries(ITEMS_DESCRIPTIVE_INFOS_MAP).map(([label, detail]) => {
+                  
+                  const moneyClassName = 
+                    label === 'Original price:'          || 
+                    label === 'Average market price:'    || 
+                    label === 'Average truckload price:' || 
+                    label === 'Average truckload price (1x1):'
+                  ;
 
-                return (
-                  <div className={styles.item}>
-                    <dt>
-                      { label }
-                    </dt>
-                    
-                    <dd 
-                    data-money={ moneyClassName }
-                    data-description={label === 'Description:'}
-                    data-release-year={label === 'Release year:'}
-                    data-units-user-has={label === 'Units you have:'}
-                    className={ stateCategoryClassName }
-                    >
-                      { detail }
-                    </dd>
+                  const stateCategoryClassName =
+                    label === 'Category:'
+                    ? `${tagColorByCategory[detail as Exclude<ItemsCategoryLabel, 'Category'>]} ${styles.category_state_tag}`
+                    : label === 'State:'
+                    ? `${tagColorByState[detail as Exclude<ItemsStateLabel, 'State'>]} ${styles.category_state_tag}`
+                    : ''
+                  ;
+
+                  if (!isWoodCategory) {
+                    if (
+                      label === 'Average truckload price (1x1):' ||
+                      label === 'Average market price:' ||
+                      label === 'Release year:' ||
+                      label === 'Description:'
+                    ) return null;
+                  } if (
+                    (label === 'Average market price:' && item?.averageMarketPrice == null) ||
+                    (label === 'Release year:' && item?.releaseYear == null) ||
+                    (label === 'Description:' && !item?.description) ||
+                    (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
+                  ) return null;       
+
+                  return (
+                    <div className={styles.item}>
+                      <dt>
+                        { label }
+                      </dt>
+                      
+                      <dd 
+                      data-money={ moneyClassName }
+                      data-description={label === 'Description:'}
+                      data-release-year={label === 'Release year:'}
+                      data-units-user-has={label === 'Units you have:'}
+                      className={ stateCategoryClassName }
+                      >
+                        { detail }
+                      </dd>
+                    </div>
+                  )
+                })}
+              </dl>
+
+              <div className={styles.add_item_container}>
+                { itemNewUnitsAmount > 0 || isEditingUnits ? (
+                  <div className={styles.new_item_units_container}>
+                    <IncrementDecrementButtons
+                      scale={1.2}
+                      onDecrement={() => {
+                        setItemNewUnitsAmount(prev => Math.max(0, prev - 1));
+                        setIsEditingUnits(true);
+                      }}
+                      onIncrement={() => {
+                        setIsEditingUnits(true);
+                        setItemNewUnitsAmount(prev =>
+                          Math.min(2147483647, prev + 1)
+                        );
+                      }}
+                    />
+
+                    {isEditingUnits && (
+                      <>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={itemNewUnitsAmountOnInput}
+                        onBlur={handleOnBlurUnitsInput}
+                        onChange={(e) => {
+                          if (/^\d*$/.test(e.target.value)) {
+                            setItemNewUnitsAmountOnInput(e.target.value);
+                          }
+                        }}
+                      />
+
+                      <Button
+                        buttonStyle='DEFAULT'
+                        label='Submit'
+                        onClick={handleAddNewItemUnitsAmount}
+                        icon={() => <FaCheckCircle size={14} />}
+                        padding={{
+                          X: '20px',
+                          Y: '4px'
+                        }}
+                        colors={{
+                          background  : '#cdffba',
+                          labelBorder : '#215f09'
+                        }}
+                      />
+                      </>
+                    )}
                   </div>
-                )
-              })}
-            </dl>
-          </section>
-        </div>
+                ) : (
+                  <Button
+                    buttonStyle='DEFAULT'
+                    icon={() => <IoAddCircle />}
+                    label='Add item'
+                    onClick={() => {
+                      setIsEditingUnits(true);
+                      setItemNewUnitsAmount(prev =>
+                        Math.min(2147483647, prev + 1)
+                      );
+                    }}
+                    padding={{
+                      X: '20px',
+                      Y: '5px'
+                    }}
+                    colors={{
+                      background  : '#cdffba',
+                      labelBorder : '#215f09'
+                    }}
+                  />
+                )}
+              </div>
+            </section>
+          </div>
+        }
+
+        {(!loading && !error && !item) && <NotFoundState label='item details'/>}
       </div>
       </>
     </Layout>

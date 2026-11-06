@@ -1,14 +1,18 @@
 import React from 'react'
 import styles from './css/ItemNavCard.module.css';
-import { ITEMS_CATEGORY_MAP, type ItemsCategory } from '@shared/filters/items/itemCategory.map';
-import { ITEMS_STATE_MAP, type ItemsState } from '@shared/filters/items/itemState.map';
-import { FaMinus, FaPlus, FaStamp } from "react-icons/fa";
+import { ITEMS_CATEGORY_MAP, type ItemsCategory } from '@shared/maps/filters/items/itemCategory.map';
+import { ITEMS_STATE_MAP, type ItemsState } from '@shared/maps/filters/items/itemState.map';
+import { FaStamp } from "react-icons/fa";
 import { SiCardmarket } from 'react-icons/si';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import { Link } from 'react-router-dom';
 import type { UserItemResponse as UserItem, ItemResponse as Item } from '@shared/dtos/item.dto';
 
-type Props = Omit<Item, 'createdAt' | 'updatedAt'>;
+type Props = Item & {
+  page: 'ITEMS'
+} | UserItem & {
+  page: 'HOME/MY_ITEMS'
+};
 
 const ItemNavCard = (props:Props): React.JSX.Element => {
 
@@ -101,23 +105,16 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
         }
       </div>
       
-      <div className={styles.units_increment_decrement_container}>
-        <p className={styles.units} title='Units'>
-          { 1 }x
-        </p>
-
-        <div className={styles.increment_decrement_container}>
-          <button className={styles.increment} title='Add Unit'>
-            <FaPlus />
-          </button>
-          
-          {'|'}
-
-          <button className={styles.decrement} title='Subtract Unit'>
-            <FaMinus />
-          </button>
+      { props.page === 'HOME/MY_ITEMS' &&
+        <div className={styles.units_increment_decrement_container}>
+          <p 
+          className={styles.units} 
+          title='Units'
+          >
+            { props.units }x
+          </p>
         </div>
-      </div>
+      }
     </div>
   )
 }

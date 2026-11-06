@@ -5,9 +5,9 @@ import PageTitle from '@/components/PageTitle';
 import { LuBoxes } from 'react-icons/lu';
 import SearchBar from '@/components/SearchBar';
 import Select from '@/components/Select';
-import type { ItemsAdvancedFilter } from '@shared/filters/items/items.filter';
-import type { ItemsCategory } from '@shared/filters/items/itemCategory.map';
-import type { ItemsState } from '@shared/filters/items/itemState.map';
+import type { ItemsAdvancedFilter } from '@shared/maps/filters/items/items.filter';
+import type { ItemsCategory } from '@shared/maps/filters/items/itemCategory.map';
+import type { ItemsState } from '@shared/maps/filters/items/itemState.map';
 import ItemNavCard from '@/components/ItemNavCard';
 import type { ItemResponse } from '@shared/dtos/item.dto';
 import type { PaginatedResponse } from '@shared/dtos/pagination.dto';
@@ -113,7 +113,7 @@ const Items = (): React.JSX.Element => {
           />
 
           <Select
-            selectConfig="ITEMS_SUBCATEGORY_FILTER"
+            selectConfig="ITEMS_STATE_FILTER"
             onSelect={(filter) => handleSubcategoryFilter(filter as ItemsState)}
             flex={0.67}
           />
@@ -143,7 +143,10 @@ const Items = (): React.JSX.Element => {
                 className={styles.li}
                 key={item.id}
                 >
-                  <ItemNavCard { ...item } />
+                  <ItemNavCard 
+                    page='ITEMS'
+                    { ...item } 
+                  />
                 </li>
               ))}
             </ul>

@@ -1,81 +1,101 @@
 import type { Request, Response } from "express";
 import { ItemService } from "./item.service.js";
-import { ItemCategory, ItemState } from "@backend/generated/prisma/enums.js";
-import { ITEMS_ADVANCED_FILTER_MAP_KEYS, type ItemsAdvancedFilter } from "@shared/filters/items/items.filter.js";
+import { GetItemsQuery } from "@shared/schemas/item.schema.js";
+import { SuccessfulOperationResponse } from "@shared/dtos/operationResult.dto.js";
+import { UpdateUserItemUnitsResponse } from "@shared/dtos/item.dto.js";
 
 export class ItemController {
   
   public static async get(
-    req: Request,
-    res: Response,
-  ): Promise<void> {
+    req : Request,
+    res : Response,
+  ) {
+    const query = res.locals.validatedData as GetItemsQuery;
 
-    const page = Number(req.query["page"] ?? 1);
-    const limit = Number(req.query["limit"] ?? 30);
+    const result = await ItemService.get(
+      query.page,
+      query.limit,
+      {
+        search         : query.search,
+        category       : query.category,
+        state          : query.state,
+        advancedFilter : query.advancedFilter,
+      },
+    );
 
-    if (
-      !Number.isInteger(page) ||
-      !Number.isInteger(limit) ||
-      page < 1 ||
-      limit < 1
-    ) {
-      res.status(400).json({
-        message: "Invalid pagination parameters.",
-      });
+    return res.status(200).json(result);
+  }
 
-      return;
-    }
 
-    const search = String(req.query["search"] ?? "").trim();
 
-    const category = req.query["category"]
-      ? String(req.query["category"])
-      : undefined;
+  public static async getItemDetails(
+    req : Request,
+    res : Response,
+  ) {
+    const itemId = Number(req.params.id);
+    const userId = Number(req.authUserId);
 
-    const state = req.query["state"]
-      ? String(req.query["state"])
-      : undefined;
+    const result = await ItemService.getItemDetails(itemId, userId);
 
-    const advancedFilter = req.query["advancedFilter"]
-      ? String(req.query["advancedFilter"])
-      : undefined;
+    return res.status(200).json(result);
+  }
 
-    if (
-      category &&
-      !Object.values(ItemCategory).includes(category as ItemCategory)
-    ) {
-      res.status(400).json({ message: "Invalid category." });
 
-      return;
-    }
 
-    if (
-      state &&
-      !Object.values(ItemState).includes(state as ItemState)
-    ) {
-      res.status(400).json({ message: "Invalid state." });
+  public static async updateUserItemUnits(
+    req : Request,
+    res : Response,
+  ) {
+    const itemId = Number(req.params.id);
+    const units = Number(req.body.units);
+    const userId = Number(req.authUserId);
 
-      return;
-    }
+    const result = await ItemService.updateUserItemUnits(itemId, units, userId);
 
-    if (
-      advancedFilter &&
-      !ITEMS_ADVANCED_FILTER_MAP_KEYS.includes(
-        advancedFilter as typeof ITEMS_ADVANCED_FILTER_MAP_KEYS[number],
-      )
-    ) {
-      res.status(400).json({ message: "Invalid advanced filter." });
+    const response: SuccessfulOperationResponse<UpdateUserItemUnitsResponse> = {
+      body    : result,
+      message : `${result.name} units successfuly updated`,
+      success : true,
+    };
 
-      return;
-    }
+    return res.status(200).json(response);
+  }
 
-    const result = await ItemService.get(page, limit, {
-      search         : search || undefined,
-      category       : category as ItemCategory | undefined,
-      state          : state as ItemState       | undefined,
-      advancedFilter : advancedFilter as  Exclude<ItemsAdvancedFilter, '_'> | undefined,
-    });
 
-    res.status(200).json(result);
+
+  public static async getUserItemsFromHome(
+    req : Request,
+    res : Response,
+  ) {
+    const userId = Number(req.authUserId);
+
+    const response = await ItemService.getUserItemsFromHome(userId);
+
+    return res.status(200).json(response);
+  }
+
+
+
+  public static async getUserItems(
+    req : Request,
+    res : Response,
+  ) {
+    const userId = Number(req.authUserId);
+
+    const query = res.locals.validatedData as GetItemsQuery;
+
+    const result = await ItemService.getUserItems(
+      userId,
+      query.page,
+      query.limit,
+      {
+        search         : query.search,
+        category       : query.category,
+        state          : query.state,
+        advancedFilter : query.advancedFilter,
+      },
+    );
+
+    return res.status(200).json(result);
   }
 }

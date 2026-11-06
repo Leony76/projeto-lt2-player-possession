@@ -96,7 +96,7 @@ export class UserService {
   ): Promise<EditLumberBucksResponse> {
     if (!userId) {
       throw new APIError(401, "User not authenticated");
-    }  if (!lumberBucks) {
+    }  if (lumberBucks === null) {
       throw new APIError(400, "No lumber bucks amount was provided");
     }
 

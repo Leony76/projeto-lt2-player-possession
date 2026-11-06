@@ -1,21 +1,5 @@
-import type { ItemsCategory } from "@shared/filters/items/itemCategory.map";
-import type { ItemsState } from "@shared/filters/items/itemState.map";
-
-export type UserItemRequest = {};
-
-
-export type UserItemResponse = {
-  readonly   id : number; 
-  imageURL      : string;
-  name          : string;
-  category      : Exclude<ItemsCategory, '_'    >;
-  state         : Exclude<ItemsState, '_' >;
-  description   : string;
-  originalPrice : number;
-  marketPrice   : number;
-  units         : number;
-};
-
+import type { ItemsCategory } from "@shared/maps/filters/items/itemCategory.map";
+import type { ItemsState } from "@shared/maps/filters/items/itemState.map";
 
 export type ItemRequest = {};
 
@@ -28,9 +12,36 @@ export type ItemResponse = {
   description              : string | null;
   originalPrice            : number;
   averageMarketPrice       : number | null;
+};
+
+
+
+export type UserItemRequest = {};
+
+export type UserItemResponse = ItemResponse & {
+  units : number;
+};
+
+
+export type ItemDetailsRequest = {};
+
+export type ItemDetailsResponse = {
+  readonly id              : number; 
+  imageURL                 : string;
+  name                     : string;
+  category                 : Exclude<ItemsCategory, '_'    >;
+  state                    : Exclude<ItemsState, '_' >;
+  description              : string | null;
+  originalPrice            : number;
+  averageMarketPrice       : number | null;
   averageTruckloadPrice    : number;
   averageTruckloadPrice1x1 : number | null;
   releaseYear              : number | null;
-  createdAt                : Date;
-  updatedAt                : Date;
+
+  unitsLoggedUserHas : number;
 };
+
+export type UpdateUserItemUnitsResponse = {
+  units : number;
+  name  : string; 
+}

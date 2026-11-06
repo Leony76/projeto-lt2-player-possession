@@ -20,3 +20,7 @@ export const ITEMS_CATEGORY_MAP = {
 
 export type ItemsCategory = keyof typeof ITEMS_CATEGORY_MAP;
 export type ItemsCategoryLabel = typeof ITEMS_CATEGORY_MAP[ItemsCategory];
+
+export const ITEMS_CATEGORY_MAP_KEYS = Object.keys(ITEMS_CATEGORY_MAP)
+  .filter((key) => key !== '_') as Exclude<ItemsCategory, '_'>[]
+;
