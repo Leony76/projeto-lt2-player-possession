@@ -7,8 +7,8 @@ import { FaArrowLeft } from 'react-icons/fa'
 import { useNavigate, useParams } from 'react-router-dom'
 import ImageExpand from '@/components/ImageExpand'
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util'
-import type { ItemsCategoryLabel } from '@/maps/select/filters/ItemCategory.map'
-import type { ItemsStateLabel } from '@/maps/select/filters/ItemSubcategory.map'
+import type { ItemsCategoryLabel } from '@shared/filters/items/itemCategory.map'
+import type { ItemsStateLabel } from '@shared/filters/items/itemState.map'
 
 const ItemDetails = (): React.JSX.Element => {
 

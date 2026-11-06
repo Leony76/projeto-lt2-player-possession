@@ -1,0 +1,57 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .pagination_numbers {
+    color: #761b2384;
+    font-size: small;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    
+    span {
+      font-size: medium;
+      color: #761B23;
+      font-weight: 600;
+    }
+  }
+
+  button {
+    background-color: #266830;
+    border: 1px solid  #d2ffc3;
+    color: #d2ffc3;
+    padding: 6px 8px;
+    border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    transition: 0.25s ease;
+
+    cursor: pointer;
+
+    &:hover { 
+      filter: brightness(1.2);
+    }
+    &:active {
+      filter: brightness(0.9);
+    }
+
+    div {
+      display: flex;
+      margin-top: -2px;
+    }
+  }
+
+  span {
+
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}

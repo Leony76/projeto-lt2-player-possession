@@ -1,6 +1,6 @@
-import { ITEMS_CATEGORY_MAP } from "./filters/ItemCategory.map";
-import { ITEMS_STATE_MAP } from "./filters/ItemSubcategory.map";
-import { ITEMS_ADVANCED_FILTER_MAP } from "./filters/items.filter";
+import { ITEMS_CATEGORY_MAP } from "@shared/filters/items/itemCategory.map";
+import { ITEMS_STATE_MAP } from "@shared/filters/items/itemState.map";
+import { ITEMS_ADVANCED_FILTER_MAP } from "@shared/filters/items/items.filter";
 
 export const SELECT_CONFIG_MAP = {
   ITEMS_ADVANCED_FILTER    : ITEMS_ADVANCED_FILTER_MAP,

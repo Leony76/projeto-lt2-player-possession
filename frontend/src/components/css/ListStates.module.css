@@ -1,0 +1,36 @@
+.loading_items {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  div {
+    display: flex;
+  }
+
+  span {
+    color: #9F3949;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+.load_items_error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: red;
+
+  div {
+    display: flex;
+  }
+}
+
+.no_items_found {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: gray;
+
+  div {
+    display: flex;
+  }
+}

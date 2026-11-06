@@ -54,13 +54,14 @@ model Item {
   category                ItemCategory
   state                   ItemState
 
-  originalPrice           Int        @map("original_price")
-  averageMarketPrice      Int        @map("average_market_price")
-  averageTruckloadPrice   Int        @map("average_truckload_price")
+  originalPrice              Int     @map("original_price")
+  averageMarketPrice         Int?    @map("average_market_price")
+  averageTruckloadPrice      Int     @map("average_truckload_price")
+  averageTruckloadPrice1x1   Int?    @map("average_truckload_price_1x1")
 
-  releaseYear             Int        @map("release_year")
+  releaseYear             Int?       @map("release_year")
   
-  description             String 
+  description             String? 
 
   imageURL                String     @map("image_url")
 
@@ -83,7 +84,7 @@ enum ItemCategory {
   GAME
   HOME
   PUMPKIN
-  WOBBLE_BOBBLES
+  WOBBLE_BOBBLE
   VEHICLE 
   MISCELLANEOUS
   LOGIC
