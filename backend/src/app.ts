@@ -5,6 +5,7 @@ import AuthRoutes from "./modules/auth/auth.routes.js";
 import { errorMiddleware } from './middlewares/error.middleware.js';
 import UserRoutes from "./modules/user/user.routes.js";
 import ItemRoutes from "./modules/item/item.routes.js";
+import ContactRoutes from "./modules/contact/contact.routes.js";
 
 const app = express();
 
@@ -16,9 +17,10 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/auth", AuthRoutes);
-app.use("/api/user", UserRoutes);
-app.use("/api/item", ItemRoutes);
+app.use("/api/auth"    , AuthRoutes);
+app.use("/api/user"    , UserRoutes);
+app.use("/api/item"    , ItemRoutes);
+app.use("/api/contact" , ContactRoutes);
 
 app.use(errorMiddleware);
 

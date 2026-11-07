@@ -4,6 +4,7 @@ import styles from './css/SectionTitle.module.css';
 type Props = {
   icon  : React.ElementType;
   title : string;
+  size? : `${number}px`;
 };
 
 const SectionTitle = (props:Props): React.JSX.Element => {
@@ -14,8 +15,16 @@ const SectionTitle = (props:Props): React.JSX.Element => {
     <h2 
     className={styles.section_title} 
     title={props.title}
+    style={{ 
+      ...(props.size && { fontSize: props.size })  
+    }}
     >
-      <div className={styles.icon}>
+      <div 
+      className={styles.icon}
+      style={{ 
+        ...(props.size && { fontSize: props.size })  
+      }}
+      >
         <Icon/> 
       </div>
       

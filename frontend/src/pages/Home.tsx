@@ -13,6 +13,9 @@ import type { UserItemResponse as UserItems } from '@shared/dtos/item.dto';
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
 import { ItemService } from '@/services/item.service';
 import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
+import SectionTitle from '@/components/SectionTitle';
+import { BiSolidContact } from 'react-icons/bi';
+import { LuBoxes } from 'react-icons/lu';
 
 const Home = (): React.JSX.Element => {
 
@@ -44,9 +47,11 @@ const Home = (): React.JSX.Element => {
       
         <section className={styles.contacts}>
           <div className={styles.label_see_all_container}>
-            <h2 className={styles.label} title={`Contacts (${67})`}>
-              Contacts (67)
-            </h2>
+            <SectionTitle
+              title='My Contacts (67)'
+              icon={() => <BiSolidContact />}
+              size='21px'
+            />
 
             <SeeAllLink to='/my-contacts'/>
           </div>
@@ -57,14 +62,16 @@ const Home = (): React.JSX.Element => {
                 <AddContactButton/>
               </li>
               
-              {[0,1,2,3,4,5,6,7].map((index) => (
+              {[0,1].map((index) => (
                 <li 
                 className={styles.li}
                 key={index}
                 >
                   <ContactCard
+                    display='SIMPLE'
                     profileImageURL={imgPlaceholder}
                     username='[ Placeholder ]'
+                    userId={3}
                   />
                 </li>
               ))}
@@ -74,9 +81,11 @@ const Home = (): React.JSX.Element => {
 
         <section className={styles.my_items}>
           <div className={styles.label_see_all_container}>
-            <h2 className={styles.label} title='My Items'>
-              My Items
-            </h2>
+            <SectionTitle
+              icon={() => <LuBoxes/>}
+              title='My Items'
+              size='21px'
+            />
             
             { items.length > 5 && <SeeAllLink to='/my-items'/>}       
           </div>

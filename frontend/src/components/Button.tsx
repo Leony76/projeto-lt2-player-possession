@@ -10,14 +10,21 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   icon       ?: React.ElementType;
   iconSize   ?: number;
   loading    ?: boolean;
+
   padding    ?: {
     X?: `${number}px`;
     Y?: `${number}px`;
-  },
+  };
+
   colors     ?: {
     labelBorder : string;
     background  : string;
-  }
+  };
+
+  brightness ?: {
+    hover ?: number;
+    active?: number;
+  };
 };
 
 const Button = ({
@@ -28,6 +35,7 @@ const Button = ({
   padding,
   iconSize,
   loading,
+  brightness,
   type = "button",
   disabled,
   ...rest
@@ -60,10 +68,14 @@ const Button = ({
     style={{ 
       borderColor     : colors?.labelBorder,
       backgroundColor : colors?.background,
+
+      '--hover-brightness'  : brightness?.hover ?? 0.95,
+      '--active-brightness' : brightness?.active ?? 0.90,
+
       ...(padding && { 
         padding: `${padding.Y ?? '0px'} ${padding.X ?? '0px'}` 
       })
-    }}
+    } as React.CSSProperties }
     {...rest} 
     >
       { loading ? (

@@ -1,4 +1,4 @@
-.container {   
+.simple_container {   
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -43,5 +43,122 @@
     white-space: nowrap;      
     overflow: hidden;         
     text-overflow: ellipsis;
+  }      
+}
+
+
+
+.detailed_container {   
+  display: flex;
+  gap: 16px;
+  padding: 8px 12px;
+  background-color: #cc8d691b;
+  color: #CC8E69;
+  cursor: default;
+  text-decoration: none;
+  transition: 0.25s ease;
+  background-color: #F8F0EB;
+  border: 1px solid #CC8E69;
+
+  border-radius: 8px;
+
+  &:hover {
+    scale: 1.025;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.192);
+  } 
+  &:active {
+    scale: 1;
+  }
+
+  .profile_image_container {
+    border: 1px solid #CC8E69;
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    
+    .profile_image {
+      padding: 2px;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .descriptive_infos_container {
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      list-style: none;
+
+      .contact_actions_container {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        & > span {
+          height: fit-content;
+          color: #CC8E69;
+        }
+
+        .contacts_label_being_contacts {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          color: #559367;
+          font-weight: 600;
+          font-size: 20px;
+          font-style: italic;
+
+          span {
+            font-size: 16px;
+          }
+        }
+
+        .contacts_label_pending {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          color: #caa05d;
+          font-weight: 600;
+          font-size: 20px;
+          font-style: italic;
+
+          span {
+            font-size: 16px;
+          }
+        }
+      }
+      
+      li {
+        span {
+          font-size: small;
+        }
+
+        h4 {
+          max-width: 160px;       
+          white-space: nowrap;      
+          overflow: hidden;         
+          text-overflow: ellipsis;
+          color: #761B23;
+
+          .link {
+            color: #761B23;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+      .joined_at_total_items_container {
+        margin-bottom: 4px;
+      }
+    }
   }      
 }

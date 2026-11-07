@@ -9,6 +9,8 @@ import Profile from './pages/Profile';
 import Items from './pages/Items';
 import MyItems from './pages/MyItems';
 import ItemDetails from './pages/ItemDetails';
+import ContactProfile from './pages/ContactProfile';
+import Contacts from './pages/Contacts';
 
 function App() {
   return (
@@ -28,16 +30,16 @@ function App() {
           <Route 
             path="/home" 
             element={ <Home /> } 
-          />
-
-          <Route 
-            path="/about" 
-            element={ <About /> } 
-          />
+          />     
 
           <Route 
             path="/profile" 
             element={ <Profile /> } 
+          />
+
+          <Route 
+            path="/contact/:id" 
+            element={ <ContactProfile /> } 
           />
 
           <Route 
@@ -53,6 +55,16 @@ function App() {
           <Route
             path="/item/:id"
             element={<ItemDetails />}
+          />
+
+          <Route
+            path="/contacts"
+            element={<Contacts />}
+          />
+
+          <Route 
+            path="/about" 
+            element={ <About /> } 
           />
         </Route>
       </Routes>

@@ -10,7 +10,7 @@ import { LoadingState, ErrorState, NotFoundState } from '@/components/ListStates
 import PaginationNavButtons from '@/components/PaginationNavButtons';
 import { ItemService } from '@/services/item.service';
 import { normalizeFilter } from '@/utils/normalizaFilter.util';
-import type { ItemResponse, UserItemResponse as UserItems } from '@shared/dtos/item.dto';
+import type { UserItemResponse as UserItems } from '@shared/dtos/item.dto';
 import type { PaginatedResponse } from '@shared/dtos/pagination.dto';
 import type { ItemsCategory } from '@shared/maps/filters/items/itemCategory.map';
 import type { ItemsAdvancedFilter } from '@shared/maps/filters/items/items.filter';
@@ -32,9 +32,9 @@ const MyItems = (): React.JSX.Element => {
 
   const [search, setSearch] = useState<string>("");
 
-  const [itemsAdvancedFilter    , setItemsAdvancedFilter    ] = useState<ItemsAdvancedFilter | null>(null);
-  const [itemsCategoryFilter    , setItemsCategoryFilter    ] = useState<ItemsCategory | null>(null);
-  const [itemsSubcategoryFilter , setItemsSubcategoryFilter ] = useState<ItemsState | null>(null);
+  const [itemsAdvancedFilter  , setItemsAdvancedFilter    ] = useState<ItemsAdvancedFilter | null>(null);
+  const [itemsCategoryFilter  , setItemsCategoryFilter    ] = useState<ItemsCategory | null>(null);
+  const [itemsStateFilter , setItemsStateFilter ] = useState<ItemsState | null>(null);
 
   useEffect(() => {
 
@@ -50,7 +50,7 @@ const MyItems = (): React.JSX.Element => {
           limit          : ITEMS_PER_PAGE,
           search         : search || undefined,
           category       : normalizeFilter(itemsCategoryFilter),
-          state          : normalizeFilter(itemsSubcategoryFilter),
+          state          : normalizeFilter(itemsStateFilter),
           advancedFilter : normalizeFilter(itemsAdvancedFilter),
         }, controller.signal);
 
@@ -72,7 +72,7 @@ const MyItems = (): React.JSX.Element => {
     page,
     search,
     itemsCategoryFilter,
-    itemsSubcategoryFilter,
+    itemsStateFilter,
     itemsAdvancedFilter,
   ]);
 
@@ -86,8 +86,8 @@ const MyItems = (): React.JSX.Element => {
     setPage(1);
   };
 
-  const handleSubcategoryFilter = (filter: ItemsState): void => {
-    setItemsSubcategoryFilter(filter);
+  const handleStateFilter = (filter: ItemsState): void => {
+    setItemsStateFilter(filter);
     setPage(1);
   };
 
@@ -114,7 +114,7 @@ const MyItems = (): React.JSX.Element => {
 
           <Select
             selectConfig="ITEMS_STATE_FILTER"
-            onSelect={(filter) => handleSubcategoryFilter(filter as ItemsState)}
+            onSelect={(filter) => handleStateFilter(filter as ItemsState)}
             flex={0.67}
           />
 

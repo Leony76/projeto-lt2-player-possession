@@ -6,6 +6,9 @@
   cursor: pointer;
   width: 100%;
   transition: 0.25s ease;
+
+  --hover-brightness: 0.95;
+  --active-brightness: 0.90;
 }
 
 .container_form_style {
@@ -30,11 +33,11 @@
   }
 
   &:hover {
-    filter: brightness(0.95);
+    filter: brightness(var(--hover-brightness));
   }
-  
+
   &:active {
-    filter: brightness(0.90);
+    filter: brightness(var(--active-brightness));
   }
 }
 
@@ -61,11 +64,11 @@
   }
 
   &:hover {
-    filter: brightness(0.95);
+    filter: brightness(var(--hover-brightness));
   }
-  
+
   &:active {
-    filter: brightness(0.90);
+    filter: brightness(var(--active-brightness));
   }
 }
 

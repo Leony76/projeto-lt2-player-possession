@@ -17,16 +17,41 @@ model User {
   name            String   @unique
 
   profileImageURL String?  @map("profile_image_url")
-  lumberBucks     Int      @map("lumber_bucks") @default(0)
+  lumberBucks     Int      @default(0) @map("lumber_bucks")
 
   passwordHash    String   @map("password_hash")
 
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
-  items           UserItem[]   
+  items                   UserItem[]
+
+  sentContactRequests     Contact[]  @relation("ContactRequester")
+  receivedContactRequests Contact[]  @relation("ContactAddressee")
 
   @@map("users")
+}
+
+model Contact {
+  id Int @id @default(autoincrement())
+
+  requesterId Int @map("requester_id")
+  addresseeId Int @map("addressee_id")
+
+  status ContactStatus @default(PENDING)
+
+  requester User @relation("ContactRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee User @relation("ContactAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([requesterId, addresseeId])
+
+  @@index([requesterId, status])
+  @@index([addresseeId, status])
+
+  @@map("contacts")
 }
 
 model UserItem {
@@ -71,6 +96,12 @@ model Item {
   users         UserItem[]           
 
   @@map("items")
+}
+
+enum ContactStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 enum ItemCategory {
