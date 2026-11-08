@@ -46,6 +46,9 @@
 .container_default_style {
   composes: button_main_composition;
 
+  --icon-margin-bottom: 0px;
+  --icon-margin-top: 0px;
+
   gap: 2px;
   border: 1px solid #98785F;
   background-color: #EAB892;
@@ -60,7 +63,9 @@
   .icon {
     color: #98785F;
     font-size: 16px;
-    margin-bottom: -4px;
+    
+    margin-bottom: var(--icon-margin-bottom);
+    margin-top: var(--icon-margin-top);
   }
 
   &:hover {

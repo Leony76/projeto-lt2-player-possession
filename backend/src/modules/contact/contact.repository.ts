@@ -6,18 +6,17 @@ import { GetContactsFilters } from "@shared/maps/filters/contacts/getContacts.ty
 export class ContactRepository {
 
   public static async get(
-    userId: number,
-    page: number,
-    limit: number,
-    filters: GetContactsFilters,
+    userId  : number,
+    page    : number,
+    limit   : number,
+    filters : GetContactsFilters,
   ) {
     const skip = (page - 1) * limit;
 
     const searchCondition = filters.search
-      ? Prisma.sql`
-          AND u.name ILIKE ${`%${filters.search}%`}
-        `
-      : Prisma.empty;
+      ? Prisma.sql` AND u.name ILIKE ${`%${filters.search}%`}`
+      : Prisma.empty
+    ;
 
     let orderBy: Prisma.Sql;
 
@@ -67,17 +66,17 @@ export class ContactRepository {
         break;
     }
 
-    const [contacts, totalContacts] = await prisma.$transaction([
+    const [contacts, totalUsers] = await prisma.$transaction([
       prisma.$queryRaw<
         {
-          id: number;
-          name: string;
-          profileImageURL: string | null;
-          joinedAt: Date;
-          totalItems: number;
-          lumberBucks: number;
-          totalContacts: number;
-          loggedUserContactStatus: string;
+          id   : number;
+          name : string;
+          profileImageURL : string | null;
+          joinedAt : Date;
+          totalItems    : number;
+          // lumberBucks   : number;
+          // totalContacts : number;
+          loggedUserContactStatus : 'CONTACT' | 'PENDING' | 'NOT_CONTACT';
         }[]
       >(Prisma.sql`
         SELECT
@@ -85,25 +84,25 @@ export class ContactRepository {
           u.name,
           u.profile_image_url AS "profileImageURL",
           u.created_at AS "joinedAt",
-          u.lumber_bucks AS "lumberBucks",
+          -- u.lumber_bucks AS "lumberBucks",
 
           COALESCE(items.total, 0)::float8 AS "totalItems",
 
-          COALESCE(friends.total, 0)::int AS "totalContacts",
+          -- COALESCE(user_contacts.total, 0)::int AS "totalContacts",
 
           CASE
-            WHEN f.status = 'ACCEPTED'
-              THEN 'FRIEND'
+            WHEN c.status = 'CONTACT'
+              THEN 'CONTACT'
 
-            WHEN f.status = 'PENDING'
-              AND f.requester_id = ${userId}
+            WHEN c.status = 'PENDING'
+              AND c.requester_id = ${userId}
               THEN 'REQUEST_SENT'
 
-            WHEN f.status = 'PENDING'
-              AND f.addressee_id = ${userId}
+            WHEN c.status = 'PENDING'
+              AND c.addressee_id = ${userId}
               THEN 'REQUEST_RECEIVED'
 
-            ELSE 'NONE'
+            ELSE 'NOT_CONTACT'
           END AS "loggedUserContactStatus"
 
         FROM users u
@@ -117,19 +116,19 @@ export class ContactRepository {
 
         LEFT JOIN LATERAL (
           SELECT COUNT(*) AS total
-          FROM friendships fr
-          WHERE fr.status = 'ACCEPTED'
+          FROM contacts ct
+          WHERE ct.status = 'CONTACT'
             AND (
-              fr.requester_id = u.id
-              OR fr.addressee_id = u.id
+              ct.requester_id = u.id
+              OR ct.addressee_id = u.id
             )
-        ) friends ON true
+        ) user_contacts ON true
 
-        LEFT JOIN friendships f
+        LEFT JOIN contacts c
           ON (
-            (f.requester_id = ${userId} AND f.addressee_id = u.id)
-            OR
-            (f.requester_id = u.id AND f.addressee_id = ${userId})
+            (c.requester_id = ${userId} AND c.addressee_id = u.id)
+          OR
+            (c.requester_id = u.id AND c.addressee_id = ${userId})
           )
 
         WHERE u.id <> ${userId}
@@ -143,15 +142,13 @@ export class ContactRepository {
       `),
 
       prisma.user.count({
-        where: {
-          id: {
-            not: userId,
-          },
+        where : {
+          id  : { not: userId },
 
           ...(filters.search && {
             name: {
-              contains: filters.search,
-              mode: 'insensitive',
+              contains : filters.search,
+              mode     : 'insensitive',
             },
           }),
         },
@@ -160,9 +157,9 @@ export class ContactRepository {
 
     return {
       contacts,
-      totalContacts,
+      totalUsers,
     };
-  } 
+  }
 
 
 
@@ -175,6 +172,9 @@ export class ContactRepository {
         requesterId,
         addresseeId,
       },
+      select: {
+        status : true,
+      }
     });
   }
 
@@ -232,7 +232,7 @@ export class ContactRepository {
   ) {
     return await prisma.contact.findMany({
       where: {
-        status: "ACCEPTED",
+        status: "CONTACT",
         OR: [
           { requesterId : userId },
           { addresseeId : userId },
@@ -259,41 +259,46 @@ export class ContactRepository {
 
 
 
-  public static async respondContactRequest(
-    contactRequestId : number,
-    userId            : number,
-    accepted          : boolean,
+  public static async acceptContactRequest(
+    userId    : number,
+    contactId : number,
   ) {
-    const result = await prisma.contact.updateMany({
+    return await prisma.contact.updateMany({
       where: {
-        id          : contactRequestId,
+        requesterId : contactId,
         addresseeId : userId,
         status      : "PENDING",
       },
       data: {
-        status : accepted ? "ACCEPTED" : "REJECTED",
+        status : "CONTACT",
       },
     });
-
-    if (result.count === 0) {
-      throw new APIError(404, "Contact request not found or already processed");
-    }
-
-    return {
-      contactRequestId,
-      status : accepted ? "ACCEPTED" : "REJECTED",
-    };
   }
 
 
 
-  public static async removeContact(
+  public static async denyContactRequest(
     userId    : number,
     contactId : number,
   ) {
-    const result = await prisma.contact.deleteMany({
+    return await prisma.contact.deleteMany({
       where: {
-        status : "ACCEPTED",
+        status      : "PENDING",
+        requesterId : contactId,
+        addresseeId : userId,
+      },
+    });
+  }
+
+
+
+  public static async undoContactRequest(
+    userId    : number,
+    contactId : number,
+  ) {
+    return await prisma.contact.deleteMany({
+      where: {
+        status : "CONTACT",
         OR: [
           {
             requesterId : userId,
@@ -306,10 +311,6 @@ export class ContactRepository {
         ],
       },
     });
-
-    if (result.count === 0) {
-      throw new APIError(404, "Contact not found");
-    }
   }
 
 
@@ -318,27 +319,14 @@ export class ContactRepository {
     userId    : number,
     contactId : number,
   ) {
-    const result = await prisma.contact.deleteMany({
+    return await prisma.contact.deleteMany({
       where: {
-        status : "PENDING",
-        OR: [
-          {
-            requesterId : userId,
-            addresseeId : contactId,
-          },
-          {
-            requesterId : contactId,
-            addresseeId : userId,
-          },
-        ],
+        requesterId : userId,
+        addresseeId : contactId,
+        status      : 'PENDING',
       },
     });
-
-    if (result.count === 0) {
-      throw new APIError(404, "Contact not found");
-    }
   }
-
 
 
   public static async getUsers(
@@ -382,5 +370,165 @@ export class ContactRepository {
       users,
       totalUsers,
     };
+  }
+
+
+
+  public static async getContactDetails(
+    contactId : number,
+    userId    : number,
+  ) {
+    return await prisma.$transaction( async(tx) => {
+      const [
+        contact,
+        itemsStats,
+        contactsStats,
+        loggedUserRelation,
+      ] = await Promise.all([
+
+        tx.user.findUnique({
+          where  : { id: contactId },
+          select : {
+            id   : true,
+            name : true,
+            profileImageURL : true,
+            lumberBucks     : true,
+            createdAt       : true,
+
+            items: {
+              where: {
+                units : {gt : 0 },
+              },
+              select : {
+                units : true,
+                item  : {
+                  select: {
+                    id          : true,
+                    name        : true,
+                    imageURL    : true,
+                    category    : true,
+                    state       : true,
+                    description : true,
+                    originalPrice      : true,
+                    averageMarketPrice : true,
+                  },
+                },
+              },
+              take : 7,
+            },
+
+            sentContactRequests: {
+              where: { status: 'CONTACT' },
+              select: {
+                addressee : {
+                  select  : {
+                    id   : true,
+                    name : true,
+                    profileImageURL : true,
+                  },
+                },
+              },
+              take: 10,
+            },
+
+            receivedContactRequests: {
+              where: {
+                status: 'CONTACT',
+              },
+              select: {
+                requester : {
+                  select  : {
+                    id   : true,
+                    name : true,
+                    profileImageURL : true,
+                  },
+                },
+              },
+              take: 10,
+            },
+          },
+        }),
+
+        tx.userItem.aggregate({
+          where: {
+            userId : contactId,
+            units : { gt : 0 },
+          },
+          _sum: { units : true },
+        }),
+
+        tx.contact.count({
+          where: { status: 'CONTACT',
+            OR: [
+              { requesterId: contactId },
+              { addresseeId: contactId },
+            ],
+          },
+        }),
+
+        tx.contact.findFirst({
+          where: {
+            OR: [
+              {
+                requesterId : userId,
+                addresseeId : contactId,
+              },
+              {
+                requesterId : contactId,
+                addresseeId : userId,
+              },
+            ],
+          },
+          select: {
+            status      : true,
+            requesterId : true,
+            addresseeId : true,
+          },
+        }),
+      ]);
+
+      if (!contact) return null;
+
+      const loggedUserContactStatus =
+        loggedUserRelation?.status === 'CONTACT'
+          ? 'CONTACT'
+          : loggedUserRelation?.status === 'PENDING'
+            ? loggedUserRelation.requesterId === userId
+              ? 'REQUEST_SENT'
+              : 'REQUEST_RECEIVED'
+            : 'NOT_CONTACT'
+      ;
+
+      const userContacts = [
+        ...contact.sentContactRequests.map((relation) => relation.addressee),
+        ...contact.receivedContactRequests.map((relation) => relation.requester),
+      ];
+
+      const normalizedItems = contact.items.map(({ item, units }) => ({
+        ...item,
+        units,
+      }));
+
+      return {
+        id   : contact.id,
+        name : contact.name,
+        profileImageURL : contact.profileImageURL,
+        lumberBucks     : contact.lumberBucks,
+        joinedAt        : contact.createdAt,
+
+        totalItems    : itemsStats._sum.units ?? 0,
+        totalContacts : contactsStats,
+
+        loggedUserContactStatus,
+
+        contacts : userContacts.map((user) => ({
+          id              : user.id,
+          profileImageURL : user.profileImageURL,
+          username        : user.name,
+        })),
+
+        items : normalizedItems,
+      };
+    });
   }
 }

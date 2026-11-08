@@ -5,7 +5,7 @@ import { FaQuestionCircle } from 'react-icons/fa'
 
 export const LoadingState = ({label} : {label: string}): React.JSX.Element => {
   return (
-    <p className={styles.loading_items}>
+    <div className={styles.loading_items}>
       <div>
         <LoadingSpinner size={20}/>
       </div>
@@ -13,7 +13,7 @@ export const LoadingState = ({label} : {label: string}): React.JSX.Element => {
       <span>
         Loading { label }...
       </span>
-    </p>
+    </div>
   )
 }
 

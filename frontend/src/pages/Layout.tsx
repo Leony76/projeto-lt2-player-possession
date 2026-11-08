@@ -152,7 +152,10 @@ const Layout = (props:Props): React.JSX.Element => {
           <nav className={styles.nav}>
             <ul className={styles.ul}>
               { navLinksConfig.map((item) => (
-                <AsideNavLink { ...item } />
+                <AsideNavLink 
+                  key={item.to} 
+                  { ...item } 
+                />
               ))}
             </ul>
           </nav>

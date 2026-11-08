@@ -66,9 +66,9 @@
     scale: 1.025;
     box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.192);
   } 
-  &:active {
+  /* &:active {
     scale: 1;
-  }
+  } */
 
   .profile_image_container {
     border: 1px solid #CC8E69;
@@ -129,6 +129,21 @@
 
           span {
             font-size: 16px;
+          }
+        }
+
+        .request_received {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          span {
+            
+          }
+
+          div {
+            display: flex;
+            gap: 8px;
           }
         }
       }

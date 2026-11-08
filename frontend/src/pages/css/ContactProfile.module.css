@@ -139,6 +139,22 @@
               font-size: 20px;
               font-style: italic;
             }
+
+            .request_received {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+
+              span {
+                color: #CC8E69;
+                font-style: italic;
+              }
+
+              div {
+                display: flex;
+                gap: 8px;
+              }
+            }
           }
         }
       }

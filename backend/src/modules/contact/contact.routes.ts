@@ -13,4 +13,40 @@ router.get(
   ContactController.get,
 );
 
+router.get(
+  "/get/:id", 
+  requireAuth,
+  ContactController.getContactDetails,
+);
+
+router.post(
+  "/:id/add-contact-request", 
+  requireAuth,
+  ContactController.addContactRequest,
+);
+
+router.patch(
+  "/:id/accept-contact-request", 
+  requireAuth,
+  ContactController.acceptContactRequest,
+);
+
+router.delete(
+  "/:id/deny-contact-request", 
+  requireAuth,
+  ContactController.denyContactRequest,
+);
+
+router.delete(
+  "/:id/cancel-contact-pending-request", 
+  requireAuth,
+  ContactController.cancelContactPendingRequest,
+);
+
+router.delete(
+  "/:id/undo-contact-request", 
+  requireAuth,
+  ContactController.undoContactRequest,
+);
+
 export default router;

@@ -15,6 +15,7 @@ import type { PaginatedResponse } from '@shared/dtos/pagination.dto';
 import type { ItemsCategory } from '@shared/maps/filters/items/itemCategory.map';
 import type { ItemsAdvancedFilter } from '@shared/maps/filters/items/items.filter';
 import type { ItemsState } from '@shared/maps/filters/items/itemState.map';
+import { handleAxiosError } from '@/utils/handleAxiosError.util';
 
 const ITEMS_PER_PAGE = 30;
 
@@ -58,7 +59,7 @@ const MyItems = (): React.JSX.Element => {
         setPagination(result.pagination);
 
       } catch (error:unknown) {
-        if (!controller.signal.aborted) setError("Unable to load items.");
+        if (!controller.signal.aborted) setError(handleAxiosError(error));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }

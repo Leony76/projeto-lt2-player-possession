@@ -49,7 +49,7 @@ export class ItemService {
     itemId : number,
     userId : number,
   ): Promise<ItemDetailsResponse> {
-     if (!userId) {
+    if (!userId) {
       throw new APIError(401, "User not authenticated");
     }  if (!itemId) {
       throw new APIError(400, "Unable to find item details");

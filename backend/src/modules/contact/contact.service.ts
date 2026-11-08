@@ -2,17 +2,18 @@ import { APIError } from "@backend/middlewares/error.middleware.js";
 import { AuthRepository } from "../auth/auth.repository.js";
 import { ContactRepository } from "./contact.repository.js";
 import { GetContactsFilters } from "@shared/maps/filters/contacts/getContacts.type.js";
-import { ContactResponse } from "@shared/dtos/contact.dto.js";
+import { ContactDetailsResponse, ContactResponse } from "@shared/dtos/contact.dto.js";
 import { PaginatedResponse } from "@shared/dtos/pagination.dto.js";
 import { ContactMapper } from "./contact.mapper.js";
+import { ContactRelationStatus } from "@shared/types/contactRelationStatus.type.js";
 
 export class ContactService {
 
   public static async get(
-    userId: number,
-    page: number,
-    limit: number,
-    filters: GetContactsFilters,
+    userId  : number,
+    page    : number,
+    limit   : number,
+    filters : GetContactsFilters,
   ): Promise<PaginatedResponse<ContactResponse>> {
 
     if (!userId) {
@@ -28,10 +29,10 @@ export class ContactService {
 
     const normalizedFilters: GetContactsFilters = {
       ...filters,
-      search: filters.search?.trim() || undefined,
+      search : filters.search?.trim() || undefined,
     };
 
-    const { contacts, totalContacts } =
+    const { contacts, totalUsers } =
       await ContactRepository.get(
         userId,
         currentPage,
@@ -39,22 +40,21 @@ export class ContactService {
         normalizedFilters,
       );
 
-    const totalPages = Math.ceil(totalContacts / pageSize);
+    const totalPages = Math.ceil(totalUsers / pageSize);
 
-    const normalizedContacts =
-      ContactMapper.toContactsResponse(contacts);
+    const normalizedContacts = ContactMapper.toContactsResponse(contacts);
 
     return {
       items: normalizedContacts,
 
       pagination: {
-        page: currentPage,
-        limit: pageSize,
-        totalItems: totalContacts,
+        page       : currentPage,
+        limit      : pageSize,
+        totalItems : totalUsers,
         totalPages,
 
-        hasNextPage: currentPage < totalPages,
-        hasPreviousPage: currentPage > 1,
+        hasNextPage     : currentPage < totalPages,
+        hasPreviousPage : currentPage > 1,
       },
     };
   }
@@ -81,7 +81,7 @@ export class ContactService {
     );
 
     if (existingContact) {
-      if (existingContact.status === "ACCEPTED") {
+      if (existingContact.status === "CONTACT") {
         throw new APIError(409, "You already have contact");
       }
 
@@ -94,5 +94,145 @@ export class ContactService {
       requesterId,
       addresseeId,
     );
+  }
+
+
+
+  public static async getContactDetails(
+    contactId : number,
+    userId    : number,
+  ): Promise<ContactDetailsResponse> {
+
+    if (!userId) {
+      throw new APIError(401, "User not authenticated");
+    } if (!Number.isInteger(contactId) || contactId <= 0) {
+      throw new APIError(400, 'Invalid contact ID');
+    }
+
+    const details = await ContactRepository.getContactDetails(contactId, userId);
+
+    if (!details) {
+      throw new APIError(404, 'Contact not found');
+    }
+
+    return ContactMapper.toContactDetailsResponse(details);
+  }
+
+
+
+  public static async addContactRequest(
+    contactId : number,
+    userId    : number,
+  ): Promise<{requestStatus: ContactRelationStatus}> {
+
+    if (!userId) {
+      throw new APIError(401, "User not authenticated");
+    } if (!Number.isInteger(contactId) || contactId <= 0) {
+      throw new APIError(400, 'Invalid contact ID');
+    }
+
+    const { status } = await ContactRepository.createContactRequest(userId, contactId);
+
+    if (!status) {
+      throw new APIError(404, 'Contact not found');
+    }
+
+    return {
+      requestStatus: status === 'PENDING'
+        ? 'REQUEST_SENT'
+        : status,
+    };
+  }
+
+
+
+  public static async acceptContactRequest(
+    contactId : number,
+    userId    : number,
+  ): Promise<{requestStatus: ContactRelationStatus}> {
+
+    if (!userId) {
+      throw new APIError(401, "User not authenticated");
+    } if (!Number.isInteger(contactId) || contactId <= 0) {
+      throw new APIError(400, 'Invalid contact ID');
+    }
+
+    const result = await ContactRepository.acceptContactRequest(userId, contactId);
+
+    if (result.count === 0) {
+      throw new APIError(404, "Contact request not found or already processed");
+    }
+
+    return { requestStatus: 'CONTACT' };
+  }
+
+
+
+  public static async denyContactRequest(
+    contactId : number,
+    userId    : number,
+  ): Promise<{requestStatus: ContactRelationStatus}> {
+
+    if (!userId) {
+      throw new APIError(401, "User not authenticated");
+    } if (!Number.isInteger(contactId) || contactId <= 0) {
+      throw new APIError(400, 'Invalid contact ID');
+    }
+
+    const result = await ContactRepository.denyContactRequest(userId, contactId);
+
+    if (result.count === 0) {
+      throw new APIError(404, "Contact request not found or already processed");
+    }
+
+    return { requestStatus: 'NOT_CONTACT' };
+  }
+
+
+
+  public static async cancelContactPendingRequest(
+    contactId : number,
+    userId    : number,
+  ): Promise<{requestStatus: ContactRelationStatus}> {
+
+    if (!userId) {
+      throw new APIError(401, "User not authenticated");
+    } if (!Number.isInteger(contactId) || contactId <= 0) {
+      throw new APIError(400, 'Invalid contact ID');
+    }
+
+    const result = await ContactRepository.cancelContactRequest(userId, contactId);
+
+    if (result.count === 0) {
+      throw new APIError(404, "Contact request not found");
+    }
+
+    return {
+      requestStatus : 'NOT_CONTACT'
+    };
+  }
+
+
+
+  public static async undoContactRequest(
+    contactId : number,
+    userId    : number,
+  ): Promise<{requestStatus: ContactRelationStatus}> {
+
+    if (!userId) {
+      throw new APIError(401, "User not authenticated");
+    } if (!Number.isInteger(contactId) || contactId <= 0) {
+      throw new APIError(400, 'Invalid contact ID');
+    }
+
+    const result = await ContactRepository.undoContactRequest(userId, contactId);
+
+    if (result.count === 0) {
+      throw new APIError(404, "Contact request not found");
+    }
+
+    return {
+      requestStatus : 'NOT_CONTACT'
+    };
   }
 }

@@ -3,7 +3,11 @@ import jwt from "jsonwebtoken";
 
 const jwtSecret = process.env["JWT_SECRET"]!;
 
-export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+export const requireAuth = (
+  req  : Request, 
+  res  : Response, 
+  next : NextFunction
+) => {
   const token = req.cookies?.["access_token"];
 
   if (!token) {

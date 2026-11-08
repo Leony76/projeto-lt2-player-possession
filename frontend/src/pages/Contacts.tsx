@@ -5,8 +5,6 @@ import PageTitle from '@/components/PageTitle';
 import imgPlaceholder from '@/assets/img/profile_image_placeholder.png';
 import SearchBar from '@/components/SearchBar';
 import Select from '@/components/Select';
-import type { ItemsState } from '@shared/maps/filters/items/itemState.map';
-import type { ItemResponse } from '@shared/dtos/item.dto';
 import type { PaginatedResponse } from '@shared/dtos/pagination.dto';
 import { normalizeFilter } from '@/utils/normalizaFilter.util';
 import PaginationNavButtons from '@/components/PaginationNavButtons';
@@ -16,20 +14,29 @@ import { toMonthDayYearTwelveHoursFormat } from '@/utils/toMonthDayYearTwelveHou
 import type { ContactsAdvancedFilter } from '@shared/maps/filters/contacts/contacts.filter';
 import { ContactService } from '@/services/contact.service';
 import type { ContactResponse } from '@shared/dtos/contact.dto';
+import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
+import { handleAxiosError } from '@/utils/handleAxiosError.util';
+import { useToast } from '@/contexts/ToastContext';
 
 const CONTACTS_PER_PAGE = 60;
 
 const Contacts = (): React.JSX.Element => {
 
+  const { showToast } = useToast();
+
   const [contacts, setContacts] = useState<ContactResponse[]>([]);
 
   const [pagination, setPagination] = useState<
-    PaginatedResponse<ItemResponse>["pagination"] | null>(null)
+    PaginatedResponse<ContactResponse>["pagination"] | null>(null)
   ;
 
   const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [isAcceptingContactRequest, setIsAcceptingContactRequest] = useState<boolean>(false);
+  const [isDeningContactRequest, setIsDeningContactRequest] = useState<boolean>(false);
+  const [isAddingContact, setIsAddingContact] = useState<boolean>(false);
 
   const [search, setSearch] = useState<string>("");
 
@@ -39,10 +46,7 @@ const Contacts = (): React.JSX.Element => {
 
     const controller = new AbortController();
 
-    const loadItems = async () => {
-      setLoading(true);
-      setError(null);
-
+    (async () => {
       try {
         const result = await ContactService.get({
           page,
@@ -55,31 +59,86 @@ const Contacts = (): React.JSX.Element => {
         setPagination(result.pagination);
 
       } catch (error:unknown) {
-        if (!controller.signal.aborted) setError("Unable to load items.");
+        if (!controller.signal.aborted) setError(handleAxiosError(error));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
-    };
-
-    loadItems();
+    })();
 
     return () => controller.abort();
 
   }, [
     page,
     search,
-    // itemsCategoryFilter,
-    // itemsSubcategoryFilter,
     contactsAdvancedFilter,
   ]);
+
+  const handleAddContact = async(
+    contactId : number
+  ): Promise<void> => {
+    try {
+      if (isAddingContact) return;
+      setIsAddingContact(true);
+      
+      const response = await ContactService.addContactRequest(contactId);
+
+      if (!response.success) {
+        throw new Error("Unable to send contact request");
+      }
+
+      setContacts(prev =>
+        prev.map(contact =>
+          contact.id === contactId
+            ? { 
+              ...contact, 
+              loggedUserContactStatus : response.body.requestStatus 
+            } : contact
+        )
+      );
+
+      showToast('INFO', response.message);   
+    } catch (error:unknown) {
+      showToast('ERROR', handleAxiosError(error));  
+    } finally {
+      setIsAddingContact(false);
+    }
+  }
+
+  const handleAcceptContactRequest = async(
+    contactId : number
+  ): Promise<void> => {
+    try {
+      if (isAcceptingContactRequest) return;
+      setIsAcceptingContactRequest(true);
+
+    } catch (error:unknown) {
+      showToast('ERROR', handleAxiosError(error));
+    } finally {
+      setIsAcceptingContactRequest(false);
+    }  
+  }
+
+  const handleDenyContactRequest = async(
+    contactId : number
+  ): Promise<void> => {
+    try {
+      if (isDeningContactRequest) return;
+      setIsDeningContactRequest(true);
+
+    } catch (error:unknown) {
+      showToast('ERROR', handleAxiosError(error));
+    } finally {
+      setIsDeningContactRequest(false);
+    }
+  }
 
   const handleSearch = (value: string): void => {
     setSearch(value);
     setPage(1);
   };
 
-  const handleSubcategoryFilter = (filter: ItemsState): void => {
-    // setItemsSubcategoryFilter(filter);
+  const handleAdvancedFilter = (filter: ContactsAdvancedFilter): void => {
+    setContactsAdvancedFilter(filter);
     setPage(1);
   };
 
@@ -101,29 +160,43 @@ const Contacts = (): React.JSX.Element => {
 
           <Select
             selectConfig="CONTACTS_ADVANCED_FILTER"
-            onSelect={(filter) => handleSubcategoryFilter(filter as ItemsState)}
+            onSelect={(filter) => handleAdvancedFilter(filter as ContactsAdvancedFilter)}
             flex={0.67}
           />
         </div>
 
         <nav className={styles.nav}>
           <ul className={styles.ul}>
-            {contacts.map((contact) => (
-              <li 
-              className={styles.li}
-              key={contact.id}
-              >
-                <ContactCard
-                  display='DETAILED'
-                  joinedAt={toMonthDayYearTwelveHoursFormat(contact.joinedAt)}
-                  profileImageURL={contact.profileImageURL ?? imgPlaceholder}
-                  username={contact.name}
-                  relationStatus={contact.loggedUserContactStatus}
-                  totalItems={contact.totalItems}
-                  userId={contact.id}
-                />
-              </li>
-            ))}
+            {loading && <LoadingState label='Contacts'/>}
+            
+            {(!loading && error) && <ErrorState error={error}/>}  
+
+            {(!loading && !error && contacts.length === 0) && <NotFoundState label='contacts'/>}
+
+            {(!loading && !error && contacts.length > 0) && (
+              contacts.map((contact) => (
+                <li 
+                className={styles.li}
+                key={contact.id}
+                >
+                  <ContactCard
+                    display='DETAILED'
+                    userId={contact.id}
+                    profileImageURL={contact.profileImageURL ?? imgPlaceholder}
+                    username={contact.name}
+                    joinedAt={toMonthDayYearTwelveHoursFormat(contact.joinedAt)}
+                    totalItems={contact.totalItems}
+                    relationStatus={contact.loggedUserContactStatus}
+                    onAddContact={handleAddContact}
+                    onAcceptContactRequest={handleAcceptContactRequest}
+                    onDenyContactRequest={handleDenyContactRequest}
+                    isAddingContact={isAddingContact}
+                    isAcceptingContactRequest={isAcceptingContactRequest}
+                    isDeningContactRequest={isDeningContactRequest}
+                  />
+                </li>
+              ))
+            )}
           </ul>
         </nav>
 

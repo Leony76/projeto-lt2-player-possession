@@ -1,7 +1,9 @@
 import { api } from "@/lib/api";
-import type { ContactResponse } from "@shared/dtos/contact.dto";
+import type { ContactDetailsResponse, ContactResponse } from "@shared/dtos/contact.dto";
+import type { SuccessfulOperationResponse } from "@shared/dtos/operationResult.dto";
 import type { PaginatedResponse } from "@shared/dtos/pagination.dto";
 import type { ContactsAdvancedFilter } from "@shared/maps/filters/contacts/contacts.filter";
+import type { ContactRelationStatus } from "@shared/types/contactRelationStatus.type";
 
 type GetContactsParams = {
   page            : number;
@@ -24,6 +26,95 @@ export class ContactService {
           { params, signal },
         );
     
+    return data;
+  }
+
+
+
+  public static async getContactDetails(
+    contactId: number,
+  ): Promise<ContactDetailsResponse> {
+
+    const { data } = await api.get<
+      ContactDetailsResponse>(
+        `/contact/get/${contactId}`
+    );
+
+    return data;
+  }
+
+
+
+  public static async addContactRequest(
+    contactId: number,
+  ): Promise<SuccessfulOperationResponse<{requestStatus: ContactRelationStatus}>> {
+
+    const { data } = await api.post<
+      SuccessfulOperationResponse<
+        {requestStatus: ContactRelationStatus}>>(
+          `/contact/${contactId}/add-contact-request`
+      );
+
+    return data;
+  }
+
+
+
+  public static async acceptContactRequest(
+    contactId : number,
+  ): Promise<SuccessfulOperationResponse<{requestStatus: ContactRelationStatus}>> {
+
+    const { data } = await api.patch<
+      SuccessfulOperationResponse<
+        {requestStatus: ContactRelationStatus}>>(
+          `/contact/${contactId}/accept-contact-request`
+      );
+
+    return data;
+  }
+
+
+
+  public static async denyContactRequest(
+    contactId: number,
+  ): Promise<SuccessfulOperationResponse<{requestStatus: ContactRelationStatus}>> {
+
+    const { data } = await api.delete<
+      SuccessfulOperationResponse<
+        {requestStatus: ContactRelationStatus}>>(
+         `/contact/${contactId}/deny-contact-request`
+      );
+
+    return data;
+  }
+
+
+
+  public static async cancelContactPendingRequest(
+    contactId: number,
+  ): Promise<SuccessfulOperationResponse<{requestStatus: ContactRelationStatus}>> {
+
+    const { data } = await api.delete<
+      SuccessfulOperationResponse<
+        {requestStatus : ContactRelationStatus}>>(
+          `/contact/${contactId}/cancel-contact-pending-request`
+      );
+
+    return data;
+  }
+
+
+
+  public static async undoContactRequest(
+    contactId: number,
+  ): Promise<SuccessfulOperationResponse<{requestStatus: ContactRelationStatus}>> {
+
+    const { data } = await api.delete<
+      SuccessfulOperationResponse<
+        {requestStatus : ContactRelationStatus}>>(
+          `/contact/${contactId}/undo-contact-request`
+      );
+
     return data;
   }
 }

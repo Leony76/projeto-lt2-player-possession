@@ -15,6 +15,7 @@ import { ItemService } from '@/services/item.service';
 import { normalizeFilter } from '@/utils/normalizaFilter.util';
 import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
 import PaginationNavButtons from '@/components/PaginationNavButtons';
+import { handleAxiosError } from '@/utils/handleAxiosError.util';
 
 const ITEMS_PER_PAGE = 30;
 
@@ -58,7 +59,7 @@ const Items = (): React.JSX.Element => {
         setPagination(result.pagination);
 
       } catch (error:unknown) {
-        if (!controller.signal.aborted) setError("Unable to load items.");
+        if (!controller.signal.aborted) setError(handleAxiosError(error));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }

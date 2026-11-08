@@ -71,6 +71,9 @@ const Profile = (): React.JSX.Element => {
                 label='Edit'
                 onClick={() => setters.setModal('EDIT_PROFILE_IMAGE')}
                 icon={() => <RiImageEditFill/>}
+                iconPosition={{
+                  bottom: '-3px'
+                }}
               />
             </div>
           </div>

@@ -38,7 +38,7 @@ model Contact {
   requesterId Int @map("requester_id")
   addresseeId Int @map("addressee_id")
 
-  status ContactStatus @default(PENDING)
+  status    ContactStatus @default(PENDING)
 
   requester User @relation("ContactRequester", fields: [requesterId], references: [id], onDelete: Cascade)
   addressee User @relation("ContactAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
@@ -99,9 +99,9 @@ model Item {
 }
 
 enum ContactStatus {
+  CONTACT
   PENDING
-  ACCEPTED
-  REJECTED
+  NOT_CONTACT
 }
 
 enum ItemCategory {
