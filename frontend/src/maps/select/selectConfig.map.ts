@@ -1,3 +1,4 @@
+import { CONTACTS_RELATION_STATUS_MAP } from "@shared/maps/filters/contacts/contactRelationStatus.filter";
 import { CONTACTS_ADVANCED_FILTER_MAP } from "@shared/maps/filters/contacts/contacts.filter";
 import { ITEMS_CATEGORY_MAP } from "@shared/maps/filters/items/itemCategory.map";
 import { ITEMS_STATE_MAP } from "@shared/maps/filters/items/itemState.map";
@@ -9,6 +10,7 @@ export const SELECT_CONFIG_MAP = {
   ITEMS_STATE_FILTER    : ITEMS_STATE_MAP,
   
   CONTACTS_ADVANCED_FILTER : CONTACTS_ADVANCED_FILTER_MAP,
+  CONTACTS_RELATION_STATUS : CONTACTS_RELATION_STATUS_MAP,
 } as const;
 
 export type SelectConfig = keyof typeof SELECT_CONFIG_MAP;

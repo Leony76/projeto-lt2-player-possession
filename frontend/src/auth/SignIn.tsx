@@ -20,6 +20,7 @@ const SignIn = (): React.JSX.Element => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -68,6 +69,7 @@ const SignIn = (): React.JSX.Element => {
             type='text'
             placeholder='ex: username_123'
             error={errors.username?.message}
+            onClear={() => setValue('username', '')}
             {...register("username")}
           />
 
@@ -76,6 +78,7 @@ const SignIn = (): React.JSX.Element => {
             type='password'
             placeholder='********'
             error={errors.password?.message}
+            onClear={() => setValue('password', '')}
             {...register("password")}
           />
 

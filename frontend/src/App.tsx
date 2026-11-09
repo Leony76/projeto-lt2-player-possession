@@ -11,6 +11,7 @@ import MyItems from './pages/MyItems';
 import ItemDetails from './pages/ItemDetails';
 import ContactProfile from './pages/ContactProfile';
 import Contacts from './pages/Contacts';
+import MyContacts from './pages/MyContacts';
 
 function App() {
   return (
@@ -60,6 +61,11 @@ function App() {
           <Route
             path="/contacts"
             element={<Contacts />}
+          />
+
+          <Route
+            path="/my-contacts"
+            element={<MyContacts />}
           />
 
           <Route 

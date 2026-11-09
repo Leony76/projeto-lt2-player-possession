@@ -1,5 +1,5 @@
 import { ItemCategory, ItemState } from "@backend/generated/prisma/enums.js";
-import { ItemDetailsResponse, UserItemResponse } from "@shared/dtos/item.dto.js";
+import { ItemDetailsResponse, UserItemFromHomeResponse, UserItemResponse } from "@shared/dtos/item.dto.js";
 
 export class ItemMapper {
 
@@ -33,24 +33,31 @@ export class ItemMapper {
 
 
   public static toUserItemsFromHomeResponse(
-    data : {
-      units: number;
-      item: {
-        id          : number;
-        category    : ItemCategory;
-        state       : ItemState;
-        description : string | null;
-        name        : string;
-        originalPrice      : number;
-        averageMarketPrice : number | null;
-        imageURL           : string;
-      };
-    }[],
-  ): UserItemResponse[] {
-    return data.map(({ item, units }) => ({
-      ...item,
-      units,
-    }));
+    data: {
+      items: {
+        units : number;
+        item  : {
+          id          : number;
+          category    : ItemCategory;
+          state       : ItemState;
+          description : string | null;
+          name        : string;
+          originalPrice      : number;
+          averageMarketPrice : number | null;
+          imageURL           : string;
+        };
+      }[];
+      totalItems: number;
+    },
+  ): UserItemFromHomeResponse {
+    return {
+      items: data.items.map(({ item, units }) => ({
+        ...item,
+        units,
+      })),
+
+      totalItems: data.totalItems,
+    };
   }
 
 

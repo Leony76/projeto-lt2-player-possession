@@ -1,7 +1,7 @@
 import type { PaginatedResponse } from "@shared/dtos/pagination.dto.js";
 import { ItemRepository } from "./item.repository.js";
 import type { GetItemsFilters } from "@shared/maps/filters/items/getItems.type.js";
-import type { ItemDetailsResponse, ItemResponse, UpdateUserItemUnitsResponse, UserItemResponse } from "@shared/dtos/item.dto.js";
+import type { ItemDetailsResponse, ItemResponse, UpdateUserItemUnitsResponse, UserItemFromHomeResponse, UserItemResponse } from "@shared/dtos/item.dto.js";
 import { APIError } from "@backend/middlewares/error.middleware.js";
 import { ItemMapper } from "./item.mappers.js";
 
@@ -95,7 +95,7 @@ export class ItemService {
 
   public static async getUserItemsFromHome(
     userId : number,
-  ): Promise<UserItemResponse[]> {
+  ): Promise<UserItemFromHomeResponse> {
      if (!userId) {
       throw new APIError(401, "User not authenticated");
     } 

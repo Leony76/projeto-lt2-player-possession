@@ -14,6 +14,12 @@ router.get(
 );
 
 router.get(
+  "/get-to-home", 
+  requireAuth,
+  ContactController.getContactsFromHome,
+);
+
+router.get(
   "/get/:id", 
   requireAuth,
   ContactController.getContactDetails,

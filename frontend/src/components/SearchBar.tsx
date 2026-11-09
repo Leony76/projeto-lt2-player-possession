@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./css/SearchBar.module.css";
 import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -18,8 +18,14 @@ const SearchBar = ({
 }: Props): React.JSX.Element => {
   
   const [search, setSearch] = useState("");
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     const timeout = setTimeout(() => {
       onSearch(search.trim());
     }, debounceTime);

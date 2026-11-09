@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import type { ItemDetailsResponse, ItemResponse, UpdateUserItemUnitsResponse, UserItemResponse } from "@shared/dtos/item.dto";
+import type { ItemDetailsResponse, ItemResponse, UpdateUserItemUnitsResponse, UserItemFromHomeResponse, UserItemResponse } from "@shared/dtos/item.dto";
 import type { SuccessfulOperationResponse } from "@shared/dtos/operationResult.dto";
 import type { PaginatedResponse } from "@shared/dtos/pagination.dto";
 import type { ItemsCategory } from "@shared/maps/filters/items/itemCategory.map";
@@ -66,9 +66,10 @@ export class ItemService {
   }
 
 
-  public static async getUserItemsFromHome(): Promise<UserItemResponse[]> {
+  public static async getUserItemsFromHome(
+  ): Promise<UserItemFromHomeResponse> {
 
-    const { data } = await api.get<UserItemResponse[]>(
+    const { data } = await api.get<UserItemFromHomeResponse>(
       `/item/user/get-to-home`
     );
     

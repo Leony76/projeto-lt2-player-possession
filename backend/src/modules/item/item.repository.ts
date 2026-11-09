@@ -192,30 +192,47 @@ export class ItemRepository {
 
 
   public static async getUserItemsFromHome(
-    userId : number,
+    userId: number,
   ) {
-    return await prisma.userItem.findMany({
-      where  : { 
-        userId,
-        units : { gt: 0 },
-      },
-      select : {
-        units : true,
-        item  : {
-          select: {
-            id       : true,
-            imageURL : true,
-            name     : true,
-            category : true,
-            state    : true,
-            description        : true,
-            averageMarketPrice : true,
-            originalPrice      : true,
+    const [items, totalItems] = await prisma.$transaction([
+      prisma.userItem.findMany({
+        where: {
+          userId,
+          units: { gt: 0 },
+        },
+        select: {
+          units: true,
+          item: {
+            select: {
+              id          : true,
+              imageURL    : true,
+              name        : true,
+              category    : true,
+              state       : true,
+              description : true,
+              averageMarketPrice : true,
+              originalPrice      : true,
+            },
           },
-        }
-      },
-      take: 6
-    });
+        },
+        take: 6,
+      }),
+
+      prisma.userItem.aggregate({
+        where: {
+          userId,
+          units: { gt: 0 },
+        },
+        _sum: {
+          units: true,
+        },
+      }),
+    ]);
+
+    return {
+      items,
+      totalItems : totalItems._sum.units ?? 0,
+    };
   }
 
 

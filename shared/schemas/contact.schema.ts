@@ -1,3 +1,4 @@
+import { CONTACTS_RELATION_STATUS_MAP_KEYS } from "@shared/maps/filters/contacts/contactRelationStatus.filter";
 import { CONTACTS_ADVANCED_FILTER_MAP_KEYS } from "@shared/maps/filters/contacts/contacts.filter";
 import z from "zod";
 
@@ -22,6 +23,12 @@ export const getContactsQuerySchema = z.object({
     .optional(),
 
   advancedFilter: z.enum(CONTACTS_ADVANCED_FILTER_MAP_KEYS).optional(),
+
+  relationStatus: z.enum(CONTACTS_RELATION_STATUS_MAP_KEYS).optional(),
+
+  onlyMyContacts: z.enum(['true', 'false'])
+    .optional()
+    .transform(value => value === 'true'),
 });
 
 export type GetContactsQuery = z.infer<typeof getContactsQuerySchema>;

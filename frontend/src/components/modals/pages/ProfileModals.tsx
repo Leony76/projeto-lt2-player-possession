@@ -90,6 +90,7 @@ const ProfileModals = ({ profile }: Props): React.JSX.Element | null => {
             <Input
               label="New username"
               placeholder="ex: username_123"
+              onClear={() => forms.usernameForm.setValue('username', '')}
               {...forms.usernameForm.register("username")}
             />
 
@@ -153,6 +154,7 @@ const ProfileModals = ({ profile }: Props): React.JSX.Element | null => {
               label="New lumber bucks amount"
               placeholder="ex: 67000"
               type="number"
+              onClear={() => forms.lumberBucksForm.setValue('lumberBucks', 0)}
               {...forms.lumberBucksForm.register("lumberBucks", {
                 valueAsNumber: true,
               })}
@@ -213,6 +215,7 @@ const ProfileModals = ({ profile }: Props): React.JSX.Element | null => {
               label="Current password"
               placeholder="Enter your current password"
               {...passwordRegister}
+              onClear={() => forms.passwordForm.setValue('password', '')}
               onChange={(event) => {
                 onCurrentPasswordChange(event);
                 setters.setFieldError(null);
@@ -264,6 +267,7 @@ const ProfileModals = ({ profile }: Props): React.JSX.Element | null => {
               label="New password"
               placeholder="Enter your new password"
               {...newPasswordRegister}
+              onClear={() => forms.newPasswordForm.setValue('newPassword', '')}
               onChange={(event) => {
                 onNewPasswordChange(event);
                 setters.setFieldError(null);

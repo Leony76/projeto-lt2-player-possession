@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styles from './css/MyItems.module.css';
 import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
@@ -16,8 +16,7 @@ import type { ItemsCategory } from '@shared/maps/filters/items/itemCategory.map'
 import type { ItemsAdvancedFilter } from '@shared/maps/filters/items/items.filter';
 import type { ItemsState } from '@shared/maps/filters/items/itemState.map';
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
-
-const ITEMS_PER_PAGE = 30;
+import { ITEMS_PER_PAGE } from '@/consts/itemsPerPage.const';
 
 const MyItems = (): React.JSX.Element => {
 
@@ -77,10 +76,10 @@ const MyItems = (): React.JSX.Element => {
     itemsAdvancedFilter,
   ]);
 
-  const handleSearch = (value: string): void => {
+  const handleSearch = useCallback((value: string): void => {
     setSearch(value);
     setPage(1);
-  };
+  }, []);
 
   const handleCategoryFilter = (filter: ItemsCategory): void => {
     setItemsCategoryFilter(filter);

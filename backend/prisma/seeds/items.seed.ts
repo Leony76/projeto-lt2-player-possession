@@ -253,6 +253,6 @@ export const seedItems = async() => {
     });
   }
 
-  console.log("Database successfully seeded!");
+  console.log("Items successfully seeded!");
 }
 

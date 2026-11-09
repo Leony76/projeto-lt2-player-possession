@@ -1,6 +1,6 @@
 import { ItemCategory, ItemState } from "@backend/generated/prisma/enums.js";
-import { ContactDetailsResponse, ContactResponse } from "@shared/dtos/contact.dto.js";
-import { ContactRelationStatus } from "@shared/types/contactRelationStatus.type.js";
+import { ContactDetailsResponse, ContactFromHomeResponse, ContactResponse } from "@shared/dtos/contact.dto.js";
+import { ContactRelationStatus } from "@shared/maps/filters/contacts/contactRelationStatus.filter.js";
 
 export class ContactMapper {
   
@@ -66,5 +66,27 @@ export class ContactMapper {
       joinedAt : data.joinedAt.toISOString(),
       loggedUserContactStatus : data.loggedUserContactStatus as ContactRelationStatus,
     }
+  }
+
+
+
+  public static toContactFromHomeResponse(
+    data: {
+      id              : number;
+      name            : string;
+      profileImageURL : string | null;
+      joinedAt        : Date;
+      totalContacts   : bigint;
+    }[],
+  ): ContactFromHomeResponse {
+    return {
+      contacts: data.map(contact => ({
+        id: contact.id,
+        name: contact.name,
+        profileImageURL: contact.profileImageURL,
+      })),
+
+      totalContacts: Number(data[0]?.totalContacts ?? 0n),
+    };
   }
 }

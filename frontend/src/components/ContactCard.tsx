@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Button from './Button';
 import { FaCheck, FaClock, FaPlus } from 'react-icons/fa';
 import { toMonthDayYearTwelveHoursFormat } from '@/utils/toMonthDayYearTwelveHoursFormat.util';
-import type { ContactRelationStatus } from '@shared/types/contactRelationStatus.type';
+import type { ContactRelationStatus } from '@shared/maps/filters/contacts/contactRelationStatus.filter';
 import { IoClose } from 'react-icons/io5';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -20,14 +20,14 @@ type Props = UserBaseInfos & {
   display : 'DETAILED';
 
   isAcceptingContactRequest : boolean;
-  isDeningContactRequest    : boolean;
-  isAddingContact           : boolean;
+  isDenyingContactRequest   : boolean;
+  isAddingContact          ?: boolean;
 
   totalItems     : number;
   relationStatus : ContactRelationStatus;
   joinedAt       : string;
   
-  onAddContact           : (contactId: number) => void;
+  onAddContact          ?: (contactId: number) => void;
   onAcceptContactRequest : (contactId: number) => void;
   onDenyContactRequest   : (contactId: number) => void;
 };
@@ -115,9 +115,7 @@ const ContactCard = (props: Props): React.JSX.Element => {
                 <div>
                   <Button
                     buttonStyle="DEFAULT"
-                    label={props.isAcceptingContactRequest ? '' : "Accept"}
-                    loading={props.isAcceptingContactRequest}
-                    disabled={props.isDeningContactRequest}
+                    label={"Accept"}
                     onClick={() => props.onAcceptContactRequest(props.userId)}
                     icon={() => <FaCheck size={10}/>}
                     padding={{
@@ -135,9 +133,7 @@ const ContactCard = (props: Props): React.JSX.Element => {
 
                   <Button
                     buttonStyle="DEFAULT"
-                    label={props.isDeningContactRequest ? '' : "Deny"}
-                    loading={props.isDeningContactRequest}
-                    disabled={props.isAcceptingContactRequest}
+                    label={"Deny"}
                     onClick={() => props.onDenyContactRequest(props.userId)}
                     icon={() => <IoClose />}
                     brightness={{
@@ -156,7 +152,7 @@ const ContactCard = (props: Props): React.JSX.Element => {
                 buttonStyle="DEFAULT"
                 label={props.isAddingContact ? '' : "Add Contact"}
                 loading={props.isAddingContact}
-                onClick={() => props.onAddContact(props.userId)}
+                onClick={() => props.onAddContact?.(props.userId)}
                 icon={() => <FaPlus size={14}/>}
                 brightness={{
                   active: 0.4,

@@ -1,9 +1,11 @@
 import { prisma } from "../src/lib/prisma";
 import { seedItems } from "./seeds/items.seed";
+import { seedUsers } from "./seeds/users.seed";
 
 const main = async() => {
   await seedItems();
-
+  await seedUsers();
+  
   console.log("All seeds completed!");
 }
 

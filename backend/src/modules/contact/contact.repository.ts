@@ -1,6 +1,5 @@
 import { Prisma } from "@backend/generated/prisma/client.js";
 import { prisma } from "@backend/lib/prisma.js";
-import { APIError } from "@backend/middlewares/error.middleware.js";
 import { GetContactsFilters } from "@shared/maps/filters/contacts/getContacts.type.js";
 
 export class ContactRepository {
@@ -66,7 +65,46 @@ export class ContactRepository {
         break;
     }
 
-    const [contacts, totalUsers] = await prisma.$transaction([
+    const myContactsCondition = filters.onlyMyContacts
+      ? Prisma.sql`
+          AND c.id IS NOT NULL
+          AND c.status IN ('CONTACT', 'PENDING')
+        `
+      : Prisma.empty;
+
+    const relationCondition = (() => {
+      switch (filters.relationStatus) {
+        case 'CONTACT':
+          return Prisma.sql`
+            AND c.status = 'CONTACT'
+          `;
+
+        case 'REQUEST_SENT':
+          return Prisma.sql`
+            AND c.status = 'PENDING'
+            AND c.requester_id = ${userId}
+          `;
+
+        case 'REQUEST_RECEIVED':
+          return Prisma.sql`
+            AND c.status = 'PENDING'
+            AND c.addressee_id = ${userId}
+          `;
+
+        case 'NOT_CONTACT':
+          return Prisma.sql`
+            AND (
+              c.id IS NULL
+              OR c.status = 'NOT_CONTACT'
+            )
+          `;
+
+        default:
+          return Prisma.empty;
+      }
+    })();
+
+    const [contacts, totalResult] = await prisma.$transaction([
       prisma.$queryRaw<
         {
           id   : number;
@@ -74,8 +112,8 @@ export class ContactRepository {
           profileImageURL : string | null;
           joinedAt : Date;
           totalItems    : number;
-          // lumberBucks   : number;
-          // totalContacts : number;
+          lumberBucks   : number;
+          totalContacts : number;
           loggedUserContactStatus : 'CONTACT' | 'PENDING' | 'NOT_CONTACT';
         }[]
       >(Prisma.sql`
@@ -84,11 +122,11 @@ export class ContactRepository {
           u.name,
           u.profile_image_url AS "profileImageURL",
           u.created_at AS "joinedAt",
-          -- u.lumber_bucks AS "lumberBucks",
+          u.lumber_bucks AS "lumberBucks",
 
           COALESCE(items.total, 0)::float8 AS "totalItems",
 
-          -- COALESCE(user_contacts.total, 0)::int AS "totalContacts",
+          COALESCE(user_contacts.total, 0)::int AS "totalContacts",
 
           CASE
             WHEN c.status = 'CONTACT'
@@ -133,7 +171,11 @@ export class ContactRepository {
 
         WHERE u.id <> ${userId}
 
+        ${myContactsCondition}
+
         ${searchCondition}
+
+        ${relationCondition}
 
         ORDER BY ${orderBy}, u.id ASC
 
@@ -141,19 +183,30 @@ export class ContactRepository {
         OFFSET ${skip}
       `),
 
-      prisma.user.count({
-        where : {
-          id  : { not: userId },
+      prisma.$queryRaw<{
+        total : bigint;
+      }[]>(Prisma.sql`
+        SELECT COUNT(DISTINCT u.id) AS total
+        FROM users u
 
-          ...(filters.search && {
-            name: {
-              contains : filters.search,
-              mode     : 'insensitive',
-            },
-          }),
-        },
-      }),
+        LEFT JOIN contacts c
+          ON (
+            (c.requester_id = ${userId} AND c.addressee_id = u.id)
+            OR
+            (c.requester_id = u.id AND c.addressee_id = ${userId})
+          )
+
+        WHERE u.id <> ${userId}
+
+        ${myContactsCondition}
+
+        ${searchCondition}
+
+        ${relationCondition}
+      `),
     ]);
+
+    const totalUsers = Number(totalResult[0]?.total ?? 0);
 
     return {
       contacts,
@@ -176,6 +229,42 @@ export class ContactRepository {
         status : true,
       }
     });
+  }
+
+
+
+  public static async getContactsFromHome(
+    userId : number
+  ): Promise<{
+    id              : number;
+    name            : string;
+    profileImageURL : string | null;
+    joinedAt        : Date;
+    totalContacts   : bigint;
+  }[]> {
+    return await prisma.$queryRaw`
+      WITH user_contacts AS (
+        SELECT
+          u.id,
+          u.name,
+          u.profile_image_url AS "profileImageURL",
+          u.created_at AS "joinedAt"
+        FROM contacts c
+        INNER JOIN users u
+          ON (
+            (c.requester_id = ${userId} AND u.id = c.addressee_id)
+            OR
+            (c.addressee_id = ${userId} AND u.id = c.requester_id)
+          )
+        WHERE c.status = 'CONTACT'
+      )
+      SELECT
+        *,
+        COUNT(*) OVER() AS "totalContacts"
+      FROM user_contacts
+      ORDER BY "joinedAt" DESC
+      LIMIT 10;
+    `;
   }
 
 

@@ -54,7 +54,7 @@ export class ItemController {
 
     const response: SuccessfulOperationResponse<UpdateUserItemUnitsResponse> = {
       body    : result,
-      message : `${result.name} units successfuly updated`,
+      message : `${result.name} units successfully updated`,
       success : true,
     };
 

@@ -18,6 +18,7 @@ const SignUp = (): React.JSX.Element => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
@@ -65,6 +66,7 @@ const SignUp = (): React.JSX.Element => {
             type='text'
             placeholder='ex: username_123'
             {...register("username")}
+            onClear={() => setValue('username', '')}
             error={errors.username?.message}
           />
           
@@ -73,6 +75,7 @@ const SignUp = (): React.JSX.Element => {
             type='password'
             placeholder='********'
             {...register("password")}
+            onClear={() => setValue('password', '')}
             error={errors.password?.message}
             />
 
@@ -81,6 +84,7 @@ const SignUp = (): React.JSX.Element => {
             type='password'
             placeholder='********'
             {...register("confirmPassword")}
+            onClear={() => setValue('confirmPassword', '')}
             error={errors.confirmPassword?.message}
           />
 

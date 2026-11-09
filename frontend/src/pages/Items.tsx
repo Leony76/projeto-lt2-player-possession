@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styles from './css/Items.module.css';
 import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
@@ -16,8 +16,7 @@ import { normalizeFilter } from '@/utils/normalizaFilter.util';
 import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
 import PaginationNavButtons from '@/components/PaginationNavButtons';
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
-
-const ITEMS_PER_PAGE = 30;
+import { ITEMS_PER_PAGE } from '@/consts/itemsPerPage.const';
 
 const Items = (): React.JSX.Element => {
 
@@ -77,10 +76,10 @@ const Items = (): React.JSX.Element => {
     itemsAdvancedFilter,
   ]);
 
-  const handleSearch = (value: string): void => {
+  const handleSearch = useCallback((value: string): void => {
     setSearch(value);
     setPage(1);
-  };
+  }, []);
 
   const handleCategoryFilter = (filter: ItemsCategory): void => {
     setItemsCategoryFilter(filter);

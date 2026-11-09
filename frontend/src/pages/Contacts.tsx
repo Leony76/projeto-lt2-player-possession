@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styles from './css/Contacts.module.css';
 import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
@@ -17,14 +17,21 @@ import type { ContactResponse } from '@shared/dtos/contact.dto';
 import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
 import { useToast } from '@/contexts/ToastContext';
+import type { ContactRelationStatus } from '@shared/maps/filters/contacts/contactRelationStatus.filter';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
+import { CONTACTS_PER_PAGE } from '@/consts/contactsPerPage.const';
 
-const CONTACTS_PER_PAGE = 60;
+type Modals = 
+| 'CONFIRM_DENY_CONTACT_REQUEST'
+| 'CONFIRM_ACCEPT_CONTACT_REQUEST'
+;
 
 const Contacts = (): React.JSX.Element => {
 
   const { showToast } = useToast();
 
   const [contacts, setContacts] = useState<ContactResponse[]>([]);
+  const [contact, setContact] = useState<ContactResponse | null>(null);
 
   const [pagination, setPagination] = useState<
     PaginatedResponse<ContactResponse>["pagination"] | null>(null)
@@ -35,16 +42,22 @@ const Contacts = (): React.JSX.Element => {
   const [error, setError] = useState<string | null>(null);
 
   const [isAcceptingContactRequest, setIsAcceptingContactRequest] = useState<boolean>(false);
-  const [isDeningContactRequest, setIsDeningContactRequest] = useState<boolean>(false);
+  const [isDenyingContactRequest, setIsDenyingContactRequest] = useState<boolean>(false);
   const [isAddingContact, setIsAddingContact] = useState<boolean>(false);
+
+  const [modal, setModal] = useState<Modals | null>(null);
 
   const [search, setSearch] = useState<string>("");
 
   const [contactsAdvancedFilter, setContactsAdvancedFilter] = useState<ContactsAdvancedFilter | null>(null);
 
   useEffect(() => {
-
     const controller = new AbortController();
+
+    console.log('Fetching page:', page);
+
+    setLoading(true);
+    setError(null);
 
     (async () => {
       try {
@@ -55,10 +68,12 @@ const Contacts = (): React.JSX.Element => {
           advancedFilter : normalizeFilter(contactsAdvancedFilter),
         }, controller.signal);
 
+        if (controller.signal.aborted) return;
+
         setContacts(result.items);
         setPagination(result.pagination);
 
-      } catch (error:unknown) {
+      } catch (error: unknown) {
         if (!controller.signal.aborted) setError(handleAxiosError(error));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
@@ -66,12 +81,29 @@ const Contacts = (): React.JSX.Element => {
     })();
 
     return () => controller.abort();
+  }, [page, search, contactsAdvancedFilter]);
 
-  }, [
-    page,
-    search,
-    contactsAdvancedFilter,
-  ]);
+  useEffect(() => {
+    console.log('Current page:', page);
+  }, [page]);
+
+  const handleUpdateUserContactStats = (
+    contactId : number,
+    message   : string,
+    status    : ContactRelationStatus,
+  ) => {
+    setContacts(prev =>
+      prev.map(contact =>
+        contact.id === contactId
+          ? { 
+            ...contact, 
+            loggedUserContactStatus : status
+          } : contact
+      )
+    );
+
+    showToast('INFO', message);
+  }
 
   const handleAddContact = async(
     contactId : number
@@ -86,17 +118,11 @@ const Contacts = (): React.JSX.Element => {
         throw new Error("Unable to send contact request");
       }
 
-      setContacts(prev =>
-        prev.map(contact =>
-          contact.id === contactId
-            ? { 
-              ...contact, 
-              loggedUserContactStatus : response.body.requestStatus 
-            } : contact
-        )
+      handleUpdateUserContactStats(
+        contactId,
+        response.message,
+        response.body.requestStatus, 
       );
-
-      showToast('INFO', response.message);   
     } catch (error:unknown) {
       showToast('ERROR', handleAxiosError(error));  
     } finally {
@@ -111,39 +137,90 @@ const Contacts = (): React.JSX.Element => {
       if (isAcceptingContactRequest) return;
       setIsAcceptingContactRequest(true);
 
+      const response = await ContactService.acceptContactRequest(contactId);
+
+      if (!response.success) {
+        throw new Error("Unable to accept contact request");
+      }
+
+      handleUpdateUserContactStats(
+        contactId,
+        response.message,
+        response.body.requestStatus, 
+      );
     } catch (error:unknown) {
       showToast('ERROR', handleAxiosError(error));
     } finally {
       setIsAcceptingContactRequest(false);
+      setContact(null);
     }  
-  }
+  };
 
   const handleDenyContactRequest = async(
     contactId : number
   ): Promise<void> => {
     try {
-      if (isDeningContactRequest) return;
-      setIsDeningContactRequest(true);
+      if (isDenyingContactRequest) return;
+      setIsDenyingContactRequest(true);
 
+      const response = await ContactService.denyContactRequest(contactId);
+
+      if (!response.success) {
+        throw new Error("Unable to cancel contact request");
+      }
+      
+      handleUpdateUserContactStats(
+        contactId,
+        response.message,
+        response.body.requestStatus, 
+      );
     } catch (error:unknown) {
       showToast('ERROR', handleAxiosError(error));
     } finally {
-      setIsDeningContactRequest(false);
+      setIsDenyingContactRequest(false);
+      setContact(null);
     }
-  }
-
-  const handleSearch = (value: string): void => {
-    setSearch(value);
-    setPage(1);
   };
 
+  const handleSearch = useCallback((value: string): void => {
+    setSearch(value);
+    setPage(1);
+  }, []);
+
   const handleAdvancedFilter = (filter: ContactsAdvancedFilter): void => {
+    console.log('handleAdvancedFilter executado:', filter);
+
     setContactsAdvancedFilter(filter);
     setPage(1);
   };
 
   return (
     <Layout tab='CONTACTS'>
+      <>
+      {(contact && modal === 'CONFIRM_ACCEPT_CONTACT_REQUEST') && (
+        <ConfirmationModal
+          loading={isAcceptingContactRequest}
+          message={`Are you sure you want to accept the contact request from ${contact.name}?`}
+          onConfirm={() => handleAcceptContactRequest(contact.id)}
+          onCancel={() => {
+            setContact(null);
+            setModal(null);
+          }}
+        />
+      )}
+
+      {(contact && modal === 'CONFIRM_DENY_CONTACT_REQUEST') && (
+        <ConfirmationModal
+          loading={isDenyingContactRequest}
+          message={`Are you sure you want to deny the contact request from ${contact.name}?`}
+          onConfirm={() => handleDenyContactRequest(contact.id)}
+          onCancel={() => {
+            setModal(null);
+            setContact(null);
+          }}
+        />
+      )}
+
       <div className={styles.container}>
         <PageTitle
           Icon={() => <IoMdContact />}
@@ -188,11 +265,17 @@ const Contacts = (): React.JSX.Element => {
                     totalItems={contact.totalItems}
                     relationStatus={contact.loggedUserContactStatus}
                     onAddContact={handleAddContact}
-                    onAcceptContactRequest={handleAcceptContactRequest}
-                    onDenyContactRequest={handleDenyContactRequest}
                     isAddingContact={isAddingContact}
                     isAcceptingContactRequest={isAcceptingContactRequest}
-                    isDeningContactRequest={isDeningContactRequest}
+                    isDenyingContactRequest={isDenyingContactRequest}
+                    onAcceptContactRequest={() => {
+                      setModal('CONFIRM_ACCEPT_CONTACT_REQUEST');
+                      setContact(contact);
+                    }}
+                    onDenyContactRequest={() => {
+                      setModal('CONFIRM_DENY_CONTACT_REQUEST');
+                      setContact(contact);
+                    }}
                   />
                 </li>
               ))
@@ -211,6 +294,7 @@ const Contacts = (): React.JSX.Element => {
           />
         )}  
       </div>
+      </>
     </Layout>
   )
 }

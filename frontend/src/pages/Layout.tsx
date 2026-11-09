@@ -98,21 +98,20 @@ const Layout = (props:Props): React.JSX.Element => {
 
         <nav className={styles.nav}>
           <ul className={styles.ul}>
-            <li className={styles.li}>
-              <button     
-              title='Lumber Bucks'      
-              onClick={() => {}}
-              type='button'
-              className={styles.user_lumber_bucks_container}
-              >
-                <div className={styles.icon}>
-                  <FaWallet />
-                </div>
+            <li 
+            title='Lumber Bucks'
+            className={`
+              ${styles.li}
+              ${styles.user_lumber_bucks_container}
+            `}
+            >
+              <div className={styles.icon}>
+                <FaWallet />
+              </div>
 
-                <span className={styles.lumber_bucks}>
-                  { toLumberBucksFormat(user.lumberBucks) }
-                </span>
-              </button>
+              <span className={styles.lumber_bucks}>
+                { toLumberBucksFormat(user.lumberBucks) }
+              </span>
             </li>
 
             <li className={styles.li}>

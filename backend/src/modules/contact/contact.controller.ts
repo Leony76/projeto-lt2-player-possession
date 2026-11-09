@@ -2,7 +2,7 @@ import { GetContactsQuery } from "@shared/schemas/contact.schema.js";
 import { Request, Response } from "express";
 import { ContactService } from "./contact.service.js";
 import { SuccessfulOperationResponse } from "@shared/dtos/operationResult.dto.js";
-import { ContactRelationStatus } from "@shared/types/contactRelationStatus.type.js";
+import { ContactRelationStatus } from "@shared/maps/filters/contacts/contactRelationStatus.filter.js";
 
 export class ContactController {
 
@@ -20,6 +20,8 @@ export class ContactController {
       {
         search         : query.search,
         advancedFilter : query.advancedFilter,
+        onlyMyContacts: query.onlyMyContacts,
+        ...(query.relationStatus && { relationStatus: query.relationStatus }),
       },
     );
 
@@ -27,6 +29,19 @@ export class ContactController {
   }
 
   
+
+  public static async getContactsFromHome(
+    req : Request,
+    res : Response,
+  ) {
+    const userId = Number(req.authUserId);
+
+    const result = await ContactService.getContactsFromHome(userId);
+
+    return res.status(200).json(result);
+  }
+
+
 
   public static async getContactDetails(
     req : Request,

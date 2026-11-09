@@ -1,5 +1,5 @@
-import type { ContactRelationStatus } from "@shared/types/contactRelationStatus.type";
-import { UserItemResponse } from "./item.dto";
+import type { ContactRelationStatus } from "@shared/maps/filters/contacts/contactRelationStatus.filter";
+import type { UserItemResponse } from "./item.dto";
 
 export type ContactResponse = {
   readonly id             : number;
@@ -8,6 +8,16 @@ export type ContactResponse = {
   joinedAt                : string;
   totalItems              : number;
   loggedUserContactStatus : ContactRelationStatus;
+}
+
+export type ContactFromHomeResponse = {
+  contacts: {
+    readonly id     : number;
+    name            : string;
+    profileImageURL : string | null;
+  }[];
+
+  totalContacts: number;
 }
 
 export type ContactDetailsResponse = {

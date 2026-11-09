@@ -1,13 +1,12 @@
 import styles from './css/ContactProfile.module.css';
 import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
-import imgPlaceholder from '@/assets/img/placeholder_1.png';
+import imgPlaceholder from '@/assets/img/profile_image_placeholder.png';
 import { FaArrowLeft, FaCheck, FaClock, FaMinus, FaPlus, FaUser } from 'react-icons/fa';
-import profileImagePlaceholder from '@/assets/img/profile_image_placeholder.png';
 import { MdOutlinePublic } from 'react-icons/md';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import SectionTitle from '@/components/SectionTitle';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import Button from '@/components/Button';
 import { IoMdContact } from 'react-icons/io';
 import ContactCard from '@/components/ContactCard';
@@ -16,241 +15,38 @@ import ItemNavCard from '@/components/ItemNavCard';
 import SeeAllLink from '@/components/SeeAllLink';
 import { toMonthDayYearTwelveHoursFormat } from '@/utils/toMonthDayYearTwelveHoursFormat.util';
 import { IoClose } from 'react-icons/io5';
-import { useEffect, useState } from 'react';
-import { handleAxiosError } from '@/utils/handleAxiosError.util';
-import { ContactService } from '@/services/contact.service';
-import type { ContactDetailsResponse as ContactDetails } from '@shared/dtos/contact.dto';
 import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
-import ImageExpand from '@/components/ImageExpand';
-import { useToast } from '@/contexts/ToastContext';
-import type { ContactRelationStatus } from '@shared/types/contactRelationStatus.type';
-import { useAuth } from '@/contexts/AuthContext';
+import { useContactProfile } from '@/hooks/pages/useContactProfile.hook';
+import ContactProfileModals from '@/components/modals/pages/ContactProfileModals';
 
 const ContactProfile = (): React.JSX.Element | null => {
 
-  const navigate = useNavigate();
-  const { showToast } = useToast();
-  const { user } = useAuth();
-
-  const { id } = useParams();
-
-  const [contact, setContact] = useState<ContactDetails | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const [isAcceptingContactRequest, setIsAcceptingContactRequest] = useState<boolean>(false);
-  const [isDeningContactRequest, setIsDeningContactRequest] = useState<boolean>(false);
-  const [isCancelingContactRequest, setIsCancellingContactRequest] = useState<boolean>(false);
-  const [isAddingContact, setIsAddingContact] = useState<boolean>(false);
-
-  const [profileImageExpand, setProfileImageExpand] = useState<boolean>(false);
-
-  useEffect(() => {
-    (async (contactId : number) => {
-      try {
-        const response = await ContactService.getContactDetails(contactId);
-
-        setContact(response);
-      } catch (error:unknown) {
-        setError(handleAxiosError(error));
-      } finally {
-        setLoading(false);
-      }
-    })(Number(id));
-  },[]);
-
-  const handleSetNewContactRelationStatus = (
-    relation : ContactRelationStatus,
-    message  : string,
-  ): void => {
-    setContact(prev => {
-      if (!prev) return null;
-      return {
-        ...prev,
-        loggedUserContactStatus: relation,
-      };
-    });
-
-    showToast('INFO', message); 
-  };
-
-  const handleAddContact = async(
-    contactId : number
-  ): Promise<void> => {
-    try {
-      if (isAddingContact) return;
-      setIsAddingContact(true);
-      
-      const response = await ContactService.addContactRequest(contactId);
-
-      if (!response.success) {
-        throw new Error("Unable to send contact request");
-      }
-
-      handleSetNewContactRelationStatus(
-        response.body.requestStatus,
-        response.message,
-      );  
-    } catch (error:unknown) {
-      showToast('ERROR', handleAxiosError(error));  
-    } finally {
-      setIsAddingContact(false);
-    }
-  };
-
-  const handleAcceptContactRequest = async(
-    contactId : number
-  ): Promise<void> => {
-    try {
-      if (isAcceptingContactRequest) return;
-      setIsAcceptingContactRequest(true);
-
-      const response = await ContactService.acceptContactRequest(contactId);
-
-      if (!response.success) {
-        throw new Error("Unable to accept contact request");
-      }
-
-      handleSetNewContactRelationStatus(
-        response.body.requestStatus,
-        response.message,
-      );  
-
-      setContact(prev => {
-        if (!prev) return prev;
-
-        return {
-          ...prev,
-          totalContacts: prev.totalContacts + 1,
-          contacts: [
-            ...prev.contacts,
-            {
-              id              : user?.id,
-              profileImageURL : user?.profileImageURL,
-              username        : user?.name,
-            }
-          ],
-        };
-      });
-    } catch (error:unknown) {
-      showToast('ERROR', handleAxiosError(error));
-    } finally {
-      setIsAcceptingContactRequest(false);
-    }  
-  };
-
-  const handleDenyContactRequest = async(
-    contactId : number
-  ): Promise<void> => {
-    try {
-      if (isDeningContactRequest) return;
-      setIsDeningContactRequest(true);
-
-      const response = await ContactService.denyContactRequest(contactId);
-
-      if (!response.success) {
-        throw new Error("Unable to cancel contact request");
-      }
-
-      handleSetNewContactRelationStatus(
-        response.body.requestStatus,
-        response.message,
-      );
-    } catch (error:unknown) {
-      showToast('ERROR', handleAxiosError(error));
-    } finally {
-      setIsDeningContactRequest(false);
-    }
-  };
-
-  const handleUndoContactRequest = async(
-    contactId : number
-  ): Promise<void> => {
-    try {
-      if (isDeningContactRequest) return;
-      setIsDeningContactRequest(true);
-
-      const response = await ContactService.undoContactRequest(contactId);
-
-      if (!response.success) {
-        throw new Error("Unable to undo contact");
-      }
-
-      handleSetNewContactRelationStatus(
-        response.body.requestStatus,
-        response.message,
-      );
-
-      setContact(prev => {
-        if (!prev) return prev;
-
-        return {
-          ...prev,
-          contacts: prev.contacts.filter(
-            contact => contact.id !== contactId
-          ),
-        };
-      });
-    } catch (error:unknown) {
-      showToast('ERROR', handleAxiosError(error));
-    } finally {
-      setIsDeningContactRequest(false);
-    }
-  };
-
-  const handleCancelContactRequest = async(
-    contactId : number
-  ): Promise<void> => {
-    try {
-      if (isDeningContactRequest) return;
-      setIsCancellingContactRequest(true);
-
-      const response = await ContactService.cancelContactPendingRequest(contactId);
-
-      if (!response.success) {
-        throw new Error("Unable to cancel contact request");
-      }
-
-      handleSetNewContactRelationStatus(
-        response.body.requestStatus,
-        response.message,
-      );
-    } catch (error:unknown) {
-      showToast('ERROR', handleAxiosError(error));
-    } finally {
-      setIsCancellingContactRequest(false);
-    }
-  };
+  const contactProfile = useContactProfile();
+  const { handlers, hooks, setters, states, user, misc } = contactProfile;
 
   const USER_DESCRIPTIVE_INFOS_MAP: { label: string, value: string | number }[] = [
-    { label: 'Identifier (Id):' , value: contact?.id ?? '?' },
-    { label: 'Username:'        , value: contact?.name ?? 'unknown' },
-    { label: 'Lumber bucks:'    , value: contact?.lumberBucks !== undefined ? toLumberBucksFormat(contact.lumberBucks) : '$?' },
-    { label: 'Contacts:'        , value: contact?.totalContacts ?? '?' },
-    { label: 'Total items:'     , value: contact?.totalItems ?? '?' },
-    { label: 'Join date'        , value: contact?.joinedAt ? toMonthDayYearTwelveHoursFormat('2026-11-07T13:59:00.000Z') : '??/??/??, ??/?? ??' },
+    { label: 'Identifier (Id):' , value: states.contact?.id ?? '?' },
+    { label: 'Username:'        , value: states.contact?.name ?? 'unknown' },
+    { label: 'Lumber bucks:'    , value: states.contact?.lumberBucks !== undefined ? toLumberBucksFormat(states.contact.lumberBucks) : '$?' },
+    { label: 'Contacts:'        , value: states.contact?.totalContacts ?? '?' },
+    { label: 'Total items:'     , value: states.contact?.totalItems ?? '?' },
+    { label: 'Join date'        , value: states.contact?.joinedAt ? toMonthDayYearTwelveHoursFormat('2026-11-07T13:59:00.000Z') : '??/??/??, ??/?? ??' },
   ]; 
   
-  if (user?.id === Number(id)) {
+  if (user?.id === Number(states.contact?.id)) {
     return <Navigate to="/home" replace />;
   }
 
   return (
     <Layout >
       <>
-      {profileImageExpand &&
-        <ImageExpand
-          imageURL={contact?.profileImageURL ?? profileImagePlaceholder}
-          label={contact?.name ?? 'unknown'}
-          onClick={() => setProfileImageExpand(false)}
-        />
-      }
+      <ContactProfileModals contactProfile={contactProfile}/>
 
       <div className={styles.container}>
         <div className={styles.page_title_history_back_container}>
           <button 
           className={styles.history_back_button}
-          onClick={() => navigate(-1)}>
+          onClick={() => hooks.navigate(-1)}>
             <FaArrowLeft />
           </button>
 
@@ -260,21 +56,21 @@ const ContactProfile = (): React.JSX.Element | null => {
           />
         </div>
 
-        { loading && <LoadingState label='contact details'/> }
+        { states.loading && <LoadingState label='contact details'/> }
 
-        {(!loading && error) && <ErrorState error={error} />}
+        {(!states.loading && states.error) && <ErrorState error={states.error} />}
         
-        {(!loading && !error && contact) &&
+        {(!states.loading && !states.error && states.contact) &&
           <div className={styles.main_container}>
             <section className={styles.contact_general_infos_section_container}>
               <button 
-              onClick={() => setProfileImageExpand(true)}
+              onClick={() => setters.setModal('PROFILE_IMAGE_EXPAND')}
               className={styles.profile_image_inner_container}
               >
                 <img 
                   className={styles.profile_image}
-                  src={contact?.profileImageURL ?? profileImagePlaceholder} 
-                  alt={contact.name} 
+                  src={states.contact?.profileImageURL ?? misc.profileImagePlaceholder} 
+                  alt={states.contact.name} 
                 />
               </button>
 
@@ -305,7 +101,7 @@ const ContactProfile = (): React.JSX.Element | null => {
                   </dl>
 
                   <div className={styles.contact_actions_container}>
-                    {contact.loggedUserContactStatus === 'CONTACT' ? (
+                    {states.contact.loggedUserContactStatus === 'CONTACT' ? (
                       <>
                       <div className={styles.contacts_label_being_contacts}>
                         <FaCheck />
@@ -319,8 +115,11 @@ const ContactProfile = (): React.JSX.Element | null => {
                       <Button
                         buttonStyle='DEFAULT'
                         label='Undo contact'
-                        onClick={() => handleUndoContactRequest(contact.id)}
+                        onClick={() => setters.setModal('CONFIRM_UNDO_CONTACT')}
                         icon={() => <FaMinus />}
+                        iconPosition={{
+                          bottom: '-3px'
+                        }}
                         brightness={{
                           active : 0.4,
                           hover  : 0.7,
@@ -331,7 +130,7 @@ const ContactProfile = (): React.JSX.Element | null => {
                         }}
                       />
                       </>
-                    ) : contact.loggedUserContactStatus === 'REQUEST_SENT' ? (
+                    ) : states.contact.loggedUserContactStatus === 'REQUEST_SENT' ? (
                       <>
                       <div className={styles.contacts_label_pending}>
                         <FaClock />
@@ -344,9 +143,8 @@ const ContactProfile = (): React.JSX.Element | null => {
 
                       <Button
                         buttonStyle='DEFAULT'
-                        onClick={() => handleCancelContactRequest(contact.id)}
-                        label={isCancelingContactRequest ? 'Cancelling...' : 'Cancel'}
-                        loading={isCancelingContactRequest}
+                        onClick={() => setters.setModal('CONFIRM_CANCEL_CONTACT_REQUEST')}
+                        label={'Cancel'}
                         icon={() => <IoClose size={20}/>}
                         iconPosition={{
                           bottom: '-3px'
@@ -361,7 +159,7 @@ const ContactProfile = (): React.JSX.Element | null => {
                         }}
                       />
                       </>
-                    ) : contact.loggedUserContactStatus === 'REQUEST_RECEIVED' ? (
+                    ) : states.contact.loggedUserContactStatus === 'REQUEST_RECEIVED' ? (
                       <div className={styles.request_received}>
                         <span>
                           Contact request received
@@ -370,10 +168,8 @@ const ContactProfile = (): React.JSX.Element | null => {
                         <div>
                           <Button
                             buttonStyle="DEFAULT"
-                            onClick={() => handleAcceptContactRequest(contact.id)}
-                            label={isAcceptingContactRequest ? 'Accepting...' : "Accept"}
-                            loading={isAcceptingContactRequest}
-                            disabled={isDeningContactRequest}
+                            onClick={() => setters.setModal('CONFIRM_ACCEPT_CONTACT_REQUEST')}
+                            label={"Accept"}
                             icon={() => <FaCheck size={10}/>}
                             padding={{
                               X: '14px'
@@ -390,18 +186,16 @@ const ContactProfile = (): React.JSX.Element | null => {
 
                           <Button
                             buttonStyle="DEFAULT"
-                            onClick={() => handleDenyContactRequest(contact.id)}
-                            label={isDeningContactRequest ? 'Dening...' : "Deny"}
-                            loading={isDeningContactRequest}
-                            disabled={isAcceptingContactRequest}
+                            onClick={() => setters.setModal('CONFIRM_DENY_CONTACT_REQUEST')}
+                            label={"Deny"}
                             icon={() => <IoClose />}
                             brightness={{
-                              active: 0.4,
-                              hover: 0.7,
+                              active : 0.4,
+                              hover  : 0.7,
                             }}
                             colors={{
-                              background: '#dd384632',
-                              labelBorder: '#dd3845'
+                              background  : '#dd384632',
+                              labelBorder : '#dd3845'
                             }}
                           />
                         </div>
@@ -409,9 +203,12 @@ const ContactProfile = (): React.JSX.Element | null => {
                     ) : (
                       <Button
                         buttonStyle='DEFAULT'
-                        label={isAddingContact ? 'Adding...' : "Add Contact"}
-                        loading={isAddingContact}
-                        onClick={() => handleAddContact(contact.id)}
+                        label={states.isAddingContact ? 'Adding...' : "Add Contact"}
+                        loading={states.isAddingContact}
+                        onClick={() => states.contact?.id 
+                          ? handlers.handleAddContact(states.contact?.id!) 
+                          : hooks.showToast('ERROR', 'Unable to procced the operation')
+                        }
                         icon={() => <FaPlus />}
                         brightness={{
                           active : 0.4,
@@ -435,15 +232,15 @@ const ContactProfile = (): React.JSX.Element | null => {
                   title='Contacts'
                 />
                 
-                {contact.contacts.length > 9 && <SeeAllLink to={`/contact/${contact.id}/contacts`}/>}       
+                {states.contact.contacts.length > 9 && <SeeAllLink to={`/contact/${states.contact.id}/contacts`}/>}       
               </div>
 
               <nav className={styles.nav}>
                 <ul className={styles.ul}> 
-                  {contact.contacts.length === 0 ? (
+                  {states.contact.contacts.length === 0 ? (
                     <NotFoundState label='contacts'/>
                   ) : (
-                    contact.contacts.slice(0, 9).map((contact) => (
+                    states.contact.contacts.slice(0, 9).map((contact) => (
                       <li 
                       className={styles.li}
                       key={contact.id}
@@ -468,15 +265,15 @@ const ContactProfile = (): React.JSX.Element | null => {
                   title='Items'
                 />
                 
-                { contact.items.length > 7 && <SeeAllLink to={`/contact/${contact.id}/items`}/>}       
+                { states.contact.items.length > 7 && <SeeAllLink to={`/contact/${states.contact.id}/items`}/>}       
               </div>
 
               <nav className={styles.nav}>
                 <ul className={styles.ul}>         
-                  {contact.items.length === 0 ? (
+                  {states.contact.items.length === 0 ? (
                     <NotFoundState label='items'/>
                   ) : (
-                    contact.items.slice(0, 6).map((item) => (
+                    states.contact.items.slice(0, 6).map((item) => (
                       <li 
                       className={styles.li}
                       key={item.id}
@@ -494,7 +291,7 @@ const ContactProfile = (): React.JSX.Element | null => {
           </div>
         }
 
-        {(!loading && !error && !contact) && <NotFoundState label={'contact details'}/>}
+        {(!states.loading && !states.error && !states.contact) && <NotFoundState label={'contact details'}/>}
       </div>
       </>
     </Layout>

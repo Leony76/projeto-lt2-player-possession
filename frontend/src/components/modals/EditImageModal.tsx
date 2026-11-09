@@ -162,6 +162,7 @@ const EditImageModal = ({
         value={imageURL}
         placeholder="https://example.com/image.png"
         onChange={(event) => handleURLChange(event.target.value)}
+        onClear={() => handleURLChange('')}
       />
 
       <input

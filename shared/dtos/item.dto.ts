@@ -22,6 +22,11 @@ export type UserItemResponse = ItemResponse & {
   units : number;
 };
 
+export type UserItemFromHomeResponse = {
+  items      : UserItemResponse[];
+  totalItems : number;
+};
+
 
 export type ItemDetailsRequest = {};
 

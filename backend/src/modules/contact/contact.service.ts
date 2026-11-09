@@ -2,10 +2,10 @@ import { APIError } from "@backend/middlewares/error.middleware.js";
 import { AuthRepository } from "../auth/auth.repository.js";
 import { ContactRepository } from "./contact.repository.js";
 import { GetContactsFilters } from "@shared/maps/filters/contacts/getContacts.type.js";
-import { ContactDetailsResponse, ContactResponse } from "@shared/dtos/contact.dto.js";
+import { ContactDetailsResponse, ContactFromHomeResponse, ContactResponse } from "@shared/dtos/contact.dto.js";
 import { PaginatedResponse } from "@shared/dtos/pagination.dto.js";
 import { ContactMapper } from "./contact.mapper.js";
-import { ContactRelationStatus } from "@shared/types/contactRelationStatus.type.js";
+import { ContactRelationStatus } from "@shared/maps/filters/contacts/contactRelationStatus.filter.js";
 
 export class ContactService {
 
@@ -57,6 +57,21 @@ export class ContactService {
         hasPreviousPage : currentPage > 1,
       },
     };
+  }
+
+
+
+  public static async getContactsFromHome(
+    userId : number,
+  ): Promise<ContactFromHomeResponse> {
+
+    if (!userId) {
+      throw new APIError(401, "User not authenticated");
+    } 
+
+    const contacts = await ContactRepository.getContactsFromHome(userId);
+
+    return ContactMapper.toContactFromHomeResponse(contacts);
   }
 
 

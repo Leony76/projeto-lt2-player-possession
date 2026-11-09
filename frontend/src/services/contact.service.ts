@@ -1,15 +1,17 @@
 import { api } from "@/lib/api";
-import type { ContactDetailsResponse, ContactResponse } from "@shared/dtos/contact.dto";
+import type { ContactDetailsResponse, ContactFromHomeResponse, ContactResponse } from "@shared/dtos/contact.dto";
 import type { SuccessfulOperationResponse } from "@shared/dtos/operationResult.dto";
 import type { PaginatedResponse } from "@shared/dtos/pagination.dto";
 import type { ContactsAdvancedFilter } from "@shared/maps/filters/contacts/contacts.filter";
-import type { ContactRelationStatus } from "@shared/types/contactRelationStatus.type";
+import type { ContactRelationStatus } from "@shared/maps/filters/contacts/contactRelationStatus.filter";
 
 type GetContactsParams = {
   page            : number;
   limit           : number;
   search?         : string;
   advancedFilter? : ContactsAdvancedFilter;
+  relationStatus? : ContactRelationStatus;
+  onlyMyContacts? : boolean;
 };
 
 export class ContactService {
@@ -26,6 +28,19 @@ export class ContactService {
           { params, signal },
         );
     
+    return data;
+  }
+
+
+
+  public static async getContactsFromHome(   
+  ): Promise<ContactFromHomeResponse> {
+
+    const { data } = await api.get<
+      ContactFromHomeResponse>(
+        `/contact/get-to-home`
+    );
+
     return data;
   }
 
