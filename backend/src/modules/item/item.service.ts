@@ -21,29 +21,17 @@ export class ItemService {
       search: filters.search?.trim() || undefined,
     };
 
-    const { items, totalItems } = await ItemRepository.get(
+    const data = await ItemRepository.get(
       currentPage,
       pageSize,
       normalizedFilters,
     );
 
-    const totalPages = Math.ceil(totalItems / pageSize);
-
-    return {
-      items: items.map(item => ({
-        ...item,
-        originalPrice: item.originalPrice ?? -1,
-      })),
-
-      pagination: {
-        totalItems,
-        totalPages,
-        page            : currentPage,
-        limit           : pageSize,
-        hasNextPage     : currentPage < totalPages,
-        hasPreviousPage : currentPage > 1,
-      },
-    };
+    return ItemMapper.toPaginatedItemsResponse(
+      currentPage,
+      pageSize,
+      data,
+    );
   }
 
 
@@ -63,26 +51,18 @@ export class ItemService {
       search: filters.search?.trim() || undefined,
     };
 
-    const { items, totalItems } = await ItemRepository.get(
+    const data = await ItemRepository.get(
       currentPage,
       pageSize,
       normalizedFilters,
       contactId,
     );
 
-    const totalPages = Math.ceil(totalItems / pageSize);
-
-    return {
-      items,
-      pagination: {
-        totalItems,
-        totalPages,
-        page            : currentPage,
-        limit           : pageSize,
-        hasNextPage     : currentPage < totalPages,
-        hasPreviousPage : currentPage > 1,
-      },
-    };
+    return ItemMapper.toPaginatedItemsResponse(
+      pageSize,
+      limit,
+      data
+    )
   }
 
 

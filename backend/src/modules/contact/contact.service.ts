@@ -21,42 +21,26 @@ export class ContactService {
     }
 
     const currentPage = Math.max(1, Math.floor(page));
-
-    const pageSize = Math.min(
-      100,
-      Math.max(1, Math.floor(limit)),
-    );
+    const pageSize = Math.min(100, Math.max(1, Math.floor(limit)));
 
     const normalizedFilters: GetContactsFilters = {
       ...filters,
       search : filters.search?.trim() || undefined,
     };
 
-    const { contacts, totalUsers } =
-      await ContactRepository.get(
-        userId,
-        currentPage,
-        pageSize,
-        normalizedFilters,
-      );
+    const { contacts, totalUsers } = await ContactRepository.get(
+      userId,
+      currentPage,
+      pageSize,
+      normalizedFilters,
+    );
 
-    const totalPages = Math.ceil(totalUsers / pageSize);
-
-    const normalizedContacts = ContactMapper.toContactsResponse(contacts);
-
-    return {
-      items: normalizedContacts,
-
-      pagination: {
-        page       : currentPage,
-        limit      : pageSize,
-        totalItems : totalUsers,
-        totalPages,
-
-        hasNextPage     : currentPage < totalPages,
-        hasPreviousPage : currentPage > 1,
-      },
-    };
+    return ContactMapper.toPaginatedContactsResponse(
+      contacts,
+      totalUsers,
+      currentPage,
+      pageSize,
+    );
   }
 
 
@@ -76,11 +60,7 @@ export class ContactService {
     }
 
     const currentPage = Math.max(1, Math.floor(page));
-
-    const pageSize = Math.min(
-      100,
-      Math.max(1, Math.floor(limit)),
-    );
+    const pageSize = Math.min(100,Math.max(1, Math.floor(limit)));
 
     const normalizedFilters: GetContactsFilters = {
       ...filters,
@@ -95,23 +75,12 @@ export class ContactService {
       normalizedFilters,
     );
 
-    const totalPages = Math.ceil(totalUsers / pageSize);
-
-    const normalizedContacts = ContactMapper.toContactsResponse(contacts);
-
-    return {
-      items: normalizedContacts,
-
-      pagination: {
-        page       : currentPage,
-        limit      : pageSize,
-        totalItems : totalUsers,
-        totalPages,
-
-        hasNextPage     : currentPage < totalPages,
-        hasPreviousPage : currentPage > 1,
-      },
-    };
+    return ContactMapper.toPaginatedContactsResponse(
+      contacts,
+      totalUsers,
+      currentPage,
+      pageSize,
+    );
   }
 
 

@@ -14,14 +14,6 @@ export class CloudinaryService {
           folder         : "lt2-players-possession-users-profile-images",
           public_id      : `user-${userId}-${Date.now()}`,
           resource_type  : "image",
-          // transformation : [
-          //   {
-          //     width   : 512,
-          //     height  : 512,
-          //     crop    : "fill",
-          //     gravity : "auto",
-          //   },
-          // ],
         },
         (error, result) => {
           if (error) return reject(error);

@@ -1,9 +1,42 @@
 import { ItemCategory, ItemState } from "@backend/generated/prisma/enums.js";
 import { ContactDetailsResponse, ContactFromHomeResponse, ContactResponse } from "@shared/dtos/contact.dto.js";
+import { PaginatedResponse } from "@shared/dtos/pagination.dto.js";
 import { ContactRelationStatus } from "@shared/maps/filters/contacts/contactRelationStatus.filter.js";
 
 export class ContactMapper {
   
+  public static toPaginatedContactsResponse(
+    contacts   : {
+      id              : number;
+      name            : string;
+      profileImageURL : string | null;
+      joinedAt        : Date;
+      totalItems      : number;
+      loggedUserContactStatus : string;
+    }[],
+    totalUsers : number,
+    page       : number,
+    limit      : number,
+  ): PaginatedResponse<ContactResponse> {
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    return {
+      items: this.toContactsResponse(contacts),
+
+      pagination: {
+        page,
+        limit,
+        totalItems: totalUsers,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
+  }
+
+
+
   public static toContactsResponse(
     data: {
       id: number;

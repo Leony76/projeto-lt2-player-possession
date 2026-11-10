@@ -1,7 +1,39 @@
 import { ItemCategory, ItemState } from "@backend/generated/prisma/enums.js";
-import { ItemDetailsResponse, UserItemFromHomeResponse, UserItemResponse } from "@shared/dtos/item.dto.js";
+import { ItemDetailsResponse, ItemResponse, UserItemFromHomeResponse, UserItemResponse } from "@shared/dtos/item.dto.js";
+import { PaginatedResponse } from "@shared/dtos/pagination.dto.js";
 
 export class ItemMapper {
+
+
+  public static toPaginatedItemsResponse<T extends ItemResponse>(
+    page  : number,
+    limit : number,
+    data  : {
+      items      : T[];
+      totalItems : number;
+    },
+  ): PaginatedResponse<T> {
+
+    const totalPages = Math.ceil(data.totalItems / limit);
+
+    return {
+      items: data.items.map(item => ({
+        ...item,
+        originalPrice: item.originalPrice ?? -1,
+      })),
+
+      pagination: {
+        totalItems: data.totalItems,
+        totalPages,
+        page,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
+  }
+
+
 
   public static toItemDetailsResponse(
     data : {
