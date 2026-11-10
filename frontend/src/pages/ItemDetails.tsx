@@ -128,7 +128,7 @@ const ItemDetails = (): React.JSX.Element => {
     'Average truckload price (1x1):' : toLumberBucksFormat(item?.averageTruckloadPrice1x1!),
     'Release year:'                  : item?.releaseYear!,
     'Units you have:'                : item?.unitsLoggedUserHas!,
-    'Description:'                   : `"${item?.description ?? ''}"`,
+    'Description:'                   : `${item?.description ?? ''}`,
   };
 
   const tagColorByCategory: Record<Exclude<ItemsCategoryLabel, 'Category'>, string> = {
@@ -223,16 +223,16 @@ const ItemDetails = (): React.JSX.Element => {
                   if (!isWoodCategory) {
                     if (
                       label === 'Average truckload price (1x1):' ||
-                      label === 'Average market price:' ||
-                      label === 'Release year:' ||
-                      label === 'Description:'
+                      label === 'Average market price:' 
                     ) return null;
-                  } if (
+                  }
+
+                  if (
                     (label === 'Average market price:' && item?.averageMarketPrice == null) ||
                     (label === 'Release year:' && item?.releaseYear == null) ||
                     (label === 'Description:' && !item?.description) ||
                     (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
-                  ) return null;       
+                  ) return null;     
 
                   return (
                     <div className={styles.item}>

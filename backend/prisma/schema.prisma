@@ -79,7 +79,7 @@ model Item {
   category                ItemCategory
   state                   ItemState
 
-  originalPrice              Int     @map("original_price")
+  originalPrice              Int?    @map("original_price")
   averageMarketPrice         Int?    @map("average_market_price")
   averageTruckloadPrice      Int     @map("average_truckload_price")
   averageTruckloadPrice1x1   Int?    @map("average_truckload_price_1x1")

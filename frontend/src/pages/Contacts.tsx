@@ -54,8 +54,6 @@ const Contacts = (): React.JSX.Element => {
   useEffect(() => {
     const controller = new AbortController();
 
-    console.log('Fetching page:', page);
-
     setLoading(true);
     setError(null);
 
@@ -82,10 +80,6 @@ const Contacts = (): React.JSX.Element => {
 
     return () => controller.abort();
   }, [page, search, contactsAdvancedFilter]);
-
-  useEffect(() => {
-    console.log('Current page:', page);
-  }, [page]);
 
   const handleUpdateUserContactStats = (
     contactId : number,
@@ -188,8 +182,6 @@ const Contacts = (): React.JSX.Element => {
   }, []);
 
   const handleAdvancedFilter = (filter: ContactsAdvancedFilter): void => {
-    console.log('handleAdvancedFilter executado:', filter);
-
     setContactsAdvancedFilter(filter);
     setPage(1);
   };

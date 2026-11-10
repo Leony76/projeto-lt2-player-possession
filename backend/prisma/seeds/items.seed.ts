@@ -2,6 +2,14 @@ import { ItemCategory, ItemState } from '../../src/generated/prisma/enums.js';
 import { prisma } from '../../src/lib/prisma.js'
 
 const items = [
+
+  /******************************************************************************
+   * ****************************************************************************
+   * WOOD CATEGORY
+   * ****************************************************************************
+   * ****************************************************************************
+   */
+
   {
     name                     : "Oak Wood",
     category                 : ItemCategory.WOOD,
@@ -241,6 +249,50 @@ const items = [
     releaseYear              : null,
     description              : null,
     imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/1/13/THUMBmapleplank.png/revision/latest?cb=20261101112732",
+  },
+
+  /******************************************************************************
+   * ****************************************************************************
+   * AXE
+   * ****************************************************************************
+   * ****************************************************************************
+   */
+
+  {
+    name                     : "Fiery Gift of Lumber",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.GIFT,
+    averageMarketPrice       : 25000,
+    originalPrice            : 14000,
+    averageTruckloadPrice    : 1750000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Cut a little wood, cut a lot of wood. You're a lumber person, and you know how to get the job done."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/f4/THUMBfierygift.png/revision/latest?cb=20220117180533",
+  },
+  {
+    name                     : "Fire axe (Boxed)",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 25000,
+    originalPrice            : 14000,
+    averageTruckloadPrice    : 650000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/54/THUMBBOXfireaxe.png/revision/latest?cb=20220117183957",
+  },
+  {
+    name                     : "Fire axe",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : 12500,
+    originalPrice            : 14000,
+    averageTruckloadPrice    : 140000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Can anyone even read this? If so, send me a message and let me know. Thx."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/b/bd/AXEfire.png/revision/latest?cb=20220126020753",
   },
 ];
 

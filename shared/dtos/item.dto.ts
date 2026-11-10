@@ -1,5 +1,5 @@
-import type { ItemsCategory } from "@shared/maps/filters/items/itemCategory.map";
-import type { ItemsState } from "@shared/maps/filters/items/itemState.map";
+import type { ItemsCategory } from "../maps/filters/items/itemCategory.map";
+import type { ItemsState } from "../maps/filters/items/itemState.map";
 
 export type ItemRequest = {};
 

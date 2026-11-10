@@ -106,7 +106,7 @@ const MyItems = (): React.JSX.Element => {
 
         <div className={styles.toolbar_container}>
           <SearchBar
-            placeholder="Search items..."
+            placeholder="Search item..."
             debounceTime={400}
             onSearch={handleSearch}
             flex={4}
