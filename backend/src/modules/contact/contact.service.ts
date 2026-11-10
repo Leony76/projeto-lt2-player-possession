@@ -61,6 +61,61 @@ export class ContactService {
 
 
 
+  public static async getContactContacts(
+    userId    : number,
+    contactId : number,
+    page      : number,
+    limit     : number,
+    filters   : GetContactsFilters,
+  ): Promise<PaginatedResponse<ContactResponse>> {
+
+    if (!userId) {
+      throw new APIError(401, 'User not authenticated');
+    } if (!contactId || contactId === userId) {
+      throw new APIError(400, 'Invalid contact ID');
+    }
+
+    const currentPage = Math.max(1, Math.floor(page));
+
+    const pageSize = Math.min(
+      100,
+      Math.max(1, Math.floor(limit)),
+    );
+
+    const normalizedFilters: GetContactsFilters = {
+      ...filters,
+      search : filters.search?.trim() || undefined,
+    };
+
+    const { contacts, totalUsers } = await ContactRepository.getContactContacts(
+      contactId,
+      userId,
+      currentPage,
+      pageSize,
+      normalizedFilters,
+    );
+
+    const totalPages = Math.ceil(totalUsers / pageSize);
+
+    const normalizedContacts = ContactMapper.toContactsResponse(contacts);
+
+    return {
+      items: normalizedContacts,
+
+      pagination: {
+        page       : currentPage,
+        limit      : pageSize,
+        totalItems : totalUsers,
+        totalPages,
+
+        hasNextPage     : currentPage < totalPages,
+        hasPreviousPage : currentPage > 1,
+      },
+    };
+  }
+
+
+
   public static async getContactsFromHome(
     userId : number,
   ): Promise<ContactFromHomeResponse> {

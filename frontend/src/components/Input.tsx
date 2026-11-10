@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './css/Input.module.css'
 import { IoMdEye } from 'react-icons/io';
 import ErrorMessage from './ErrorMessage';
@@ -27,9 +27,11 @@ const Input = React.forwardRef<HTMLInputElement, Props>(({
   const inputId: string = id ?? React.useId();
 
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-  const [hasValue, setHasValue] = useState<boolean>(
-    Boolean(value ?? defaultValue)
-  );
+  const [hasValue, setHasValue] = useState<boolean>();
+
+  useEffect(() => {
+    setHasValue(Boolean(value ?? defaultValue));
+  }, [value, defaultValue]);
 
   return (
     <div className={styles.container}>
@@ -49,6 +51,11 @@ const Input = React.forwardRef<HTMLInputElement, Props>(({
           className={`${styles.input} ${className ?? ""}`}
           value={value}
           defaultValue={defaultValue}
+          onAnimationStart={(e) => {
+            if (e.animationName === 'onAutoFillStart') {
+              setHasValue(Boolean(e.currentTarget.value));
+            }
+          }}
           type={type === 'password'
             ? passwordVisible ? 'text' : 'password'
             : type

@@ -10,7 +10,7 @@ export class ItemMapper {
       state       : ItemState;
       description : string | null;
       name        : string;
-      originalPrice            : number;
+      originalPrice            : number | null;
       averageMarketPrice       : number | null;
       averageTruckloadPrice    : number;
       averageTruckloadPrice1x1 : number | null;
@@ -26,6 +26,7 @@ export class ItemMapper {
 
     return {
       ...item,
+      originalPrice: item.originalPrice ?? -1,
       unitsLoggedUserHas : users[0]?.units ?? 0,
     };
   }
@@ -42,7 +43,7 @@ export class ItemMapper {
           state       : ItemState;
           description : string | null;
           name        : string;
-          originalPrice      : number;
+          originalPrice      : number | null;
           averageMarketPrice : number | null;
           imageURL           : string;
         };
@@ -53,6 +54,7 @@ export class ItemMapper {
     return {
       items: data.items.map(({ item, units }) => ({
         ...item,
+        originalPrice : item.originalPrice ?? -1,
         units,
       })),
 
@@ -69,7 +71,7 @@ export class ItemMapper {
       state        : ItemState;
       description  : string | null;
       name               : string;
-      originalPrice      : number;
+      originalPrice      : number | null;
       averageMarketPrice : number | null;
       imageURL           : string;
       users: {
@@ -79,6 +81,7 @@ export class ItemMapper {
   ): UserItemResponse[] {
     return data.map(({ users, ...item }) => ({
       ...item,
+      originalPrice : item.originalPrice ?? -1,
       units : users[0]?.units ?? 0,
     }));
   }

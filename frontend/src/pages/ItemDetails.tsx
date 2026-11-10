@@ -30,8 +30,10 @@ const ItemDetails = (): React.JSX.Element => {
   const [itemNewUnitsAmount, setItemNewUnitsAmount] = useState<number>(0);
   const [itemNewUnitsAmountOnInput, setItemNewUnitsAmountOnInput] = useState<string>("0");
   const [isEditingUnits, setIsEditingUnits] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   useEffect(() => {
     ( async() => {
@@ -54,7 +56,7 @@ const ItemDetails = (): React.JSX.Element => {
   }, [itemNewUnitsAmount]);
 
   const handleAddNewItemUnitsAmount = async (): Promise<void> => {
-    if (loading || !item) return;
+    if (isUpdating || !item) return;
 
     const validation = updateUnitsSchema.safeParse({
       units: itemNewUnitsAmount,
@@ -66,7 +68,7 @@ const ItemDetails = (): React.JSX.Element => {
     }
 
     try {
-      setLoading(true);
+      setIsUpdating(true);
 
       const response = await ItemService.updateUserItemUnits(
         item.id, 
@@ -87,7 +89,7 @@ const ItemDetails = (): React.JSX.Element => {
     } catch (error: unknown) {
       showToast('ERROR', handleAxiosError(error));
     } finally {
-      setLoading(false);
+      setIsUpdating(false);
     }
   };
 
@@ -161,7 +163,7 @@ const ItemDetails = (): React.JSX.Element => {
   return (
     <Layout>
       <>
-      { (imageExpand && item) &&
+      {(imageExpand && item) &&
         <ImageExpand
           imageURL={item.imageURL}
           label={item.name}
@@ -287,12 +289,14 @@ const ItemDetails = (): React.JSX.Element => {
 
                       <Button
                         buttonStyle='DEFAULT'
-                        label='Submit'
+                        label={isUpdating ? 'Submitting...' : 'Submit'}
+                        loading={isUpdating}
                         onClick={handleAddNewItemUnitsAmount}
                         icon={() => <FaCheckCircle size={14} />}
+                        iconPosition={{ bottom: '-3px' }}
                         padding={{
-                          X: '20px',
-                          Y: '4px'
+                          X : '20px',
+                          Y : '4px'
                         }}
                         colors={{
                           background  : '#cdffba',

@@ -33,6 +33,24 @@ export class ContactService {
 
 
 
+  public static async getContactContacts(
+    params    : GetContactsParams,
+    contactId : number,
+    signal?   : AbortSignal,
+  ): Promise<PaginatedResponse<ContactResponse>> {
+
+    const { data } = await api.get<
+      PaginatedResponse<
+        ContactResponse>>(
+          `/contact/${contactId}/contacts`, 
+          { params, signal },
+        );
+    
+    return data;
+  }
+
+
+
   public static async getContactsFromHome(   
   ): Promise<ContactFromHomeResponse> {
 

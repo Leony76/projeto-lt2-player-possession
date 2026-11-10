@@ -11,7 +11,7 @@ import type { UserItemResponse as UserItem, ItemResponse as Item } from '@shared
 type Props = Item & {
   page: 'ITEMS'
 } | UserItem & {
-  page: 'HOME/MY_ITEMS'
+  page: 'HOME/USER_ITEMS'
 };
 
 const ItemNavCard = (props:Props): React.JSX.Element => {
@@ -105,7 +105,7 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
         }
       </div>
       
-      { props.page === 'HOME/MY_ITEMS' &&
+      { props.page === 'HOME/USER_ITEMS' &&
         <div className={styles.units_increment_decrement_container}>
           <p 
           className={styles.units} 

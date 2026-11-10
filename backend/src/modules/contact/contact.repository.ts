@@ -216,6 +216,234 @@ export class ContactRepository {
 
 
 
+  public static async getContactContacts(
+    contactId : number,
+    userId    : number,
+    page      : number,
+    limit     : number,
+    filters   : GetContactsFilters,
+  ) {
+    const skip = (page - 1) * limit;
+    
+    const conditions: Prisma.Sql[] = [
+      Prisma.sql`target_contacts.status = 'CONTACT'`,
+      Prisma.sql`u.id <> ${userId}`,
+      Prisma.sql`u.id <> ${contactId}`,
+    ];
+
+    if (filters.search?.trim()) {
+      conditions.push(
+        Prisma.sql`u.name ILIKE ${`%${filters.search.trim()}%`}`
+      );
+    }
+
+    // if (filters.relationStatus) {
+    //   switch (filters.relationStatus) {
+    //     case 'CONTACT':
+    //       conditions.push(
+    //         Prisma.sql`c.status = 'CONTACT'`
+    //       );
+    //       break;
+
+    //     case 'REQUEST_SENT':
+    //       conditions.push(
+    //         Prisma.sql`
+    //           c.status = 'PENDING'
+    //           AND c.requester_id = ${userId}
+    //         `
+    //       );
+    //       break;
+
+    //     case 'REQUEST_RECEIVED':
+    //       conditions.push(
+    //         Prisma.sql`
+    //           c.status = 'PENDING'
+    //           AND c.addressee_id = ${userId}
+    //         `
+    //       );
+    //       break;
+
+    //     case 'NOT_CONTACT':
+    //       conditions.push(
+    //         Prisma.sql`
+    //           (
+    //             c.id IS NULL
+    //             OR c.status = 'NOT_CONTACT'
+    //           )
+    //         `
+    //       );
+    //       break;
+    //   }
+    // }
+
+    // if (filters.onlyMyContacts) {
+    //   conditions.push(
+    //     Prisma.sql`c.status = 'CONTACT'`
+    //   );
+    // }
+
+    let orderBy: Prisma.Sql;
+
+    switch (filters.advancedFilter) {
+      case 'AZ_NAME':
+        orderBy = Prisma.sql`u.name ASC, u.id ASC`;
+        break;
+
+      case 'ZA_NAME':
+        orderBy = Prisma.sql`u.name DESC, u.id DESC`;
+        break;
+
+      case 'MOST_RECENT_JOINS':
+        orderBy = Prisma.sql`u.created_at DESC, u.id DESC`;
+        break;
+
+      case 'LESS_RECENT_JOINS':
+        orderBy = Prisma.sql`u.created_at ASC, u.id ASC`;
+        break;
+
+      case 'MOST_ITEMS':
+        orderBy = Prisma.sql`"totalItems" DESC, u.id ASC`;
+        break;
+
+      case 'LESS_ITEMS':
+        orderBy = Prisma.sql`"totalItems" ASC, u.id ASC`;
+        break;
+
+      case 'MOST_LUMBER_BUCKS':
+        orderBy = Prisma.sql`u.lumber_bucks DESC, u.id ASC`;
+        break;
+
+      case 'LESS_LUMBER_BUCKS':
+        orderBy = Prisma.sql`u.lumber_bucks ASC, u.id ASC`;
+        break;
+
+      case 'MOST_CONTACTS':
+        orderBy = Prisma.sql`"totalContacts" DESC, u.id ASC`;
+        break;
+
+      case 'LESS_CONTACTS':
+        orderBy = Prisma.sql`"totalContacts" ASC, u.id ASC`;
+        break;
+
+      default:
+        orderBy = Prisma.sql`u.name ASC, u.id ASC`;
+        break;
+    }
+
+    const [contacts, totalResult] = await prisma.$transaction([
+      prisma.$queryRaw<{
+        id   : number;
+        name : string;
+        profileImageURL : string | null;
+        joinedAt        : Date;
+        totalItems      : number;
+        lumberBucks     : number;
+        totalContacts   : number;
+        loggedUserContactStatus:
+          | 'CONTACT'
+          | 'REQUEST_SENT'
+          | 'REQUEST_RECEIVED'
+          | 'NOT_CONTACT';
+      }[]>(Prisma.sql`
+        SELECT
+          u.id,
+          u.name,
+          u.profile_image_url AS "profileImageURL",
+          u.created_at AS "joinedAt",
+          u.lumber_bucks AS "lumberBucks",
+
+          COALESCE(items.total, 0)::float8 AS "totalItems",
+
+          COALESCE(user_contacts.total, 0)::int AS "totalContacts",
+
+          CASE
+            WHEN c.status = 'CONTACT'
+              THEN 'CONTACT'
+
+            WHEN c.status = 'PENDING'
+              AND c.requester_id = ${userId}
+              THEN 'REQUEST_SENT'
+
+            WHEN c.status = 'PENDING'
+              AND c.addressee_id = ${userId}
+              THEN 'REQUEST_RECEIVED'
+
+            ELSE 'NOT_CONTACT'
+          END AS "loggedUserContactStatus"
+
+        FROM contacts target_contacts
+
+        INNER JOIN users u
+          ON (
+            (target_contacts.requester_id = ${contactId}
+              AND u.id = target_contacts.addressee_id)
+
+            OR
+
+            (target_contacts.addressee_id = ${contactId}
+              AND u.id = target_contacts.requester_id)
+          )
+
+        LEFT JOIN LATERAL (
+          SELECT SUM(ui.units) AS total
+          FROM user_items ui
+          WHERE ui.user_id = u.id
+            AND ui.units > 0
+        ) items ON true
+
+        LEFT JOIN LATERAL (
+          SELECT COUNT(*) AS total
+          FROM contacts ct
+          WHERE ct.status = 'CONTACT'
+            AND (
+              ct.requester_id = u.id
+              OR ct.addressee_id = u.id
+            )
+        ) user_contacts ON true
+
+        LEFT JOIN contacts c
+          ON (
+            (c.requester_id = ${userId} AND c.addressee_id = u.id)
+            OR
+            (c.requester_id = u.id AND c.addressee_id = ${userId})
+          )
+
+        WHERE ${Prisma.join(conditions, ' AND ')}
+        
+        ORDER BY ${orderBy}
+        -- ORDER BY u.name ASC, u.id ASC
+
+        LIMIT ${limit}
+        OFFSET ${skip}
+      `),
+
+      prisma.$queryRaw<{ total: bigint }[]>(Prisma.sql`
+        SELECT COUNT(*) AS total
+        FROM contacts target_contacts
+
+        INNER JOIN users u
+          ON (
+            (target_contacts.requester_id = ${contactId}
+              AND u.id = target_contacts.addressee_id)
+
+            OR
+
+            (target_contacts.addressee_id = ${contactId}
+              AND u.id = target_contacts.requester_id)
+          )
+
+        WHERE ${Prisma.join(conditions, ' AND ')}
+      `),
+    ]);
+
+    return {
+      contacts,
+      totalUsers: Number(totalResult[0]?.total ?? 0),
+    };
+  }
+
+
+
   public static async createContactRequest(
     requesterId : number,
     addresseeId : number,
@@ -263,7 +491,7 @@ export class ContactRepository {
         COUNT(*) OVER() AS "totalContacts"
       FROM user_contacts
       ORDER BY "joinedAt" DESC
-      LIMIT 10;
+      LIMIT 9;
     `;
   }
 
@@ -486,7 +714,7 @@ export class ContactRepository {
 
             items: {
               where: {
-                units : {gt : 0 },
+                units : { gt : 0 },
               },
               select : {
                 units : true,
@@ -503,7 +731,7 @@ export class ContactRepository {
                   },
                 },
               },
-              take : 7,
+              take: 7,
             },
 
             sentContactRequests: {

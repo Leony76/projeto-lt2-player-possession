@@ -34,6 +34,24 @@ export class ItemService {
 
 
 
+  public static async getContactItems(
+    params    : GetItemsParams,
+    contactId : number,
+    signal?   : AbortSignal,
+  ): Promise<PaginatedResponse<UserItemResponse>> {
+
+    const { data } = await api.get<
+      PaginatedResponse<
+        UserItemResponse>>(
+          `/item/contact/${contactId}/get`, 
+          { params, signal },
+        );  
+
+    return data;
+  }
+
+
+
   public static async getItemDetails(
     itemId : number,
   ): Promise<ItemDetailsResponse> {

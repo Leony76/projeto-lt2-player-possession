@@ -28,6 +28,30 @@ export class ItemController {
 
 
 
+  public static async getContactItems(
+    req : Request,
+    res : Response,
+  ) {
+    const query = res.locals.validatedData as GetItemsQuery;
+    const contactId = Number(req.params.id);
+
+    const result = await ItemService.getContactItems(
+      contactId,
+      query.page,
+      query.limit,
+      {
+        search         : query.search,
+        category       : query.category,
+        state          : query.state,
+        advancedFilter : query.advancedFilter,
+      },
+    );
+
+    return res.status(200).json(result);
+  }
+
+
+
   public static async getItemDetails(
     req : Request,
     res : Response,

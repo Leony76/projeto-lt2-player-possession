@@ -28,6 +28,32 @@ export class ContactController {
     return res.status(200).json(result);
   }
 
+
+
+  public static async getContactContacts(
+    req : Request,
+    res : Response,
+  ) {
+    const query = res.locals.validatedData as GetContactsQuery;
+    const contactId = Number(req.params.id);
+    const userId = Number(req.authUserId);
+
+    const result = await ContactService.getContactContacts(
+      userId,
+      contactId,
+      query.page,
+      query.limit,
+      {
+        search         : query.search,
+        advancedFilter : query.advancedFilter,
+        onlyMyContacts: query.onlyMyContacts,
+        ...(query.relationStatus && { relationStatus: query.relationStatus }),
+      },
+    );
+
+    return res.status(200).json(result);
+  }
+
   
 
   public static async getContactsFromHome(

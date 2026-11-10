@@ -14,6 +14,13 @@ router.get(
 );
 
 router.get(
+  "/contact/:id/get", 
+  requireAuth,
+  validate(getItemsQuerySchema, "query"),
+  ItemController.getContactItems,
+);
+
+router.get(
   "/get/:id", 
   requireAuth,
   ItemController.getItemDetails,

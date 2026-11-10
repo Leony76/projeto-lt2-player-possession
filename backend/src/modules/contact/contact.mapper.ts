@@ -16,16 +16,12 @@ export class ContactMapper {
   ): ContactResponse[] {
 
     return data.map(contact => ({
-      id: contact.id,
-      name: contact.name,
-      profileImageURL: contact.profileImageURL,
-
-      joinedAt: contact.joinedAt.toISOString(),
-
-      totalItems: contact.totalItems,
-
-      loggedUserContactStatus:
-        contact.loggedUserContactStatus as ContactRelationStatus,
+      id              : contact.id,
+      name            : contact.name,
+      profileImageURL : contact.profileImageURL,
+      joinedAt        : contact.joinedAt.toISOString(),
+      totalItems      : contact.totalItems,
+      loggedUserContactStatus : contact.loggedUserContactStatus as ContactRelationStatus,
     }));
   }
 
@@ -55,7 +51,7 @@ export class ContactMapper {
         name        : string;
         category    : ItemCategory;
         state       : ItemState;
-        originalPrice      : number;
+        originalPrice      : number | null;
         averageMarketPrice : number | null;
         imageURL           : string;
       }[];
@@ -65,6 +61,10 @@ export class ContactMapper {
       ...data,
       joinedAt : data.joinedAt.toISOString(),
       loggedUserContactStatus : data.loggedUserContactStatus as ContactRelationStatus,
+      items : data.items.map((item) => ({
+        ...item,
+        originalPrice: item.originalPrice ?? -1
+      })),
     }
   }
 

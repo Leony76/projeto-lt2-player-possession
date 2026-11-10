@@ -144,7 +144,7 @@ const MyItems = (): React.JSX.Element => {
                 key={item.id}
                 >
                   <ItemNavCard 
-                    page='HOME/MY_ITEMS'
+                    page='HOME/USER_ITEMS'
                     { ...item } 
                   />
                 </li>

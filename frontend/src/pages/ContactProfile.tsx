@@ -232,7 +232,14 @@ const ContactProfile = (): React.JSX.Element | null => {
                   title='Contacts'
                 />
                 
-                {states.contact.contacts.length > 9 && <SeeAllLink to={`/contact/${states.contact.id}/contacts`}/>}       
+                {states.contact.contacts.length > 9 && 
+                  <SeeAllLink 
+                    to={`/contact/${states.contact.id}/contacts`}
+                    state={{
+                      contactName: states.contact.name,
+                    }}
+                  />
+                }       
               </div>
 
               <nav className={styles.nav}>
@@ -265,7 +272,14 @@ const ContactProfile = (): React.JSX.Element | null => {
                   title='Items'
                 />
                 
-                { states.contact.items.length > 7 && <SeeAllLink to={`/contact/${states.contact.id}/items`}/>}       
+                {states.contact.items.length > 6 && 
+                  <SeeAllLink 
+                    to={`/contact/${states.contact.id}/items`}
+                    state={{
+                      contactName: states.contact.name,
+                    }}
+                  />
+                }       
               </div>
 
               <nav className={styles.nav}>
@@ -280,7 +294,7 @@ const ContactProfile = (): React.JSX.Element | null => {
                       >
                         <ItemNavCard
                           { ...item }
-                          page='HOME/MY_ITEMS'
+                          page='HOME/USER_ITEMS'
                         />
                       </li>
                     ))

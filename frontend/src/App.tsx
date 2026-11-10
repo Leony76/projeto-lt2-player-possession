@@ -12,8 +12,11 @@ import ItemDetails from './pages/ItemDetails';
 import ContactProfile from './pages/ContactProfile';
 import Contacts from './pages/Contacts';
 import MyContacts from './pages/MyContacts';
+import ContactContacts from './pages/ContactContacts';
+import ContactItems from './pages/ContactItems';
+import type React from 'react';
 
-function App() {
+function App(): React.JSX.Element {
   return (
     <>
       <Routes>
@@ -61,6 +64,16 @@ function App() {
           <Route
             path="/contacts"
             element={<Contacts />}
+          />
+
+          <Route
+            path="/contact/:id/contacts"
+            element={<ContactContacts />}
+          />
+
+          <Route
+            path="/contact/:id/items"
+            element={<ContactItems />}
           />
 
           <Route

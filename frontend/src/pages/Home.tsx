@@ -12,7 +12,7 @@ import AddItemNavCard from '@/components/AddItemNavCard';
 import type { UserItemFromHomeResponse as UserItem } from '@shared/dtos/item.dto';
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
 import { ItemService } from '@/services/item.service';
-import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
+import { ErrorState, LoadingState } from '@/components/ListStates';
 import SectionTitle from '@/components/SectionTitle';
 import { BiSolidContact } from 'react-icons/bi';
 import { LuBoxes } from 'react-icons/lu';
@@ -59,7 +59,7 @@ const Home = (): React.JSX.Element => {
               size='21px'
             />
 
-            {((contacts?.contacts.length ?? 0) > 9) && <SeeAllLink to='/my-contacts'/>}
+            {((contacts?.contacts.length ?? 0) > 8) && <SeeAllLink to='/my-contacts'/>}
           </div>
 
           <nav className={styles.nav}>
@@ -82,8 +82,7 @@ const Home = (): React.JSX.Element => {
                   <AddContactButton/>
                 </li>
 
-                {contacts.contacts.map((contact) => (
-                  
+                {contacts.contacts.slice(0, 8).map((contact) => (               
                   <li 
                   className={styles.li}
                   key={contact.id}
@@ -97,12 +96,6 @@ const Home = (): React.JSX.Element => {
                   </li>
                 ))}
                 </>
-              )}
-
-              {(!loading && !error && contacts?.contacts.length === 0) && (
-                <div>
-                  <NotFoundState label='contacts'/>
-                </div>
               )}
             </ul>
           </nav>
@@ -147,18 +140,12 @@ const Home = (): React.JSX.Element => {
                   key={item.id}
                   >
                     <ItemNavCard
-                      page='HOME/MY_ITEMS'
+                      page='HOME/USER_ITEMS'
                       { ...item }
                     />
                   </li>
                 ))}
                 </>
-              )}
-              
-              {(!loading && !error && items?.items.length === 0) && (
-                <div>
-                  <NotFoundState label='items'/>
-                </div>
               )}
             </ul>
           </nav>

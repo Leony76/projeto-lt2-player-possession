@@ -1,6 +1,7 @@
 import { prisma } from "@backend/lib/prisma.js";
 import type { Prisma } from "../../generated/prisma/client.js";
 import type { GetItemsFilters } from "@shared/maps/filters/items/getItems.type.js";
+import { ItemResponse, UserItemResponse } from "@shared/dtos/item.dto.js";
 
 
 export class ItemRepository {
@@ -9,11 +10,38 @@ export class ItemRepository {
     page    : number,
     limit   : number,
     filters : GetItemsFilters,
+    userId  : number,
+  ): Promise<{
+    items      : UserItemResponse[];
+    totalItems : number;
+  }>;
+
+  public static async get(
+    page    : number,
+    limit   : number,
+    filters : GetItemsFilters,
+    userId? : undefined,
+  ): Promise<{
+    items      : ItemResponse[];
+    totalItems : number;
+  }>;
+
+  public static async get(
+    page    : number,
+    limit   : number,
+    filters : GetItemsFilters,
+    userId ?: number,
   ) {
 
     const skip = (page - 1) * limit;
 
     const where: Prisma.ItemWhereInput = {
+      ...(userId !== undefined && {
+        users: {
+          some: { userId },
+        },
+      }),
+      
       ...(filters.search && {
         OR: [
           {
@@ -109,17 +137,40 @@ export class ItemRepository {
           description        : true,
           originalPrice      : true,
           averageMarketPrice : true,
-        }
+
+          ...(userId && {
+            users: {
+              where  : { userId      },
+              select : { units: true },
+            }}
+          ),
+        },
       }),
 
       prisma.item.count({
         where,
       }),
-
     ]);
 
+    const formattedItems = items.map(item => {
+      if (userId === undefined) {
+        return {
+          ...item,
+          originalPrice: item.originalPrice ?? -1,
+        };
+      }
+
+      const { users, ...itemData } = item;
+
+      return {
+        ...itemData,
+        units         : users?.[0]?.units ?? 0,
+        originalPrice : itemData.originalPrice ?? -1,
+      };
+    });
+
     return {
-      items,
+      items : formattedItems,
       totalItems,
     };
   }
