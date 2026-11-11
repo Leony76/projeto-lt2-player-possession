@@ -309,12 +309,15 @@ const ItemDetails = (): React.JSX.Element => {
                   <Button
                     buttonStyle='DEFAULT'
                     icon={() => <IoAddCircle />}
-                    label='Add item'
+                    label='Add Item'
                     onClick={() => {
                       setIsEditingUnits(true);
                       setItemNewUnitsAmount(prev =>
                         Math.min(2147483647, prev + 1)
                       );
+                    }}
+                    iconPosition={{
+                      bottom: '-2.5px'
                     }}
                     padding={{
                       X: '20px',

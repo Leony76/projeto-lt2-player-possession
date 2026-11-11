@@ -3975,9 +3975,362 @@ const items = [
    * ****************************************************************************
    */
 
+  {
+    name                     : "Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 40000,
+    originalPrice            : 360,
+    averageTruckloadPrice    : 2000000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Perfect for warding off the neighborhood youngsters."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/0d/THUMBBOXpumpkin.png/revision/latest?cb=20220117180516",
+  },
+  {
+    name                     : "Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 360,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Perfect for warding off the neighborhood youngsters."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/9/9f/PumpkinUnboxed.png/revision/latest?cb=20161011213909",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Dark Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 37500,
+    originalPrice            : 500,
+    averageTruckloadPrice    : 3500000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"You feel this pumpkin calling you from deep within."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/fc/THUMBBOXdarkpumpkin.png/revision/latest?cb=20220117180420",
+  },
+  {
+    name                     : "Dark Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"You feel this pumpkin calling you from deep within."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/3f/Dark_pumpkin.png/revision/latest?cb=20160925183830",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Strange Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 41000,
+    originalPrice            : 510,
+    averageTruckloadPrice    : 2750000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2017,
+    description              : `"You're not sure about this pumpkin."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/a7/THUMBBOXstrangepumpkin.png/revision/latest?cb=20220123215124",
+  },
+  {
+    name                     : "Strange Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 510,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2017,
+    description              : `"You're not sure about this pumpkin."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/ca/2f320dca0a46b984c4acb62d83a8b229.png/revision/latest?cb=20170924043058",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Cursed Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 45000,
+    originalPrice            : 524,
+    averageTruckloadPrice    : 1750000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2018,
+    description              : `"The wise avoid the cursed."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/e7/THUMBBOXcursedpumpkin.png/revision/latest?cb=20220117180414",
+  },
+  {
+    name                     : "Cursed Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 524,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2018,
+    description              : `"The wise avoid the cursed."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/26/CursedPumpkin.png/revision/latest?cb=20180927004253",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Lumbkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 30000,
+    originalPrice            : 620,
+    averageTruckloadPrice    : 2250000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2019,
+    description              : `"Woody pumpkin?"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/4c/THUMBBOXlumbkin.png/revision/latest?cb=20220117180508",
+  },
+  {
+    name                     : "Lumbkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 620,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2019,
+    description              : `"Woody pumpkin?"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/a2/THUMBlumbkin.png/revision/latest?cb=20220117180533",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Ghastly Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 37500,
+    originalPrice            : 832,
+    averageTruckloadPrice    : 3750000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2020,
+    description              : `"Ah!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/31/THUMBBOXghastlypumpkin.png/revision/latest?cb=20220117180452",
+  },
+  {
+    name                     : "Ghastly Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 832,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2020,
+    description              : `"Ah!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/4c/Gassy.png/revision/latest?cb=20201001014614",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Rosea Flamma Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 41500,
+    originalPrice            : 704,
+    averageTruckloadPrice    : 2750000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2021,
+    description              : `"🌺🌸🌷🎃👻💀"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/f9/THUMBBOXroseaflammapumpkin.png/revision/latest?cb=20220117180518",
+  },
+  {
+    name                     : "Rosea Flamma Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 704,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2021,
+    description              : `"🌺🌸🌷🎃👻💀"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/38/THUMBroseaflammapumpkin.png/revision/latest?cb=20220123220345",
+  },
+
+  // --------------------------------------------------------------------------- //
+  
+  {
+    name                     : "Boreal Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 41500,
+    originalPrice            : 800,
+    averageTruckloadPrice    : 2250000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2022,
+    description              : `”🥶🎃”`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/d/d5/THUMBBOXboreal.png/revision/latest?cb=20221007191642",
+  },
+  {
+    name                     : "Boreal Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 800,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2022,
+    description              : `”🥶🎃”`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/8/86/THUMBboreal.png/revision/latest?cb=20221007191633",
+  },
+
+  // --------------------------------------------------------------------------- //
+  
+  {
+    name                     : "Gloomy Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 30000,
+    originalPrice            : 808,
+    averageTruckloadPrice    : 2550000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2023,
+    description              : `"😔🎃"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/6/61/THUMBBOXGloomyPumpkin.png/revision/latest?cb=20231125225102",
+  },
+  {
+    name                     : "Gloomy Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 808,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2023,
+    description              : `"😔🎃"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/aa/THUMBgloomypumpkin.png/revision/latest?cb=20231101233230",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Ordinary Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 30000,
+    originalPrice            : 500,
+    averageTruckloadPrice    : 3750000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2024,
+    description              : `"An awesome pumpkin."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/7/74/THUMBBOXOrdinaryPumpkin.png/revision/latest?cb=20241022225859",
+  },
+  {
+    name                     : "Ordinary Pumpkin (13-14 stud)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : 650000,
+    originalPrice            : 500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2024,
+    description              : `"An awesome pumpkin."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/a7/THUMBOrdinaryPumpkin.png/revision/latest?cb=20241018001137",
+  },
+  {
+    name                     : "Ordinary Pumpkin (10-12 stud)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : 350000,
+    originalPrice            : 500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2024,
+    description              : `"An awesome pumpkin."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/a7/THUMBOrdinaryPumpkin.png/revision/latest?cb=20241018001137",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Jack-O'-Melon (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 30000,
+    originalPrice            : 728,
+    averageTruckloadPrice    : 4250000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : `"🍉🎃🤔"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/ef/Boxedjackomelon.png/revision/latest?cb=20251009062617",
+  },
+  {
+    name                     : "Jack-O'-Melon",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 728,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : `"🍉🎃🤔"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/7/70/Jack-OMelon.png/revision/latest?cb=20251008002648",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Carved Pumpkin (Boxed)",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 702,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2026,
+    description              : `"Looks like someone took a stab at it."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/f3/CarvedPumpkinBox.webp/revision/latest?cb=20261002200350",
+  },
+  {
+    name                     : "Carved Pumpkin",
+    category                 : ItemCategory.PUMPKIN,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 702,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2026,
+    description              : `"Looks like someone took a stab at it."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/4c/Carved_Pumpkin.webp/revision/latest?cb=20261001154535",
+  },
+
+  /******************************************************************************
+   * ****************************************************************************
+   * WOBBLE BOBBLES
+   * ****************************************************************************
+   * ****************************************************************************
+   */
+
   // {
   //   name                     : "",
-  //   category                 : ItemCategory.PUMPKIN,
+  //   category                 : ItemCategory.WOBBLE_BOBBLE,
+  //   state                    : ItemState.GIFT,
+  //   averageMarketPrice       : ,
+  //   originalPrice            : ,
+  //   averageTruckloadPrice    : ,
+  //   averageTruckloadPrice1x1 : null,
+  //   releaseYear              : ,
+  //   description              : ``,
+  //   imageURL                 : "",
+  // },
+  // {
+  //   name                     : "",
+  //   category                 : ItemCategory.WOBBLE_BOBBLE,
   //   state                    : ItemState.BOXED,
   //   averageMarketPrice       : ,
   //   originalPrice            : ,
@@ -3989,7 +4342,7 @@ const items = [
   // },
   // {
   //   name                     : "",
-  //   category                 : ItemCategory.PUMPKIN,
+  //   category                 : ItemCategory.WOBBLE_BOBBLE,
   //   state                    : ItemState.LOOSE,
   //   averageMarketPrice       : null,
   //   originalPrice            : ,
