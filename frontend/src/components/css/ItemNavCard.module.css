@@ -72,9 +72,9 @@
     }
     
     .ball {
-      background-color: rgba(212, 199, 188, 0.11);
-      color: rgb(143, 134, 127);
-      border-color: rgb(143, 134, 127);
+      background-color: rgba(253, 131, 255, 0.164);
+      color: rgb(253, 131, 255);
+      border-color: rgb(253, 131, 255);
     }
 
     .book {

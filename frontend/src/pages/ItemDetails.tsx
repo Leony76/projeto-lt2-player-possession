@@ -121,16 +121,16 @@ const ItemDetails = (): React.JSX.Element => {
   };
 
   const ITEMS_DESCRIPTIVE_INFOS_MAP: Record<string, string | number> = {
-    'Name:'                          : item?.name!,
-    'Category:'                      : ITEMS_CATEGORY_MAP[item?.category!],
-    'State:'                         : ITEMS_STATE_MAP[item?.state!],
-    'Original price:'                : toLumberBucksFormat(item?.originalPrice!),
-    'Average market price:'          : toLumberBucksFormat(item?.averageMarketPrice!),
-    'Average truckload price:'       : toLumberBucksFormat(item?.averageTruckloadPrice!),
-    'Average truckload price (1x1):' : toLumberBucksFormat(item?.averageTruckloadPrice1x1!),
-    'Release year:'                  : item?.releaseYear!,
-    'Units you have:'                : item?.unitsLoggedUserHas!,
-    'Description:'                   : `${item?.description ?? ''}`,
+    'Name:'                          : item?.name ?? 'Not available',
+    'Category:'                      : ITEMS_CATEGORY_MAP[item?.category!] ?? 'Not available',
+    'State:'                         : ITEMS_STATE_MAP[item?.state!] ?? 'Not available',
+    'Original price:'                : item?.originalPrice ? toLumberBucksFormat(item?.originalPrice) : 'Not available',
+    'Average market price:'          : item?.averageMarketPrice ? toLumberBucksFormat(item?.averageMarketPrice) : 'Not available',
+    'Average truckload price:'       : item?.averageTruckloadPrice ? toLumberBucksFormat(item?.averageTruckloadPrice) : 'Not available',
+    'Average truckload price (1x1):' : item?.averageTruckloadPrice1x1 ?toLumberBucksFormat(item?.averageTruckloadPrice1x1) : 'Not available',
+    'Release year:'                  : item?.releaseYear ?? 'Not available',
+    'Units you have:'                : item?.unitsLoggedUserHas ?? 'Not available',
+    'Description:'                   : `${item?.description ?? 'Not available'}`,
   };
 
   const tagColorByCategory: Record<Exclude<ItemsCategoryLabel, 'Category'>, string> = {
@@ -222,19 +222,18 @@ const ItemDetails = (): React.JSX.Element => {
                     : ''
                   ;
 
-                  if (!isWoodCategory) {
-                    if (
-                      label === 'Average truckload price (1x1):' ||
-                      label === 'Average market price:' 
-                    ) return null;
+                  if (!isWoodCategory && label === 'Average truckload price (1x1):') {
+                    return null;
                   }
 
-                  if (
-                    (label === 'Average market price:' && item?.averageMarketPrice == null) ||
-                    (label === 'Release year:' && item?.releaseYear == null) ||
-                    (label === 'Description:' && !item?.description) ||
-                    (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
-                  ) return null;     
+                  // if (
+                  //   (label === 'Average market price:' && item?.averageMarketPrice == null) ||
+                  //   (label === 'Original price:' && (item?.originalPrice == null || item?.originalPrice == -1)) ||
+                  //   (label === 'Release year:' && item?.releaseYear == null) ||
+                  //   (label === 'Description:' && !item?.description) ||
+                  //   (label === 'Average truckload price:' && item?.averageTruckloadPrice1x1 == null) ||
+                  //   (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
+                  // ) return null;     
 
                   return (
                     <div className={styles.item}>
