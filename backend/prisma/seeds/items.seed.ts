@@ -1497,6 +1497,277 @@ const items = [
     imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/55/THUMBballrain.webp/revision/latest?cb=20251227013913",
   },
 
+  /******************************************************************************
+   * ****************************************************************************
+   * BOOKS
+   * ****************************************************************************
+   * ****************************************************************************
+   */
+
+  {
+    name                     : "Gift of Tremendously Important Knowledge",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.GIFT,
+    averageMarketPrice       : 17500,
+    originalPrice            : 604,
+    averageTruckloadPrice    : 5000000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2020,
+    description              : `"This gift makes you look back melancholically at your lost youth."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/9/96/KnowledgeGift.png/revision/latest?cb=20201219191243",
+  },
+  {
+    name                     : "Hatchet by Captain Hoove (Boxed)",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 16500,
+    originalPrice            : 604,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2020,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/00/THUMBBOXhatchetbook.png/revision/latest?cb=20220117180505",
+  },
+  {
+    name                     : "Hatchet by Captain Hoove",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 604,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2020,
+    description              : `"Required reading for wilderness survival, as written by one of the industry's leading experts."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/7/7f/HatchetBook.png/revision/latest?cb=20201226231745",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Gift of Critically Acclaimed Knowledge",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.GIFT,
+    averageMarketPrice       : 17500,
+    originalPrice            : 805,
+    averageTruckloadPrice    : 1800000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2021,
+    description              : `"This gifts make you feel ready to brawl!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/ff/THUMBGIFTcriticallyacclaimed.png/revision/latest?cb=20221116231209",
+  },
+  {
+    name                     : "The Lumber Games by Captain Hoove (Boxed)",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 16500,
+    originalPrice            : 805,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2021,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/aa/THUMBBOXlumbergamesbook.png/revision/latest?cb=20220117180508",
+  },
+  {
+    name                     : "The Lumber Games by Captain Hoove",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 805,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2021,
+    description              : `"One of the most critically acclaimed books this year, written by your favorite author."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/0f/The_Lumber_Games_by_Captain_Hoover.png/revision/latest?cb=20211223232949",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Gift of Enchanted Tales",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.GIFT,
+    averageMarketPrice       : 17500,
+    originalPrice            : 905,
+    averageTruckloadPrice    : 1400000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2022,
+    description              : `"You are enchanted with anticipation for this gift."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/ad/THUMBGIFTTales.png/revision/latest?cb=20221220002915",
+  },
+  {
+    name                     : "Ferry Potter and the Deathly Shallows by Captain Hoove (Boxed)",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 16500,
+    originalPrice            : 905,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2022,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/1/11/THUMBBOXBook3.png/revision/latest?cb=20231123001628",
+  },
+  {
+    name                     : "Ferry Potter and the Deathly Shallows by Captain Hoove",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 905,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2022,
+    description              : `"One of the best selling  books this year, written by your favorite author."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/a0/THUMBFerryPotter.png/revision/latest?cb=20221225154242",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Gift of Important Game Knowledge",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.GIFT,
+    averageMarketPrice       : 50000,
+    originalPrice            : 303,
+    averageTruckloadPrice    : 1700000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2023,
+    description              : `"a book?"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/ca/THUMBGIFTimportantgameknowledge.png/revision/latest?cb=20231214003025",
+  },
+  {
+    name                     : " LT2 for Dummies (Boxed)",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 16500,
+    originalPrice            : 303,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2023,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/9/91/THUMBBOXlt2fordummies.png/revision/latest?cb=20231229010754",
+  },
+  {
+    name                     : "LT2 for Dummies",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 303,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2023,
+    description              : `"This book contains very important information Hoove didn't want you to know."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/b/bd/THUMBLT2Dummies.png/revision/latest?cb=20231225094021",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Gift of Spooky Knowledge",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.GIFT,
+    averageMarketPrice       : 45000,
+    originalPrice            : 506,
+    averageTruckloadPrice    : 2750000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2024,
+    description              : `"This gift makes you scared 😟🥲"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/22/THUMBspookyknowledgegift.png/revision/latest?cb=20251210055623",
+  },
+  {
+    name                     : "Franken Sign (Boxed)",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : 16500,
+    originalPrice            : 506,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2024,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c0/Boxed_Frankensign_book_by_Captain_Hoover.png/revision/latest?cb=20250828002256",
+  },
+  {
+    name                     : "Franken Sign",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 506,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2024,
+    description              : `"This horror novel describes the terrifying theoretical of bringing sentience to signage."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/26/THUMBfrankenbook.webp/revision/latest?cb=20251210055759",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Gift of Forbidden Knowledge",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.GIFT,
+    averageMarketPrice       : 35000,
+    originalPrice            : 1895,
+    averageTruckloadPrice    : 2750000,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : `"i dont get it"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/f6/THUMBforbiddenknowledgegift.webp/revision/latest?cb=20251208000844",
+  },
+  {
+    name                     : "The Thing in Yellow (boxed)",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 1895,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/8/8a/Forbiddenknowledgebox.png/revision/latest?cb=20251225175028",
+  },
+  {
+    name                     : "The Thing in Yellow",
+    category                 : ItemCategory.BOOK,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 1895,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : `"They say the author of this play was chased out of town just for writing it."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/af/THUMBthingyellowbook.webp/revision/latest?cb=20251225110829",
+  },
+
+  /******************************************************************************
+   * ****************************************************************************
+   * CANDY
+   * ****************************************************************************
+   * ****************************************************************************
+   */
+
+  // {
+  //   name                     : "",
+  //   category                 : ItemCategory.CANDY,
+  //   state                    : ItemState.BOXED,
+  //   averageMarketPrice       : ,
+  //   originalPrice            : ,
+  //   averageTruckloadPrice    : ,
+  //   averageTruckloadPrice1x1 : null,
+  //   releaseYear              : ,
+  //   description              : ``,
+  //   imageURL                 : "",
+  // },
+  // {
+  //   name                     : "",
+  //   category                 : ItemCategory.CANDY,
+  //   state                    : ItemState.LOOSE,
+  //   averageMarketPrice       : ,
+  //   originalPrice            : ,
+  //   averageTruckloadPrice    : ,
+  //   averageTruckloadPrice1x1 : null,
+  //   releaseYear              : ,
+  //   description              : null,
+  //   imageURL                 : "",
+  // },
+
   // --------------------------------------------------------------------------- //
 ];
 

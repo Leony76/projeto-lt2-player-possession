@@ -124,7 +124,7 @@ const ItemDetails = (): React.JSX.Element => {
     'Name:'                          : item?.name ?? 'Not available',
     'Category:'                      : ITEMS_CATEGORY_MAP[item?.category!] ?? 'Not available',
     'State:'                         : ITEMS_STATE_MAP[item?.state!] ?? 'Not available',
-    'Original price:'                : item?.originalPrice ? toLumberBucksFormat(item?.originalPrice) : 'Not available',
+    'Original price:'                : item?.originalPrice ? item?.originalPrice < 0 ? 'Not available' : toLumberBucksFormat(item?.originalPrice) : 'Not available',
     'Average market price:'          : item?.averageMarketPrice ? toLumberBucksFormat(item?.averageMarketPrice) : 'Not available',
     'Average truckload price:'       : item?.averageTruckloadPrice ? toLumberBucksFormat(item?.averageTruckloadPrice) : 'Not available',
     'Average truckload price (1x1):' : item?.averageTruckloadPrice1x1 ?toLumberBucksFormat(item?.averageTruckloadPrice1x1) : 'Not available',
@@ -227,12 +227,12 @@ const ItemDetails = (): React.JSX.Element => {
                   }
 
                   // if (
-                  //   (label === 'Average market price:' && item?.averageMarketPrice == null) ||
-                  //   (label === 'Original price:' && (item?.originalPrice == null || item?.originalPrice == -1)) ||
-                  //   (label === 'Release year:' && item?.releaseYear == null) ||
-                  //   (label === 'Description:' && !item?.description) ||
-                  //   (label === 'Average truckload price:' && item?.averageTruckloadPrice1x1 == null) ||
-                  //   (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
+                    // (label === 'Average market price:' && item?.averageMarketPrice == null) ||
+                    // (label === 'Release year:' && item?.releaseYear == null) ||
+                    // (label === 'Description:' && !item?.description) ||
+                    // (label === 'Average truckload price:' && item?.averageTruckloadPrice1x1 == null) ||
+                    // (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
+                    // (label === 'Original price:' && (item?.originalPrice == null || item?.originalPrice == -1))
                   // ) return null;     
 
                   return (

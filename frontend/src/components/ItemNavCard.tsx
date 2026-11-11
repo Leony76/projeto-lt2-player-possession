@@ -86,13 +86,15 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
       </p>
 
       <div className={styles.original_market_price_container} title='Original Price'>
-        <span className={styles.original_price}>
-          <span className={styles.icon}>
-            <FaStamp size={14}/>
-          </span>
+        {(props.originalPrice !== null && props.originalPrice >= 0) && 
+          <span className={styles.original_price}>
+            <span className={styles.icon}>
+              <FaStamp size={14}/>
+            </span>
 
-          { toLumberBucksFormat(props.originalPrice) }
-        </span>
+            { toLumberBucksFormat(props.originalPrice) }
+          </span>
+        }
         
         { props.averageMarketPrice !== null &&    
           <span className={styles.market_price} title='Market Price'>
