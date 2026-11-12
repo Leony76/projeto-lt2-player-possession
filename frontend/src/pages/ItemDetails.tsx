@@ -236,7 +236,10 @@ const ItemDetails = (): React.JSX.Element => {
                   // ) return null;     
 
                   return (
-                    <div className={styles.item}>
+                    <div 
+                    className={styles.item}
+                    key={label}
+                    >
                       <dt>
                         { label }
                       </dt>
