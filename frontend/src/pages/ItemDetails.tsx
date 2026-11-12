@@ -150,6 +150,7 @@ const ItemDetails = (): React.JSX.Element => {
     'Conveyor'      : styles.conveyor,
     'Wood'          : styles.wood,
     'Logic'         : styles.logic,
+    'Sawmill'       : styles.sawmill,
   };
 
   const tagColorByState: Record<Exclude<ItemsStateLabel, 'State'>, string> = {

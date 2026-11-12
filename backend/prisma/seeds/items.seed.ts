@@ -259,6 +259,141 @@ const items = [
    */
 
   {
+    name                     : "Basic Hatchet (Boxed)",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 12,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"It's not the greatest axe, but it will get the job done."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/a0/THUMBBOXbasichatchet.png/revision/latest?cb=20220117183955",
+  },
+  {
+    name                     : "Basic Hatchet",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 12,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/45/AXEbasic.png/revision/latest?cb=20220126021035",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Plain Axe (Boxed)",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Put some grease into your swings"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/fb/THUMBBOXplainaxe.png/revision/latest?cb=20220117183958",
+  },
+  {
+    name                     : "Plain Axe",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/6/68/AXEplain.png/revision/latest?cb=20220126021026",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Steel Axe (Boxed)",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 190,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"A quality mid-level cutting tool for general applications."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/fc/THUMBBOXsteelaxe.png/revision/latest?cb=20220117183959",
+  },
+  {
+    name                     : "Steel Axe",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 190,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/3b/AXEsteel.png/revision/latest?cb=20220126021005",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Hardened Axe (Boxed)",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 550,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"This axe has carried the greats through the harshest of winters, and it can carry you to your dreams"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/7/79/THUMBBOXhardenedaxe.png/revision/latest?cb=20220117183957",
+  },
+  {
+    name                     : "Hardened Axe",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 550,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/fb/AXEhardened.png/revision/latest?cb=20220126020958",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Silver Axe (Boxed)",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 2040,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"It is said that this axe was forged from the axe heads of one hundred great fallen lumberjacks"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/ac/THUMBBOXsilveraxe.png/revision/latest?cb=20220117183958",
+  },
+  {
+    name                     : "Silver Axe",
+    category                 : ItemCategory.AXE,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 2040,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/f8/AXEsilver.png/revision/latest?cb=20220126020709",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
     name                     : "Fiery Gift of Lumber",
     category                 : ItemCategory.AXE,
     state                    : ItemState.GIFT,
@@ -2762,6 +2897,33 @@ const items = [
   // --------------------------------------------------------------------------- //
 
   {
+    name                     : "Can of Worms (Boxed)",
+    category                 : ItemCategory.FOOD,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 3200,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Mmmm... worms."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/39/Can_of_Worms_Box.png/revision/latest?cb=20261107052918",
+  },
+  {
+    name                     : "Can of Worms",
+    category                 : ItemCategory.FOOD,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 3200,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Mmmm... worms."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/e6/THUMBcanofworms.png/revision/latest?cb=20220126021213",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
     name                     : "Burnt food",
     category                 : ItemCategory.FOOD,
     state                    : ItemState.LOOSE,
@@ -2780,6 +2942,141 @@ const items = [
    * ****************************************************************************
    * ****************************************************************************
    */
+
+  {
+    name                     : "Title Unknown (Boxed)",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 5980,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Leroy, Contemporary original work."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/00/THUMBBOXunknown.png/revision/latest?cb=20220117180527",
+  },
+  {
+    name                     : "Title Unknown",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 5980,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Leroy, Contemporary original work."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/cc/THUMBunknown.png/revision/latest?cb=20220125162622",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Disturbed Painting (Boxed)",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 2006,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Henry G. Keller. Watercolor."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/b/b3/THUMBBOXdisturbed.png/revision/latest?cb=20220117180420",
+  },
+  {
+    name                     : "Disturbed Painting",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 2006,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Henry G. Keller. Watercolor."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/56/Disturbed_painting.png/revision/latest?cb=20160925183830",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Outdoor Watercolor Sketch (Boxed)",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 6,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Bill Polm."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/d/d5/THUMBBOXoutdoorwaterpainting.png/revision/latest?cb=20220117180511",
+  },
+  {
+    name                     : "Outdoor Watercolor Sketch",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 6,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Bill Polm."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/ce/Outdoor_Watercolor_Sketch.png/revision/latest?cb=20171118221125",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Arctic Light (Boxed)",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 16000,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Linda D. Lang"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/4e/THUMBBOXarticlight.png/revision/latest?cb=20220117180359",
+  },
+  {
+    name                     : "Arctic Light",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 16000,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Linda D. Lang"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c6/ArcticLight.png/revision/latest?cb=20180927004939",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "The Lonely Giraffe (Boxed)",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 26800,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Holly Spring."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/08/THUMBBOXgiraffe.png/revision/latest?cb=20220117180358",
+  },
+  {
+    name                     : "The Lonely Giraffe",
+    category                 : ItemCategory.FINE_ART,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 26800,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"By Holly Spring."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/07/The_Lonely_Giraffe.png/revision/latest?cb=20181208001304",
+  },
+
+  // --------------------------------------------------------------------------- //
 
   {
     name                     : "Modern Gift",
@@ -3474,6 +3771,517 @@ const items = [
    * ****************************************************************************
    * ****************************************************************************
    */
+
+  {
+    name                     : "Tiny Glass Pane (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 12,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For all your tiny glass pane needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/28/THUMBBOXtinypane.png/revision/latest/scale-to-width-down/100?cb=20220117180522",
+  },
+  {
+    name                     : "Tiny Glass Pane",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 12,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For all your tiny glass pane needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c4/THUMBtinyglasspane.webp/revision/latest/scale-to-width-down/100?cb=20260921013325",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Small Glass Pane (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 50,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"When reasonably sized glass panes don't meet your needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/05/THUMBBOXsmallpane.png/revision/latest/scale-to-width-down/100?cb=20220117180520",
+  },
+  {
+    name                     : "Small Glass Pane",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 50,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"When reasonably sized glass panes don't meet your needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/49/THUMBsmallglasspane.webp/revision/latest/scale-to-width-down/100?cb=20260921013922",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Glass Pane (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 220,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"I guess thats why they call it 'glass pane'."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/b/bb/THUMBBOXpane.png/revision/latest/scale-to-width-down/100?cb=20220117180511",
+  },
+  {
+    name                     : "Glass Pane",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 220,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"I guess thats why they call it 'glass pane'."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/0c/THUMBglasspane.webp/revision/latest/scale-to-width-down/100?cb=20260921014130",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Large Glass Pane (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 550,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"This is serious business glass pane."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/ee/THUMBBOXlargepane.png/revision/latest/scale-to-width-down/100?cb=20220117180505",
+  },
+  {
+    name                     : "Large Glass Pane",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 550,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"This is serious business glass pane."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/e4/THUMBlargeglasspane.webp/revision/latest/scale-to-width-down/100?cb=20260921014231",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Glass Door (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 720,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Feeling stylish?"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/22/THUMBBOXglassdoor.png/revision/latest/scale-to-width-down/100?cb=20220117180444",
+  },
+  {
+    name                     : "Glass Door",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 720,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Feeling stylish?"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c0/THUMBglassdoor.webp/revision/latest/scale-to-width-down/100?cb=20260921014018",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Toilet (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Poop."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/28/THUMBBOXtoilet.png/revision/latest?cb=20220117180524",
+  },
+  {
+    name                     : "Toilet",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Poop."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/d/d5/Toilet.png/revision/latest?cb=20160323151237",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Wall Light (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Looks nice on exterior walls."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/f6/THUMBBOXwalllight.png/revision/latest?cb=20220117180534",
+  },
+  {
+    name                     : "Wall Light",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Looks nice on exterior walls."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/ad/THUMBwalllight.png/revision/latest?cb=20220119230025",
+  },
+
+  // --------------------------------------------------------------------------- //
+  {
+    name                     : "Floodlight (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Good for outdoor use."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/9/99/THUMBBOXfloodlight.png/revision/latest?cb=20220117183341",
+  },
+  {
+    name                     : "Floodlight",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Good for outdoor use."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/5f/THUMBfloodlight.png/revision/latest?cb=20160322022456",
+  },
+
+  // --------------------------------------------------------------------------- //
+  {
+    name                     : "Lamp (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Get it. Get it?"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/fc/THUMBBOXlamp.png/revision/latest?cb=20220117180505",
+  },
+  {
+    name                     : "Lamp",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 90,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Get it. Get it?"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/1/1f/THUMBlamp.png/revision/latest?cb=20160322182718",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Floor Lamp (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 110,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Make your house homey with this fashionable floor lamp."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/e8/THUMBBOXfloorlamp.png/revision/latest?cb=20220117183341",
+  },
+  {
+    name                     : "Floor Lamp",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 110,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Make your house homey with this fashionable floor lamp."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/cf/THUMBfloorlamp.png/revision/latest?cb=20160322182902",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Armchair (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 130,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"It's a chair for your arms."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/30/THUMBBOXarmchair.png/revision/latest?cb=20220117180358",
+  },
+  {
+    name                     : "Armchair",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 130,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"It's a chair for your arms."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/8/8a/Armchair.png/revision/latest?cb=20160411144137",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Loveseat (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 150,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"If you're lonely this seat is for you."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/01/THUMBBOXloveseat.png/revision/latest?cb=20220117180508",
+  },
+  {
+    name                     : "Loveseat",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 150,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"If you're lonely this seat is for you."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/8/84/Loveseat.png/revision/latest?cb=20160411144018",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Couch (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 200,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For you and your friends."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c4/THUMBBOXcouch.png/revision/latest?cb=20220117180413",
+  },
+  {
+    name                     : "Couch",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 200,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For you and your friends."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/28/Couch.png/revision/latest?cb=20160409160001",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Single Bed (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 250,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For all your sleeping needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/ef/THUMBBOXbed.png/revision/latest?cb=20220117180359",
+  },
+  {
+    name                     : "Single Bed",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 250,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For all your sleeping needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/25/Single_Bed.png/revision/latest?cb=20160324030747",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Refrigerator (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 310,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Brrrr"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/7/7c/THUMBBOXfridge.png/revision/latest?cb=20220117180358",
+  },
+  {
+    name                     : "Refrigerator",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 310,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Brrrr"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/0f/THUMBfridge.png/revision/latest?cb=20160409232422",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Stove (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 340,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Cook up some yummy."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/5e/THUMBBOXstove.png/revision/latest?cb=20220117180522",
+  },
+  {
+    name                     : "Stove",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 340,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Cook up some yummy."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/4b/THUMBstove.png/revision/latest?cb=20160409160336",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Twin Bed (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 350,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For all your sleeping needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/f5/THUMBBOXbed2.png/revision/latest?cb=20220117180359",
+  },
+  {
+    name                     : "Twin Bed",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 350,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For all your sleeping needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c6/Twin_Bed.png/revision/latest?cb=20160327232242",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Dishwasher (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 380,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Wash your dishes or they will be dirty."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/0d/THUMBBOXdishwasher.png/revision/latest?cb=20220117180420",
+  },
+  {
+    name                     : "Dishwasher",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 380,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Wash your dishes or they will be dirty."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/ae/THUMBdishwasher.png/revision/latest?cb=20160409160506",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Lightbulb (Boxed)",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 2600,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"How many game developers does it take to scr"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/8/8e/THUMBBOXlightbulb.png/revision/latest?cb=20220117180508",
+  },
+  {
+    name                     : "Lightbulb",
+    category                 : ItemCategory.HOME,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 2600,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"How many game developers does it take to scr"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/6/6f/Lightbulb.png/revision/latest?cb=20160324235421",
+  },
+
+  // --------------------------------------------------------------------------- //
 
   {
     name                     : "Poorly Wrapped Gift from Bob",
@@ -5170,6 +5978,357 @@ const items = [
     imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/4b/PurpleGlorb.png/revision/latest?cb=20260920050707",
   },
 
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Worklight (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 80,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Get the job done no matter what the time of day is."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/9/9d/THUMBBOXworklight.png/revision/latest?cb=20220117180532",
+  },
+  {
+    name                     : "Worklight",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 80,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Get the job done no matter what the time of day is."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/8/81/THUMBworklight.png/revision/latest?cb=20220126021213",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Bag of Sand (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 1600,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Time for Sands Castle."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/35/THUMBSandbagBoxColored.png/revision/latest?cb=20260429051239",
+  },
+  {
+    name                     : "Bag of Sand",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 1600,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"Time for Sands Castle."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/47/THUMBsandbag.png/revision/latest?cb=20220126021211",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Chop Saw (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 12200,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Big wood demands a big saw. This one's got you covered."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/55/THUMBBOXchopsaw.png/revision/latest?cb=20220117180411",
+  },
+  {
+    name                     : "Chop Saw",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 12200,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Big wood demands a big saw. This one's got you covered."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/3e/THUMBchopsaw.png/revision/latest?cb=20160614200623",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Dynamite (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 220,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"For all your exploding things needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/1/13/TNTBox.png/revision/latest?cb=20211018090038",
+  },
+  {
+    name                     : "Dynamite",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 220,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/29/Tnt.png/revision/latest?cb=20160524003302",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Spooky Icicle Lights (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 910,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2018,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/05/THUMBBOXspookylight2.png/revision/latest?cb=20221020204509",
+  },
+  {
+    name                     : "Spooky Icicle Lights",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 910,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2018,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/b/b2/THUMBspookylights2.png/revision/latest?cb=20221020204039",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Scary Icicle Lights (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 910,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/06/ScaryIcicleBoxed.png/revision/latest?cb=20251009190814",
+  },
+  {
+    name                     : "Scary Icicle Lights",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 910,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : null,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/6/6e/ScaryIcicleLights.png/revision/latest?cb=20251008002647",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Candy Cane Icicle Lights (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 1050,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2022,
+    description              : `"Cheer up your neighbors with these festive lights!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c7/THUMBBOXCandyLights.png/revision/latest?cb=20221212005912",
+  },
+  {
+    name                     : "Candy Cane Icicle Lights",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 1050,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2022,
+    description              : `"Cheer up your neighbors with these festive lights!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/e0/THUMBCandyLights.png/revision/latest?cb=20221212005847",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Maple Leaf Icicle Lights (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 1450,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : `"Please your neighbors with these cozy lights!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/34/IcicleWireMaple_Box.webp/revision/latest?cb=20251125152345",
+  },
+  {
+    name                     : "Maple Leaf Icicle Lights",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 1450,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2025,
+    description              : `"Please your neighbors with these cozy lights!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/4/41/IcicleWireMaple_Preview.webp/revision/latest?cb=20251210060422",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Firework Launcher (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 7500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2017,
+    description              : `"YES you'd better believfefe it get ready to launch some fireworks!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/07/THUMBBOXfireworklauncher.png/revision/latest?cb=20220117183341",
+  },
+  {
+    name                     : "Firework Launcher",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 7500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2017,
+    description              : `"YES you'd better believfefe it get ready to launch some fireworks!"`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/a7/THUMBfireworklauncher.webp/revision/latest?cb=20260919014532",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Red Icicle Lights (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 750,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Light up the night with this beautiful decoration!"`,
+    imageURL                 : "https://res.cloudinary.com/dnw6pr1jn/image/upload/v1794509347/image-removebg-preview_8_rlhrnl.png",
+  },
+  {
+    name                     : "Red Icicle Lights",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 750,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Light up the night with this beautiful decoration!"`,
+    imageURL                 : "https://res.cloudinary.com/dnw6pr1jn/image/upload/v1794509604/image-removebg-preview_12_rbrld9.png",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Yellow Icicle Lights (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 750,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Light up the night with this beautiful decoration!"`,
+    imageURL                 : "https://res.cloudinary.com/dnw6pr1jn/image/upload/v1794509400/image-removebg-preview_9_ya3uqe.png",
+  },
+  {
+    name                     : "Yellow Icicle Lights",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 750,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Light up the night with this beautiful decoration!"`,
+    imageURL                 : "https://res.cloudinary.com/dnw6pr1jn/image/upload/v1794509652/image-removebg-preview_13_wl0bqz.png",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Blue Icicle Lights (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 750,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Light up the night with this beautiful decoration!"`,
+    imageURL                 : "https://res.cloudinary.com/dnw6pr1jn/image/upload/v1794509498/image-removebg-preview_10_ovvudu.png",
+  },
+  {
+    name                     : "Blue Icicle Lights",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 750,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Light up the night with this beautiful decoration!"`,
+    imageURL                 : "https://res.cloudinary.com/dnw6pr1jn/image/upload/v1794509737/image-removebg-preview_14_h98g2l.png",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Green Icicle Lights (Boxed)",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 750,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Light up the night with this beautiful decoration!"`,
+    imageURL                 : "https://res.cloudinary.com/dnw6pr1jn/image/upload/v1794509537/image-removebg-preview_11_dm1bdq.png",
+  },
+  {
+    name                     : "Green Icicle Lights",
+    category                 : ItemCategory.MISCELLANEOUS,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 750,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2016,
+    description              : `"Light up the night with this beautiful decoration!"`,
+    imageURL                 : "https://res.cloudinary.com/dnw6pr1jn/image/upload/v1794509779/image-removebg-preview_15_shxnz3.png",
+  },
+
   /******************************************************************************
    * ****************************************************************************
    * LOGIC
@@ -6703,6 +7862,148 @@ const items = [
     description              : `"Get your turn conveyors in the air."`,
     imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/8/89/THUMBturnsupports.png/revision/latest/scale-to-width-down/100?cb=20220126205914",
   },
+
+  /******************************************************************************
+   * ****************************************************************************
+   * SAWMILL
+   * ****************************************************************************
+   * ****************************************************************************
+   */
+
+  {
+    name                     : "Shabby Sawmill (Boxed)",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 130,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"This sawmill does what you need to start turning logs into planks, but you will need to upgrade to cut larger logs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c2/THUMBBOXshabby.png/revision/latest?cb=20220126204432",
+  },
+  {
+    name                     : "Shabby Sawmill",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 130,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"This sawmill does what you need to start turning logs into planks, but you will need to upgrade to cut larger logs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/b/bd/THUMBshabby.png/revision/latest?cb=20220126203312",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Fair Sawmill (Boxed)",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 1600,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"An intermediate sawmill that have your planks dance out of their socks."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/3/3d/THUMBBOXfair.png/revision/latest?cb=20220126204400",
+  },
+  {
+    name                     : "Fair Sawmill",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 1600,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"An intermediate sawmill that have your planks dance out of their socks."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/e/e0/THUMBfair.png/revision/latest?cb=20260921013034",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Sawmax 01 (Boxed)",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 11000,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"A top of the line machine that accepts large logs for heavy duty applications."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/b/bd/THUMBBOX01.png/revision/latest?cb=20220117180356",
+  },
+  {
+    name                     : "Sawmax 01",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 11000,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"A top of the line machine that accepts large logs for heavy duty applications."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/2/27/THUMBsawmax01.webp/revision/latest?cb=20260921012124",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Sawmax 02 (Boxed)",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 22500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"A beefy sawmill for super serious saw milling needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/a/ae/THUMBBOX02.png/revision/latest?cb=20220117180358",
+  },
+  {
+    name                     : "Sawmax 02",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 22500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2015,
+    description              : `"A beefy sawmill for super serious saw milling needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/0/08/THUMB02.png/revision/latest?cb=20260921012547",
+  },
+
+  // --------------------------------------------------------------------------- //
+
+  {
+    name                     : "Sawmax 02L (Boxed)",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.BOXED,
+    averageMarketPrice       : null,
+    originalPrice            : 86500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2017,
+    description              : `"Extra length capacity for your extra long needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/f/f9/THUMBBOX02l.png/revision/latest?cb=20220117180359",
+  },
+  {
+    name                     : "Sawmax 02L",
+    category                 : ItemCategory.SAWMILL,
+    state                    : ItemState.LOOSE,
+    averageMarketPrice       : null,
+    originalPrice            : 86500,
+    averageTruckloadPrice    : null,
+    averageTruckloadPrice1x1 : null,
+    releaseYear              : 2017,
+    description              : `"Extra length capacity for your extra long needs."`,
+    imageURL                 : "https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/c8/THUMBBOX02L.png/revision/latest?cb=20260921012903",
+  },
+
+  // --------------------------------------------------------------------------- //
 ];
 
 export const seedItems = async() => {

@@ -158,7 +158,14 @@
     .wood {
       background-color: #cc8d691f;
       color: #8b6148;
+      
       border-color: #8b6148;
+    }
+    
+    .sawmill {
+      background-color: #e8be9077;
+      color: #9a7e60;
+      border-color: #9a7e60;
     }
 
 

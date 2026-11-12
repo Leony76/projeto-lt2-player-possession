@@ -16,6 +16,7 @@ export const ITEMS_CATEGORY_MAP = {
   CONVEYOR       : 'Conveyor',
   LOGIC          : 'Logic',
   WOOD           : 'Wood',
+  SAWMILL        : 'Sawmill',
 } as const;
 
 export type ItemsCategory = keyof typeof ITEMS_CATEGORY_MAP;

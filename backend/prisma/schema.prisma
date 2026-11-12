@@ -121,6 +121,7 @@ enum ItemCategory {
   LOGIC
   CONVEYOR
   WOOD
+  SAWMILL
 }
 
 enum ItemState {
