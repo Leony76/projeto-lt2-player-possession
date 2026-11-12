@@ -1,24 +1,101 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styles from './css/Items.module.css';
 import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
 import { LuBoxes } from 'react-icons/lu';
 import SearchBar from '@/components/SearchBar';
 import Select from '@/components/Select';
-import type { ItemsAdvancedFilter } from '@/maps/select/filters/items.filter';
-import type { ItemsCategory } from '@/maps/select/filters/ItemCategory.map';
-import type { ItemsState } from '@/maps/select/filters/ItemSubcategory.map';
+import type { ItemsAdvancedFilter } from '@shared/maps/filters/items/items.filter';
+import type { ItemsCategory } from '@shared/maps/filters/items/itemCategory.map';
+import type { ItemsState } from '@shared/maps/filters/items/itemState.map';
 import ItemNavCard from '@/components/ItemNavCard';
-import imgPlaceholder2 from '@/assets/img/placeholder_2.png';
+import type { ItemResponse } from '@shared/dtos/item.dto';
+import type { PaginatedResponse } from '@shared/dtos/pagination.dto';
+import { ItemService } from '@/services/item.service';
+import { normalizeFilter } from '@/utils/normalizaFilter.util';
+import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
+import PaginationNavButtons from '@/components/PaginationNavButtons';
+import { handleAxiosError } from '@/utils/handleAxiosError.util';
+import { ITEMS_PER_PAGE } from '@/consts/itemsPerPage.const';
 
 const Items = (): React.JSX.Element => {
 
+  const [items, setItems] = useState<ItemResponse[]>([]);
+
+  const [pagination, setPagination] = useState<
+    PaginatedResponse<ItemResponse>["pagination"] | null>(null)
+  ;
+
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [search, setSearch] = useState<string>("");
 
-  const [itemsAdvancedFilter    , setItemsAdvancedFilter    ] = useState<ItemsAdvancedFilter | null>(null);
-  const [itemsCategoryFilter    , setItemsCategoryFilter    ] = useState<ItemsCategory | null>(null);
-  const [itemsSubcategoryFilter , setItemsSubcategoryFilter ] = useState<ItemsState | null>(null);
-  
+  const [itemsAdvancedFilter , setItemsAdvancedFilter ] = useState<ItemsAdvancedFilter | null>(null);
+  const [itemsCategoryFilter , setItemsCategoryFilter ] = useState<ItemsCategory | null>(null);
+  const [itemsStateFilter    , setItemsStateFilter    ] = useState<ItemsState | null>(null);
+
+  useEffect(() => {
+
+    const controller = new AbortController();
+
+    const loadItems = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const result = await ItemService.get({
+          page,
+          limit          : ITEMS_PER_PAGE,
+          search         : search || undefined,
+          category       : normalizeFilter(itemsCategoryFilter),
+          state          : normalizeFilter(itemsStateFilter),
+          advancedFilter : normalizeFilter(itemsAdvancedFilter),
+        }, controller.signal);
+
+        setItems(result.items);
+        setPagination(result.pagination);
+
+      } catch (error:unknown) {
+        if (!controller.signal.aborted) setError(handleAxiosError(error));
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
+
+    loadItems();
+
+    return () => controller.abort();
+
+  }, [
+    page,
+    search,
+    itemsCategoryFilter,
+    itemsStateFilter,
+    itemsAdvancedFilter,
+  ]);
+
+  const handleSearch = useCallback((value: string): void => {
+    setSearch(value);
+    setPage(1);
+  }, []);
+
+  const handleCategoryFilter = (filter: ItemsCategory): void => {
+    setItemsCategoryFilter(filter);
+    setPage(1);
+  };
+
+  const handleStateFilter = (filter: ItemsState): void => {
+    setItemsStateFilter(filter);
+    setPage(1);
+  };
+
+  const handleAdvancedFilter = (filter: ItemsAdvancedFilter): void => {
+    setItemsAdvancedFilter(filter);
+    setPage(1);
+  };
+
   return (
     <Layout tab='ITEMS'>
       <div className={styles.container}>
@@ -29,53 +106,65 @@ const Items = (): React.JSX.Element => {
 
         <div className={styles.toolbar_container}>
           <SearchBar
-            placeholder="Search items..."
+            placeholder="Search item..."
             debounceTime={400}
-            onSearch={(value) => setSearch(value)}
+            onSearch={handleSearch}
             flex={4}
           />
 
           <Select
-            selectConfig='ITEMS_SUBCATEGORY_FILTER'
-            onSelect={(filter) => setItemsSubcategoryFilter(filter as ItemsState)}
+            selectConfig="ITEMS_STATE_FILTER"
+            onSelect={(filter) => handleStateFilter(filter as ItemsState)}
             flex={0.67}
           />
 
           <Select
-            selectConfig='ITEMS_CATEGORY_FILTER'
-            onSelect={(filter) => setItemsCategoryFilter(filter as ItemsCategory)}
+            selectConfig="ITEMS_CATEGORY_FILTER"
+            onSelect={(filter) => handleCategoryFilter(filter as ItemsCategory)}
             flex={0.87}
           />
 
           <Select
-            selectConfig='ITEMS_ADVANCED_FILTER'
-            onSelect={(filter) => setItemsAdvancedFilter(filter as ItemsAdvancedFilter)}
+            selectConfig="ITEMS_ADVANCED_FILTER"
+            onSelect={(filter) => handleAdvancedFilter(filter as ItemsAdvancedFilter)}
             flex={1}
           />
         </div>
 
         <nav className={styles.nav}>
-          <ul className={styles.ul}>
-            {[0,1,2,3,4,5,6,7].map((index) => (
-              <li 
-              className={styles.li}
-              key={index}
-              >
-                <ItemNavCard
-                  id={12}
-                  imageURL={imgPlaceholder2}
-                  name={'Maria bonita de la aprma'}
-                  category={'AXE'}
-                  state={'GIFT'}
-                  description={'"She\'s just bealtiful sadasd dxasd asdas"'}
-                  originalPrice={69000}
-                  marketPrice={690000}
-                  units={1}
-                />
-              </li>
-            ))}
-          </ul>
+          {loading && <LoadingState label='Items'/>}
+
+          {(!loading && error) && <ErrorState error={error}/>}  
+
+          {!loading && !error && (
+            <ul className={styles.ul}>
+              {items.map((item) => (
+                <li
+                className={styles.li}
+                key={item.id}
+                >
+                  <ItemNavCard 
+                    page='ITEMS'
+                    { ...item } 
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {(!loading && !error && items.length === 0) && <NotFoundState label='Items'/>}
         </nav>
+
+        {pagination && pagination.totalPages > 1 && (
+          <PaginationNavButtons
+            hasPreviousPage={pagination.hasPreviousPage}
+            hasNextPage={pagination.hasNextPage}
+            loading={loading}
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            setPage={setPage}
+          />
+        )}  
       </div>
     </Layout>
   )

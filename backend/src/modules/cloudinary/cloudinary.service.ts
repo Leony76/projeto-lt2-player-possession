@@ -11,17 +11,9 @@ export class CloudinaryService {
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          folder         : "lt2-players-possession-users-profile-images",
+          folder         : "lt2-players-possession/users-profile-images",
           public_id      : `user-${userId}-${Date.now()}`,
           resource_type  : "image",
-          // transformation : [
-          //   {
-          //     width   : 512,
-          //     height  : 512,
-          //     crop    : "fill",
-          //     gravity : "auto",
-          //   },
-          // ],
         },
         (error, result) => {
           if (error) return reject(error);

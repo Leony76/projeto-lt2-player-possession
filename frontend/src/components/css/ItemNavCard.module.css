@@ -72,9 +72,9 @@
     }
     
     .ball {
-      background-color: rgba(212, 199, 188, 0.11);
-      color: rgb(143, 134, 127);
-      border-color: rgb(143, 134, 127);
+      background-color: rgba(253, 131, 255, 0.164);
+      color: rgb(253, 131, 255);
+      border-color: rgb(253, 131, 255);
     }
 
     .book {
@@ -222,37 +222,6 @@
       font-weight: 600;
       font-style: italic;
       text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.151);
-    }
-
-    .increment_decrement_container {
-      display: flex;
-      gap: 4px;
-
-      .increment, .decrement {
-        border-radius: 4px;
-        display: flex;
-        padding: 2px;
-        cursor: pointer;
-
-        &:hover {
-          scale: 1.1;
-          filter: brightness(1.1);
-        }
-        &:active {
-          scale: 1;
-          filter: brightness(0.8);
-        }
-      }
-
-      .increment {
-        border: 2px solid green;
-        color: green;
-      }
-      
-      .decrement {
-        border: 2px solid red;
-        color: red;
-      }
     }
   }
 }

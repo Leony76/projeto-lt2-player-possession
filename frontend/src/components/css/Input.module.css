@@ -77,6 +77,27 @@
         background-color: rgba(165, 131, 104, 0.123);
       }
     }
+
+    .clear_icon {
+      display: flex;
+
+      color: #5B4A40;
+      background-color: transparent;
+      border: none;
+      border-radius: 3px;
+      padding: 5px;
+      font-size: 16px;
+      cursor: pointer;
+
+      transition: 0.25s ease;
+
+      &:hover {
+        background-color: rgba(165, 131, 104, 0.288);
+      }
+      &:active {
+        background-color: rgba(165, 131, 104, 0.123);
+      }
+    }
   }
 
   .input:-webkit-autofill,
@@ -88,5 +109,14 @@
   }
 }
 
+@keyframes onAutoFillStart {
+  from {
+    opacity : 1;
+  } to {
+    opacity : 1;
+  }
+}
 
-
+.input:-webkit-autofill {
+  animation-name: onAutoFillStart;
+}

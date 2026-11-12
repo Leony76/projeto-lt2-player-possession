@@ -21,7 +21,7 @@ export class UserController {
     const response: SuccessfulOperationResponse<EditProfileImageResponse> = {
       success : true,
       body    : body,
-      message : 'Profile image successfuly updated',
+      message : 'Profile image successfully updated',
     }
 
     return res.status(200).json(response);
@@ -61,7 +61,7 @@ export class UserController {
     const response: SuccessfulOperationResponse<EditUsernameResponse> = {
       success : true,
       body    : body,
-      message : 'Username successfuly updated',
+      message : 'Username successfully updated',
     }
 
     return res.status(200).json(response);
@@ -81,7 +81,7 @@ export class UserController {
     const response: SuccessfulOperationResponse<EditLumberBucksResponse> = {
       success : true,
       body    : body,
-      message : 'Lumber bucks successfuly updated',
+      message : 'Lumber bucks successfully updated',
     }
 
     return res.status(200).json(response);
@@ -121,7 +121,7 @@ export class UserController {
     const response: SuccessfulOperationResponse<EditPasswordResponse> = {
       success : true,
       body    : body,
-      message : 'Password successfuly updated',
+      message : 'Password successfully updated',
     }
 
     return res.status(200).json(response);

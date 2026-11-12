@@ -25,13 +25,22 @@ const EditImageModal = ({
   onConfirm,
   isSaving = false,
 }: Props): React.JSX.Element => {
+
+  const initialImageURL = initialImage === profileImagePlaceholder
+    ? ''
+    : initialImage
+  ;
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imageURL, setImageURL] = useState<string>(initialImage);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState(initialImage);
   const [imageError, setImageError] = useState<string>("");
-  const [imageLoadError, setImageLoadError] = useState<boolean>(false);
+  const [imageLoadError, setImageLoadError] = useState<boolean>(initialImageURL === '' ? true : false);
   const [imageExpand, setImageExpand] = useState<boolean>(false);
+  
+  const [imageURL, setImageURL] = useState<string>(initialImageURL);
+  const [imagePreview, setImagePreview] = useState(initialImageURL);
+
+  const canExpandImage = Boolean(imagePreview.trim()) && !imageLoadError;
 
   useEffect(() => {
     if (!imageFile) {
@@ -51,7 +60,7 @@ const EditImageModal = ({
     setImageURL(value);
     setImageFile(null);
     setImageError("");
-    setImageLoadError(false);
+    setImageLoadError(!value.trim());
   };
 
 
@@ -124,17 +133,18 @@ const EditImageModal = ({
     }
 
     <ModalBody
-      XCloseButton
-      onClose={onClose}
-      title="Edit Image"
-      gap="8px"
+    XCloseButton
+    onClose={onClose}
+    title="Edit Image"
+    gap="8px"
     >
-      <figure
+      <button
       title="Zoom in"
-      onClick={() => setImageExpand(true)}
+      disabled={!canExpandImage}
       className={styles.edit_image_preview_container}
+      onClick={() => setImageExpand(true)}
       style={{
-        cursor: imageLoadError ? "not-allowed" : "zoom-in",
+        cursor: canExpandImage ? "zoom-in" : "not-allowed",
       }}
       >
         {imagePreview && !imageLoadError ? (
@@ -153,7 +163,7 @@ const EditImageModal = ({
             <span>Unable to render image</span>
           </div>
         )}
-      </figure>
+      </button>
 
       <Input
         title="Image URL"
@@ -162,6 +172,7 @@ const EditImageModal = ({
         value={imageURL}
         placeholder="https://example.com/image.png"
         onChange={(event) => handleURLChange(event.target.value)}
+        onClear={() => handleURLChange('')}
       />
 
       <input
@@ -179,6 +190,9 @@ const EditImageModal = ({
         label="Upload"
         buttonStyle="DEFAULT"
         icon={() => <RiImageUploadFill />}
+        iconPosition={{
+          bottom: '-3px'
+        }}
         onClick={() => fileInputRef.current?.click()}
       />
 

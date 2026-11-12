@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 import { AuthService } from "./auth.service.js";
-import { signInSchema } from '@shared/schemas/auth.schema.js';
 import { cookieOptions } from "../../config/cookies.config.js";
 
 export class AuthController {

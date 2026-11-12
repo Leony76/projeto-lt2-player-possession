@@ -52,28 +52,28 @@
 
 .SUCCESS {
   --toast-color: #166534;
-  --toast-border: #d9ffe7;
+  --toast-border: #a3ffc5;
   --toast-background: #d9ffe7;
   --toast-text: #166534;
 }
 
 .ERROR {
   --toast-color: #892323;
-  --toast-border: #ffdada;
+  --toast-border: #ffb5b5;
   --toast-background: #ffdada;
   --toast-text: #892323;
 }
 
 .INFO {
   --toast-color: #3f88ff;
-  --toast-border: #e3eeff;
+  --toast-border: #bad6ff;
   --toast-background: #e3eeff;
   --toast-text: #3f88ff;
 }
 
 .WARNING {
   --toast-color: #b45309;
-  --toast-border: #ffecdd;
+  --toast-border: #ffd6b7;
   --toast-background: #ffecdd;
   --toast-text: #b45309;
 }

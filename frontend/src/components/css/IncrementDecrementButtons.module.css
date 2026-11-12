@@ -1,0 +1,36 @@
+.increment_decrement_container {
+  display: flex;
+  gap: 4px;
+
+  .division_line {
+    width: 0.5px;
+    background-color: gray;
+  }
+
+  .increment, .decrement {
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    cursor: pointer;
+
+    &:hover {
+      scale: 1.1;
+      filter: brightness(1.1);
+    }
+    &:active {
+      scale: 1;
+      filter: brightness(0.8);
+    }
+  }
+
+  .increment {
+    border: 2px solid green;
+    color: green;
+  }
+  
+  .decrement {
+    border: 2px solid red;
+    color: red;
+  }
+}

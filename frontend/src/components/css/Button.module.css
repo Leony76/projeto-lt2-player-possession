@@ -6,6 +6,9 @@
   cursor: pointer;
   width: 100%;
   transition: 0.25s ease;
+
+  --hover-brightness: 0.95;
+  --active-brightness: 0.90;
 }
 
 .container_form_style {
@@ -27,15 +30,14 @@
   .icon {
     color: #EAB892;
     font-size: 16px;
-    margin-bottom: -4px;
   }
 
   &:hover {
-    filter: brightness(0.95);
+    filter: brightness(var(--hover-brightness));
   }
-  
+
   &:active {
-    filter: brightness(0.90);
+    filter: brightness(var(--active-brightness));
   }
 }
 
@@ -43,6 +45,9 @@
 
 .container_default_style {
   composes: button_main_composition;
+
+  --icon-margin-bottom: 0px;
+  --icon-margin-top: 0px;
 
   gap: 2px;
   border: 1px solid #98785F;
@@ -58,15 +63,17 @@
   .icon {
     color: #98785F;
     font-size: 16px;
-    margin-bottom: -4px;
+    
+    margin-bottom: var(--icon-margin-bottom);
+    margin-top: var(--icon-margin-top);
   }
 
   &:hover {
-    filter: brightness(0.95);
+    filter: brightness(var(--hover-brightness));
   }
-  
+
   &:active {
-    filter: brightness(0.90);
+    filter: brightness(var(--active-brightness));
   }
 }
 

@@ -1,7 +1,7 @@
 import styles from './css/Profile.module.css';
 import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
-import { FaUser } from 'react-icons/fa';
+import { FaArrowLeft, FaUser } from 'react-icons/fa';
 import profileImagePlaceholder from '@/assets/img/profile_image_placeholder.png';
 import Button from '@/components/Button';
 import { RiImageEditFill } from 'react-icons/ri';
@@ -9,12 +9,13 @@ import { MdEditSquare, MdOutlinePublic, MdPublicOff } from 'react-icons/md';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import SectionTitle from '@/components/SectionTitle';
 import { useProfile, type Modals } from '@/hooks/pages/useProfile.hook';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import ProfileModals from '@/components/modals/pages/ProfileModals';
 
 const Profile = (): React.JSX.Element => {
 
   const profile = useProfile();
+  const navigate = useNavigate();
 
   const { user, setters } = profile;
 
@@ -36,10 +37,18 @@ const Profile = (): React.JSX.Element => {
       <ProfileModals profile={profile} />
 
       <div className={styles.container}>
-        <PageTitle
-          Icon={() => <FaUser />}
-          title='Profile'
-        />
+        <div className={styles.page_title_history_back_container}>
+          <button 
+          className={styles.history_back_button}
+          onClick={() => navigate(-1)}>
+            <FaArrowLeft />
+          </button>
+
+          <PageTitle
+            Icon={() => <FaUser />}
+            title='Profile'
+          />
+        </div>
 
         <div className={styles.main_container}>
           <div className={styles.profile_image_container}>
@@ -62,6 +71,9 @@ const Profile = (): React.JSX.Element => {
                 label='Edit'
                 onClick={() => setters.setModal('EDIT_PROFILE_IMAGE')}
                 icon={() => <RiImageEditFill/>}
+                iconPosition={{
+                  bottom: '-3px'
+                }}
               />
             </div>
           </div>

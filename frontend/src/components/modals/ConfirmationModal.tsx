@@ -34,6 +34,9 @@ const ConfirmationModal = (props:Props): React.JSX.Element => {
           disabled={props.loading}
           iconSize={14}
           padding={{ Y: '8px' }}
+          iconPosition={{
+            bottom: '-3px'
+          }}
           colors={{
             background: '#00ff0022',
             labelBorder: 'green'
@@ -48,6 +51,9 @@ const ConfirmationModal = (props:Props): React.JSX.Element => {
           icon={() => <MdCancel />}
           disabled={props.loading}
           padding={{ Y: '8px' }}
+          iconPosition={{
+            bottom: '-3px'
+          }}
           colors={{
             background: '#ff787858',
             labelBorder: '#761B23'

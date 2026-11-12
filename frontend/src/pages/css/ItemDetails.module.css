@@ -61,6 +61,11 @@
 
     .item_descriptive_infos_container {
       flex: 2;
+      display: flex;
+      padding: 16px 0px;
+      flex-direction: column;
+      justify-content: space-between;
+
 
       dl {
         display: flex;
@@ -96,9 +101,9 @@
           }
           
           .ball {
-            background-color: rgba(212, 199, 188, 0.11);
-            color: rgb(143, 134, 127);
-            border-color: rgb(143, 134, 127);
+            background-color: rgba(253, 131, 255, 0.164);
+            color: rgb(253, 131, 255);
+            border-color: rgb(253, 131, 255);
           }
 
           .book {
@@ -214,8 +219,9 @@
             }
 
             &[data-money="true"] {
-              color: #00e200;
-              text-shadow: 1px 1px 1px black;
+              color: #00bd00;
+              font-weight: 600;
+              text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.073);
             }
 
             &[data-units-user-has="true"] {
@@ -226,6 +232,26 @@
             &[data-release-year="true"] {
               color: #0056cf;
             }
+          }
+        }
+      }
+
+      .add_item_container {
+        width: fit-content;
+
+        .new_item_units_container {
+          display: flex;
+          gap: 16px;
+
+          input {
+            background-color: #cc7f5233;
+            border-radius: 4px;
+            border: 1px solid #cc7f52;
+            width: 67px;
+            padding: 0px 4px;
+            text-align: center;
+            color: #761B23;
+            font-weight: 600;
           }
         }
       }

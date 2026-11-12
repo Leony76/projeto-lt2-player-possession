@@ -1,14 +1,18 @@
 import React from 'react'
 import styles from './css/ItemNavCard.module.css';
-import { ITEMS_CATEGORY_MAP, type ItemsCategory } from '@/maps/select/filters/ItemCategory.map';
-import { ITEMS_STATE_MAP, type ItemsState } from '@/maps/select/filters/ItemSubcategory.map';
-import { FaMinus, FaPlus, FaStamp } from "react-icons/fa";
+import { ITEMS_CATEGORY_MAP, type ItemsCategory } from '@shared/maps/filters/items/itemCategory.map';
+import { ITEMS_STATE_MAP, type ItemsState } from '@shared/maps/filters/items/itemState.map';
+import { FaStamp } from "react-icons/fa";
 import { SiCardmarket } from 'react-icons/si';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import { Link } from 'react-router-dom';
-import { type UserItemResponse as Item } from '@shared/dtos/item.dto';
+import type { UserItemResponse as UserItem, ItemResponse as Item } from '@shared/dtos/item.dto';
 
-type Props = Item;
+type Props = Item & {
+  page: 'ITEMS'
+} | UserItem & {
+  page: 'HOME/USER_ITEMS'
+};
 
 const ItemNavCard = (props:Props): React.JSX.Element => {
 
@@ -82,40 +86,37 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
       </p>
 
       <div className={styles.original_market_price_container} title='Original Price'>
-        <span className={styles.original_price}>
-          <span className={styles.icon}>
-            <FaStamp size={14}/>
+        {(props.originalPrice !== null && props.originalPrice >= 0) && 
+          <span className={styles.original_price}>
+            <span className={styles.icon}>
+              <FaStamp size={14}/>
+            </span>
+
+            { toLumberBucksFormat(props.originalPrice) }
           </span>
+        }
+        
+        { props.averageMarketPrice !== null &&    
+          <span className={styles.market_price} title='Market Price'>
+            <span className={styles.icon}>
+              <SiCardmarket size={14}/>
+            </span>
 
-          { toLumberBucksFormat(props.originalPrice) }
-        </span>
-
-        <span className={styles.market_price} title='Market Price'>
-          <span className={styles.icon}>
-            <SiCardmarket size={14}/>
+            { toLumberBucksFormat(props.averageMarketPrice) }
           </span>
-
-          { toLumberBucksFormat(props.marketPrice) }
-        </span>
+        }
       </div>
       
-      <div className={styles.units_increment_decrement_container}>
-        <p className={styles.units} title='Units'>
-          { props.units }x
-        </p>
-
-        <div className={styles.increment_decrement_container}>
-          <button className={styles.increment} title='Add Unit'>
-            <FaPlus />
-          </button>
-          
-          {'|'}
-
-          <button className={styles.decrement} title='Subtract Unit'>
-            <FaMinus />
-          </button>
+      { props.page === 'HOME/USER_ITEMS' &&
+        <div className={styles.units_increment_decrement_container}>
+          <p 
+          className={styles.units} 
+          title='Units'
+          >
+            { props.units }x
+          </p>
         </div>
-      </div>
+      }
     </div>
   )
 }

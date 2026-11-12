@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .page_title_history_back_container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    .history_back_button {
+      display: flex;
+      scale: 2;
+      padding: 2px;
+      border: none;
+      background-color: transparent;
+      color: #CC8E69;
+      border-radius: 4px;
+      transition: 0.25s ease;
+      cursor: pointer;
+
+      &:hover {
+        color: #cc7f52;
+        background-color: #cc8d691d;
+      }
+    }
+  }
+
+  .toolbar_container {
+    display: flex;
+    gap: 4px;
+    
+    border-bottom: 1px solid #cc8d697f;
+    padding-bottom: 20px;
+  }
+
+  .nav {
+    .ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .li {
+        min-width: 0;
+      }
+    }
+  }
+}
+

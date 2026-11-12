@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .section_title_container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .row {
+        height: 2.67px;
+        background-color: #69402842;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+        border-top-right-radius: 50%;
+        border-bottom-right-radius: 50%;
+        flex: 1;
+      }
+    }
+
+    p {
+      color: #CC8E69;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.26);
+    }
+  }
+}

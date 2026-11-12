@@ -9,8 +9,14 @@ import Profile from './pages/Profile';
 import Items from './pages/Items';
 import MyItems from './pages/MyItems';
 import ItemDetails from './pages/ItemDetails';
+import ContactProfile from './pages/ContactProfile';
+import Contacts from './pages/Contacts';
+import MyContacts from './pages/MyContacts';
+import ContactContacts from './pages/ContactContacts';
+import ContactItems from './pages/ContactItems';
+import type React from 'react';
 
-function App() {
+function App(): React.JSX.Element {
   return (
     <>
       <Routes>
@@ -28,16 +34,16 @@ function App() {
           <Route 
             path="/home" 
             element={ <Home /> } 
-          />
-
-          <Route 
-            path="/about" 
-            element={ <About /> } 
-          />
+          />     
 
           <Route 
             path="/profile" 
             element={ <Profile /> } 
+          />
+
+          <Route 
+            path="/contact/:id" 
+            element={ <ContactProfile /> } 
           />
 
           <Route 
@@ -53,6 +59,31 @@ function App() {
           <Route
             path="/item/:id"
             element={<ItemDetails />}
+          />
+
+          <Route
+            path="/contacts"
+            element={<Contacts />}
+          />
+
+          <Route
+            path="/contact/:id/contacts"
+            element={<ContactContacts />}
+          />
+
+          <Route
+            path="/contact/:id/items"
+            element={<ContactItems />}
+          />
+
+          <Route
+            path="/my-contacts"
+            element={<MyContacts />}
+          />
+
+          <Route 
+            path="/about" 
+            element={ <About /> } 
           />
         </Route>
       </Routes>

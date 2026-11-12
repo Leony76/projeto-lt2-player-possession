@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const AddContactButton = (): React.JSX.Element => {
   return (
     <Link 
-    to={'/contact/add'}
+    to={'/contacts'}
     className={styles.container}
     title='New Contact'
     >

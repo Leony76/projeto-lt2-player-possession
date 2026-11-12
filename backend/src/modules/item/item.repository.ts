@@ -1,3 +1,421 @@
+import { prisma } from "@backend/lib/prisma.js";
+import type { Prisma } from "../../generated/prisma/client.js";
+import type { GetItemsFilters } from "@shared/maps/filters/items/getItems.type.js";
+import { ItemResponse, UserItemResponse } from "@shared/dtos/item.dto.js";
+
+
 export class ItemRepository {
   
+  public static async get(
+    page    : number,
+    limit   : number,
+    filters : GetItemsFilters,
+    userId  : number,
+  ): Promise<{
+    items      : UserItemResponse[];
+    totalItems : number;
+  }>;
+
+  public static async get(
+    page    : number,
+    limit   : number,
+    filters : GetItemsFilters,
+    userId? : undefined,
+  ): Promise<{
+    items      : ItemResponse[];
+    totalItems : number;
+  }>;
+
+  public static async get(
+    page    : number,
+    limit   : number,
+    filters : GetItemsFilters,
+    userId ?: number,
+  ) {
+
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.ItemWhereInput = {
+      ...(userId !== undefined && {
+        users: {
+          some: { userId },
+        },
+      }),
+      
+      ...(filters.search && {
+        OR: [
+          {
+            name: {
+              contains : filters.search,
+              mode     : "insensitive",
+            },
+          },
+          {
+            description: {
+              contains : filters.search,
+              mode     : "insensitive",
+            },
+          },
+        ],
+      }),
+
+      ...(filters.category && {
+        category: filters.category,
+      }),
+
+      ...(filters.state && {
+        state: filters.state,
+      }),
+    };
+
+    const orderBy: Prisma.ItemOrderByWithRelationInput[] = [];
+
+    switch (filters.advancedFilter) {
+
+      case "AZ_NAME":
+        orderBy.push({ name: "asc" });
+        break;
+
+      case "ZA_NAME":
+        orderBy.push({ name: "desc" });
+        break;
+
+      case "MOST_RECENTS":
+        orderBy.push({ createdAt: "desc" });
+        break;
+
+      case "LESS_RECENTS":
+        orderBy.push({ createdAt: "asc" });
+        break;
+
+      case "HIGHEST_ORIGINAL_PRICE":
+        orderBy.push({ originalPrice: "desc" });
+        break;
+
+      case "LOWEST_ORIGINAL_PRICE":
+        orderBy.push({ originalPrice: "asc" });
+        break;
+
+      case "HIGHEST_MARKET_PRICE":
+        orderBy.push({
+          averageMarketPrice: {
+            sort: "desc",
+            nulls: "last",
+          },
+        });
+        break;
+
+      case "LOWEST_MARKET_PRICE":
+        orderBy.push({
+          averageMarketPrice: {
+            sort: "asc",
+            nulls: "last",
+          },
+        });
+        break;
+
+      default:
+        orderBy.push({ name: "asc" });
+        break;
+    }
+
+    orderBy.push({ id: "asc" });
+
+    const [items, totalItems] = await prisma.$transaction([
+
+      prisma.item.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+        select: {
+          id                 : true,
+          imageURL           : true,
+          name               : true,
+          category           : true,
+          state              : true,
+          description        : true,
+          originalPrice      : true,
+          averageMarketPrice : true,
+
+          ...(userId && {
+            users: {
+              where  : { userId      },
+              select : { units: true },
+            }}
+          ),
+        },
+      }),
+
+      prisma.item.count({
+        where,
+      }),
+    ]);
+
+    const formattedItems = items.map(item => {
+      if (userId === undefined) {
+        return {
+          ...item,
+          originalPrice: item.originalPrice ?? -1,
+        };
+      }
+
+      const { users, ...itemData } = item;
+
+      return {
+        ...itemData,
+        units         : users?.[0]?.units ?? 0,
+        originalPrice : itemData.originalPrice ?? -1,
+      };
+    });
+
+    return {
+      items : formattedItems,
+      totalItems,
+    };
+  }
+
+
+
+  public static async getItemDetails(
+    itemId: number,
+    userId: number,
+  ) {
+
+    return await prisma.item.findUnique({
+      where: {
+        id: itemId,
+      },
+      select: {
+        id: true,
+        imageURL: true,
+        name: true,
+        category: true,
+        state: true,
+        description: true,
+
+        originalPrice: true,
+        averageMarketPrice: true,
+        averageTruckloadPrice: true,
+        averageTruckloadPrice1x1: true,
+
+        releaseYear: true,
+
+        users: {
+          where: {
+            userId: userId,
+          },
+          select: {
+            units: true,
+          },
+        },
+      },
+    });
+  }
+
+
+
+  public static async updateUserItemUnits(
+    itemId : number,
+    units  : number,
+    userId : number,
+  ) {
+    return await prisma.userItem.upsert({
+      where: {
+        userId_itemId: {
+          userId,
+          itemId,
+        },
+      },
+      update : { units },
+      create : {
+        userId,
+        itemId,
+        units,
+      },
+      select: { 
+        units: true,
+        item: { select: { name: true }} 
+      },
+    });
+  }
+
+
+
+  public static async getUserItemsFromHome(
+    userId: number,
+  ) {
+    const [items, totalItems] = await prisma.$transaction([
+      prisma.userItem.findMany({
+        where: {
+          userId,
+          units: { gt: 0 },
+        },
+        select: {
+          units: true,
+          item: {
+            select: {
+              id          : true,
+              imageURL    : true,
+              name        : true,
+              category    : true,
+              state       : true,
+              description : true,
+              averageMarketPrice : true,
+              originalPrice      : true,
+            },
+          },
+        },
+        take: 6,
+      }),
+
+      prisma.userItem.aggregate({
+        where: {
+          userId,
+          units: { gt: 0 },
+        },
+        _sum: {
+          units: true,
+        },
+      }),
+    ]);
+
+    return {
+      items,
+      totalItems : totalItems._sum.units ?? 0,
+    };
+  }
+
+
+
+  public static async getUserItems(
+    userId  : number,
+    page    : number,
+    limit   : number,
+    filters : GetItemsFilters,
+  ) {
+
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.ItemWhereInput = {
+       users: {
+        some: {
+          userId,
+          units : { gt: 0 },
+        },
+      },
+
+      ...(filters.search && {
+        OR: [
+          {
+            name: {
+              contains : filters.search,
+              mode     : "insensitive",
+            },
+          },
+          {
+            description: {
+              contains : filters.search,
+              mode     : "insensitive",
+            },
+          },
+        ],
+      }),
+
+      ...(filters.category && {
+        category: filters.category,
+      }),
+
+      ...(filters.state && {
+        state: filters.state,
+      }),
+    };
+
+    const orderBy: Prisma.ItemOrderByWithRelationInput[] = [];
+
+    switch (filters.advancedFilter) {
+
+      case "AZ_NAME":
+        orderBy.push({ name: "asc" });
+        break;
+
+      case "ZA_NAME":
+        orderBy.push({ name: "desc" });
+        break;
+
+      case "MOST_RECENTS":
+        orderBy.push({ createdAt: "desc" });
+        break;
+
+      case "LESS_RECENTS":
+        orderBy.push({ createdAt: "asc" });
+        break;
+
+      case "HIGHEST_ORIGINAL_PRICE":
+        orderBy.push({ originalPrice: "desc" });
+        break;
+
+      case "LOWEST_ORIGINAL_PRICE":
+        orderBy.push({ originalPrice: "asc" });
+        break;
+
+      case "HIGHEST_MARKET_PRICE":
+        orderBy.push({
+          averageMarketPrice: {
+            sort: "desc",
+            nulls: "last",
+          },
+        });
+        break;
+
+      case "LOWEST_MARKET_PRICE":
+        orderBy.push({
+          averageMarketPrice: {
+            sort: "asc",
+            nulls: "last",
+          },
+        });
+        break;
+
+      default:
+        orderBy.push({ name: "asc" });
+        break;
+    }
+
+    orderBy.push({ id: "asc" });
+
+    const [items, totalItems] = await prisma.$transaction([
+
+      prisma.item.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+        select: {
+          id                 : true,
+          imageURL           : true,
+          name               : true,
+          category           : true,
+          state              : true,
+          description        : true,
+          originalPrice      : true,
+          averageMarketPrice : true,
+          users: {
+            where  : { userId },
+            select : { units: true },
+          },
+        }
+      }),
+
+      prisma.item.count({
+        where,
+      }),
+
+    ]);
+
+    return {
+      items,
+      totalItems,
+    };
+  }
 }

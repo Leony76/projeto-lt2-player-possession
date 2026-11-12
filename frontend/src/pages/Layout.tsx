@@ -6,10 +6,13 @@ import { MdLogout } from "react-icons/md";
 import type { NavLinks } from '@/types/navLinks.type';
 import AsideNavLink from '@/components/AsideNavLink';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
-import { FaWallet } from 'react-icons/fa';
+import { FaBoxOpen, FaHome, FaInfoCircle, FaWallet } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
 import PageLoading from '@/components/PageLoading';
 import profileImagePlaceholder from '@/assets/img/profile_image_placeholder.png';
+import { LuBoxes } from 'react-icons/lu';
+import { IoMdContact } from 'react-icons/io';
+import { BiSolidContact } from 'react-icons/bi';
 
 type Props = {
   children : React.ReactNode;
@@ -23,6 +26,57 @@ const Layout = (props:Props): React.JSX.Element => {
   if (loading) return <PageLoading/>;
 
   if (!user) return <Navigate to={'/'}/>;
+
+  const navLinksConfig: {
+    to         : `/${string}`;
+    label      : string;
+    tab        : NavLinks;
+    currentTab : NavLinks | undefined;
+    icon       : React.ElementType;
+  }[] = [
+    {
+      to         : '/home',
+      label      : 'Home',
+      tab        : 'HOME',
+      currentTab : props.tab,
+      icon       : () => <FaHome/>
+    },
+    {
+      to         : '/items',
+      label      : 'Items',
+      tab        : 'ITEMS',
+      currentTab : props.tab,
+      icon       : () => <LuBoxes />
+    },
+    {
+      to         : '/my-items',
+      label      : 'My items',
+      tab        : 'MY_ITEMS',
+      currentTab : props.tab,
+      icon       : () => <FaBoxOpen />
+    },
+    {
+      to         : '/contacts',
+      label      : 'Contacts',
+      tab        : 'CONTACTS',
+      currentTab : props.tab,
+      icon       : () => <IoMdContact />
+    },
+    {
+      to         : '/my-contacts',
+      label      : 'My Contacts',
+      tab        : 'MY_CONTACTS',
+      currentTab : props.tab,
+      icon       : () => <BiSolidContact />
+    },
+    {
+      to         : '/about',
+      label      : 'About',
+      tab        : 'ABOUT',
+      currentTab : props.tab,
+      icon       : () => <FaInfoCircle/>
+    },
+  ];
 
   return (
     <div className={styles.container}>
@@ -44,21 +98,20 @@ const Layout = (props:Props): React.JSX.Element => {
 
         <nav className={styles.nav}>
           <ul className={styles.ul}>
-            <li className={styles.li}>
-              <button     
-              title='Lumber Bucks'      
-              onClick={() => {}}
-              type='button'
-              className={styles.user_lumber_bucks_container}
-              >
-                <div className={styles.icon}>
-                  <FaWallet />
-                </div>
+            <li 
+            title='Lumber Bucks'
+            className={`
+              ${styles.li}
+              ${styles.user_lumber_bucks_container}
+            `}
+            >
+              <div className={styles.icon}>
+                <FaWallet />
+              </div>
 
-                <span className={styles.lumber_bucks}>
-                  { toLumberBucksFormat(user.lumberBucks) }
-                </span>
-              </button>
+              <span className={styles.lumber_bucks}>
+                { toLumberBucksFormat(user.lumberBucks) }
+              </span>
             </li>
 
             <li className={styles.li}>
@@ -97,33 +150,12 @@ const Layout = (props:Props): React.JSX.Element => {
         <aside className={styles.aside}>
           <nav className={styles.nav}>
             <ul className={styles.ul}>
-              <AsideNavLink
-                to='/home'
-                label='Home'
-                tab='HOME'
-                currentTab={props.tab}
-              />
-              
-              <AsideNavLink
-                to='/items'
-                label='Items'
-                tab='ITEMS'
-                currentTab={props.tab}
-              />
-
-              <AsideNavLink
-                to='/my-items'
-                label='My Items'
-                tab='MY_ITEMS'
-                currentTab={props.tab}
-              />
-
-              <AsideNavLink
-                to='/about'
-                label='About'
-                tab='ABOUT'
-                currentTab={props.tab}
-              />
+              { navLinksConfig.map((item) => (
+                <AsideNavLink 
+                  key={item.to} 
+                  { ...item } 
+                />
+              ))}
             </ul>
           </nav>
         </aside>

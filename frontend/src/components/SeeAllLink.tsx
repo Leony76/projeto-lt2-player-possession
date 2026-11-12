@@ -4,13 +4,15 @@ import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 
 type Props = {
-  to: `/${string}`;
+  to     : `/${string}`;
+  state? : Record<string, string | number>;
 };
 
 const SeeAllLink = (props:Props): React.JSX.Element => {
   return (
     <Link 
     to={props.to} 
+    state={props.state}
     className={styles.see_all_container}
     title='See All'
     >
