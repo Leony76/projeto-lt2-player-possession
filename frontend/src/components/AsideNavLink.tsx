@@ -9,6 +9,7 @@ type Props = {
   tab        : NavLinks;
   currentTab?: NavLinks;
   icon       : React.ElementType;
+  collapsed?: boolean;
 };
 
 const AsideNavLink = (props:Props): React.JSX.Element => {
@@ -21,7 +22,7 @@ const AsideNavLink = (props:Props): React.JSX.Element => {
     <li className={styles.li}> 
       <Link 
         to={props.to} 
-        title={props.label}
+         title={props.collapsed ? props.label : undefined} 
         aria-current={isSelected ? 'page' : undefined}
         className={
           isSelected 
@@ -30,10 +31,12 @@ const AsideNavLink = (props:Props): React.JSX.Element => {
         }
       > 
         <Icon/>
-
-        <span>
-          { props.label }
-        </span>
+        
+        {!props.collapsed && (
+          <span>
+            { props.label }
+          </span>
+        )}
       </Link> 
     </li>
   )

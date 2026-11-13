@@ -8,7 +8,7 @@ type Props = {
   loading         : boolean;
   page            : number;
   totalPages      : number;
-  setPage         : React.Dispatch<React.SetStateAction<number>>;
+  setPage         : (newPage: number) => void;
 };
 
 const PaginationNavButtons = (props:Props): React.JSX.Element => {
@@ -17,7 +17,7 @@ const PaginationNavButtons = (props:Props): React.JSX.Element => {
       <button
       type="button"
       disabled={!props.hasPreviousPage || props.loading}
-      onClick={() => props.setPage((current) => current - 1)}
+      onClick={() => props.setPage(props.page - 1)}
       >
         <div>
           <FaArrowLeft />
@@ -42,7 +42,7 @@ const PaginationNavButtons = (props:Props): React.JSX.Element => {
       <button
       type="button"
       disabled={!props.hasNextPage || props.loading}
-      onClick={() => props.setPage((current) => current + 1)}
+      onClick={() => props.setPage(props.page + 1)}
       >
         <span>
           Next

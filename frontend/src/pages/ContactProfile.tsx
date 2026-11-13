@@ -234,10 +234,7 @@ const ContactProfile = (): React.JSX.Element | null => {
                 
                 {states.contact.contacts.length > 9 && 
                   <SeeAllLink 
-                    to={`/contact/${states.contact.id}/contacts`}
-                    state={{
-                      contactName: states.contact.name,
-                    }}
+                    to={`/contact/${states.contact.id}/contacts?username=${encodeURIComponent(states.contact.name)}`}
                   />
                 }       
               </div>
@@ -274,10 +271,7 @@ const ContactProfile = (): React.JSX.Element | null => {
                 
                 {states.contact.items.length > 6 && 
                   <SeeAllLink 
-                    to={`/contact/${states.contact.id}/items`}
-                    state={{
-                      contactName: states.contact.name,
-                    }}
+                    to={`/contact/${states.contact.id}/items?username=${encodeURIComponent(states.contact.name)}`}
                   />
                 }       
               </div>

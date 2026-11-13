@@ -17,15 +17,13 @@ import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates
 import PaginationNavButtons from '@/components/PaginationNavButtons';
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
 import { ITEMS_PER_PAGE } from '@/consts/itemsPerPage.const';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import { useUpdateParams } from '@/hooks/useUpdateParams.hook';
 
 const ContactItems = (): React.JSX.Element => {
 
   const { id } = useParams();
-
-  const location = useLocation();
-  const { contactName } = location.state || {};
 
   const navigate = useNavigate();
 
@@ -35,16 +33,20 @@ const ContactItems = (): React.JSX.Element => {
     PaginatedResponse<ItemResponse>["pagination"] | null>(null)
   ;
 
-  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [search, setSearch] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { updateParams } = useUpdateParams(setSearchParams);
 
-  const [itemsAdvancedFilter , setItemsAdvancedFilter ] = useState<ItemsAdvancedFilter | null>(null);
-  const [itemsCategoryFilter , setItemsCategoryFilter ] = useState<ItemsCategory | null>(null);
-  const [itemsStateFilter    , setItemsStateFilter    ] = useState<ItemsState | null>(null);
+  const search = searchParams.get('search') ?? '';
+  const page = Number(searchParams.get('page') ?? 1);
+  const contactName = searchParams.get('username') ?? '';
 
+  const itemsAdvancedFilter = (searchParams.get('advancedFilter') ?? null) as ItemsAdvancedFilter | null;
+  const itemsCategoryFilter =  (searchParams.get('category') ?? null) as ItemsCategory | null;
+  const itemsStateFilter = (searchParams.get('state') ?? null) as ItemsState | null;
+  
   useEffect(() => {
 
     const controller = new AbortController();
@@ -88,23 +90,37 @@ const ContactItems = (): React.JSX.Element => {
   ]);
 
   const handleSearch = useCallback((value: string): void => {
-    setSearch(value);
-    setPage(1);
-  }, []);
+    updateParams({
+      search : value || null,
+      page   : '1',
+    });
+  }, [updateParams]);
 
   const handleCategoryFilter = (filter: ItemsCategory): void => {
-    setItemsCategoryFilter(filter);
-    setPage(1);
+    updateParams({
+      category : filter === '_' ? null : filter,
+      page     : '1',
+    });
   };
 
   const handleStateFilter = (filter: ItemsState): void => {
-    setItemsStateFilter(filter);
-    setPage(1);
+    updateParams({
+      state : filter === '_' ? null : filter,
+      page  : '1',
+    });
   };
 
   const handleAdvancedFilter = (filter: ItemsAdvancedFilter): void => {
-    setItemsAdvancedFilter(filter);
-    setPage(1);
+    updateParams({
+      advancedFilter : filter === '_' ? null : filter,
+      page           : '1',
+    });
+  };
+
+  const handlePage = (newPage: number): void => {
+    updateParams({
+      page: String(newPage),
+    });
   };
 
   return (
@@ -125,6 +141,7 @@ const ContactItems = (): React.JSX.Element => {
 
         <div className={styles.toolbar_container}>
           <SearchBar
+            value={search}
             placeholder="Search item..."
             debounceTime={400}
             onSearch={handleSearch}
@@ -132,18 +149,21 @@ const ContactItems = (): React.JSX.Element => {
           />
 
           <Select
+            value={itemsStateFilter ?? '_'}
             selectConfig="ITEMS_STATE_FILTER"
             onSelect={(filter) => handleStateFilter(filter as ItemsState)}
             flex={0.67}
           />
 
           <Select
+            value={itemsCategoryFilter ?? '_'}
             selectConfig="ITEMS_CATEGORY_FILTER"
             onSelect={(filter) => handleCategoryFilter(filter as ItemsCategory)}
             flex={0.87}
           />
 
           <Select
+            value={itemsAdvancedFilter ?? '_'}
             selectConfig="ITEMS_ADVANCED_FILTER"
             onSelect={(filter) => handleAdvancedFilter(filter as ItemsAdvancedFilter)}
             flex={1}
@@ -179,9 +199,9 @@ const ContactItems = (): React.JSX.Element => {
             hasPreviousPage={pagination.hasPreviousPage}
             hasNextPage={pagination.hasNextPage}
             loading={loading}
-            page={pagination.page}
+            page={page}
             totalPages={pagination.totalPages}
-            setPage={setPage}
+            setPage={handlePage}
           />
         )}  
       </div>

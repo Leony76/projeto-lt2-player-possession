@@ -20,6 +20,8 @@ import { useToast } from '@/contexts/ToastContext';
 import type { ContactRelationStatus } from '@shared/maps/filters/contacts/contactRelationStatus.filter';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { CONTACTS_PER_PAGE } from '@/consts/contactsPerPage.const';
+import { useSearchParams } from 'react-router-dom';
+import { useUpdateParams } from '@/hooks/useUpdateParams.hook';
 
 type Modals = 
 | 'CONFIRM_DENY_CONTACT_REQUEST'
@@ -37,7 +39,6 @@ const Contacts = (): React.JSX.Element => {
     PaginatedResponse<ContactResponse>["pagination"] | null>(null)
   ;
 
-  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,9 +48,13 @@ const Contacts = (): React.JSX.Element => {
 
   const [modal, setModal] = useState<Modals | null>(null);
 
-  const [search, setSearch] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { updateParams } = useUpdateParams(setSearchParams);
 
-  const [contactsAdvancedFilter, setContactsAdvancedFilter] = useState<ContactsAdvancedFilter | null>(null);
+  const page = Number(searchParams.get('page') ?? 1);
+  const search = searchParams.get('search') ?? '';
+
+  const contactsAdvancedFilter = (searchParams.get('advancedFilter') ?? '_') as ContactsAdvancedFilter;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -177,13 +182,25 @@ const Contacts = (): React.JSX.Element => {
   };
 
   const handleSearch = useCallback((value: string): void => {
-    setSearch(value);
-    setPage(1);
-  }, []);
+    updateParams({
+      search: value || null,
+      page: '1',
+    });
+  }, [updateParams]);
 
-  const handleAdvancedFilter = (filter: ContactsAdvancedFilter): void => {
-    setContactsAdvancedFilter(filter);
-    setPage(1);
+  const handleAdvancedFilter = (
+    filter: ContactsAdvancedFilter
+  ): void => {
+    updateParams({
+      advancedFilter: filter === '_' ? null : filter,
+      page: '1',
+    });
+  };
+
+  const handlePage = (newPage: number): void => {
+    updateParams({
+      page: String(newPage),
+    });
   };
 
   return (
@@ -221,6 +238,7 @@ const Contacts = (): React.JSX.Element => {
 
         <div className={styles.toolbar_container}>
           <SearchBar
+            value={search}
             placeholder="Search contact..."
             debounceTime={400}
             onSearch={handleSearch}
@@ -228,6 +246,7 @@ const Contacts = (): React.JSX.Element => {
           />
 
           <Select
+            value={contactsAdvancedFilter ?? '_'}
             selectConfig="CONTACTS_ADVANCED_FILTER"
             onSelect={(filter) => handleAdvancedFilter(filter as ContactsAdvancedFilter)}
             flex={0.67}
@@ -280,9 +299,9 @@ const Contacts = (): React.JSX.Element => {
             hasPreviousPage={pagination.hasPreviousPage}
             hasNextPage={pagination.hasNextPage}
             loading={loading}
-            page={pagination.page}
+            page={page}
             totalPages={pagination.totalPages}
-            setPage={setPage}
+            setPage={handlePage}
           />
         )}  
       </div>

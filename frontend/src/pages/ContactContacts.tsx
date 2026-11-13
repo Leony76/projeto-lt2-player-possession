@@ -21,7 +21,8 @@ import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { CONTACTS_PER_PAGE } from '@/consts/contactsPerPage.const';
 import { FaArrowLeft } from 'react-icons/fa';
 import { BiSolidContact } from 'react-icons/bi';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useUpdateParams } from '@/hooks/useUpdateParams.hook';
 
 type Modals = 
 | 'CONFIRM_DENY_CONTACT_REQUEST'
@@ -34,10 +35,6 @@ const ContactContacts = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  
-  const location = useLocation();
-  const { contactName } = location.state || {};
-
   const [contacts, setContacts] = useState<ContactResponse[]>([]);
   const [contact, setContact] = useState<ContactResponse | null>(null);
 
@@ -45,19 +42,23 @@ const ContactContacts = (): React.JSX.Element => {
     PaginatedResponse<ContactResponse>["pagination"] | null>(null)
   ;
 
-  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  
   const [isAcceptingContactRequest, setIsAcceptingContactRequest] = useState<boolean>(false);
   const [isDenyingContactRequest, setIsDenyingContactRequest] = useState<boolean>(false);
   const [isAddingContact, setIsAddingContact] = useState<boolean>(false);
-
+  
   const [modal, setModal] = useState<Modals | null>(null);
+  
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { updateParams } = useUpdateParams(setSearchParams);
 
-  const [search, setSearch] = useState<string>("");
+  const page = Number(searchParams.get('page') ?? 1);
+  const search = searchParams.get('search') ?? '';
 
-  const [contactsAdvancedFilter, setContactsAdvancedFilter] = useState<ContactsAdvancedFilter | null>(null);
+  const contactName = searchParams.get('username') ?? '';
+  const contactsAdvancedFilter = (searchParams.get('advancedFilter') ?? '_') as ContactsAdvancedFilter;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -189,14 +190,27 @@ const ContactContacts = (): React.JSX.Element => {
   };
 
   const handleSearch = useCallback((value: string): void => {
-    setSearch(value);
-    setPage(1);
-  }, []);
+    updateParams({
+      search: value || null,
+      page: '1',
+    });
+  }, [updateParams]);
 
-  const handleAdvancedFilter = (filter: ContactsAdvancedFilter): void => {
-    setContactsAdvancedFilter(filter);
-    setPage(1);
+  const handleAdvancedFilter = (
+    filter: ContactsAdvancedFilter
+  ): void => {
+    updateParams({
+      advancedFilter: filter === '_' ? null : filter,
+      page: '1',
+    });
   };
+
+  const handlePage = (newPage: number): void => {
+    updateParams({
+      page: String(newPage),
+    });
+  };
+
 
   return (
     <Layout>
@@ -241,6 +255,7 @@ const ContactContacts = (): React.JSX.Element => {
 
         <div className={styles.toolbar_container}>
           <SearchBar
+            value={search}
             placeholder="Search contact..."
             debounceTime={400}
             onSearch={handleSearch}
@@ -248,6 +263,7 @@ const ContactContacts = (): React.JSX.Element => {
           />
 
           <Select
+            value={contactsAdvancedFilter ?? '_'}
             selectConfig="CONTACTS_ADVANCED_FILTER"
             onSelect={(filter) => handleAdvancedFilter(filter as ContactsAdvancedFilter)}
             flex={0.67}
@@ -300,9 +316,9 @@ const ContactContacts = (): React.JSX.Element => {
             hasPreviousPage={pagination.hasPreviousPage}
             hasNextPage={pagination.hasNextPage}
             loading={loading}
-            page={pagination.page}
+            page={page}
             totalPages={pagination.totalPages}
-            setPage={setPage}
+            setPage={handlePage}
           />
         )}  
       </div>

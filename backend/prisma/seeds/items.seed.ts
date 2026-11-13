@@ -8018,3 +8018,17 @@ export const seedItems = async() => {
   console.log("Items successfully seeded!");
 }
 
+// export const seedItems = async () => {
+//   await prisma.$executeRaw`
+//     TRUNCATE TABLE "items" RESTART IDENTITY CASCADE
+//   `;
+
+//   for (const item of items) {
+//     await prisma.item.create({
+//       data: item,
+//     });
+//   }
+
+//   console.log("Items successfully seeded!");
+// };
+

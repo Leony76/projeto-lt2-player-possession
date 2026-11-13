@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import styles from './css/Select.module.css';
 import { SELECT_CONFIG_MAP, type SelectConfig } from '@/maps/select/selectConfig.map';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
@@ -6,6 +6,7 @@ import { useMouseClickOuttaTargetDiv } from '@/hooks/useMouseClickOuttaTargetDiv
 
 type Props = {
   selectConfig : SelectConfig;
+ value        ?: string;
   onSelect     : (optionKey: string) => void;
   flex        ?: number;
 };
@@ -18,9 +19,14 @@ const Select = (props:Props): React.JSX.Element => {
 
   type OptionKey = keyof typeof OPTIONS_CONFIG;
 
-  const [selectedOption, setSelectedOption] = useState<OptionKey>(
-    Object.keys(OPTIONS_CONFIG)[0] as OptionKey
-  );
+  const [localSelectedOption, setLocalSelectedOption] =
+    useState<OptionKey>(
+      Object.keys(OPTIONS_CONFIG)[0] as OptionKey
+    );
+
+  const selectedOption = (
+    props.value ?? localSelectedOption
+  ) as OptionKey;
 
   const { containerRef } = useMouseClickOuttaTargetDiv(setIsOpen);
 
@@ -52,7 +58,7 @@ const Select = (props:Props): React.JSX.Element => {
             className={styles.option}
             data-selected={selectedOption === key}
             onClick={() => {
-              setSelectedOption(key as OptionKey);
+              setLocalSelectedOption(key as OptionKey);
               props.onSelect(key);
               setIsOpen(false);
             }}
