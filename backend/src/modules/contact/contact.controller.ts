@@ -180,4 +180,17 @@ export class ContactController {
 
     return res.status(200).json(response);
   }
+
+
+
+  public static async getUserReceivedContactRequestsCount(
+    req : Request,
+    res : Response,
+  ) {
+    const userId = Number(req.authUserId);
+
+    const response = await ContactService.getUserReceivedContactRequestsCount(userId);
+
+    return res.status(200).json(response);
+  }
 }

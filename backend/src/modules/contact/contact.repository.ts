@@ -19,50 +19,61 @@ export class ContactRepository {
 
     let orderBy: Prisma.Sql;
 
-    switch (filters.advancedFilter) {
-      case 'AZ_NAME':
-        orderBy = Prisma.sql`u.name ASC`;
-        break;
+    if (filters.onlyMyContacts) {
+      orderBy = Prisma.sql`
+        CASE
+          WHEN c.status = 'PENDING'
+            AND c.addressee_id = ${userId}
+          THEN 0
+          ELSE 1
+        END ASC
+      `;
+    } else {
+      switch (filters.advancedFilter) {
+        case 'AZ_NAME':
+          orderBy = Prisma.sql`u.name ASC`;
+          break;
 
-      case 'ZA_NAME':
-        orderBy = Prisma.sql`u.name DESC`;
-        break;
+        case 'ZA_NAME':
+          orderBy = Prisma.sql`u.name DESC`;
+          break;
 
-      case 'MOST_RECENT_JOINS':
-        orderBy = Prisma.sql`u.created_at DESC`;
-        break;
+        case 'MOST_RECENT_JOINS':
+          orderBy = Prisma.sql`u.created_at DESC`;
+          break;
 
-      case 'LESS_RECENT_JOINS':
-        orderBy = Prisma.sql`u.created_at ASC`;
-        break;
+        case 'LESS_RECENT_JOINS':
+          orderBy = Prisma.sql`u.created_at ASC`;
+          break;
 
-      case 'MOST_ITEMS':
-        orderBy = Prisma.sql`"totalItems" DESC`;
-        break;
+        case 'MOST_ITEMS':
+          orderBy = Prisma.sql`"totalItems" DESC`;
+          break;
 
-      case 'LESS_ITEMS':
-        orderBy = Prisma.sql`"totalItems" ASC`;
-        break;
+        case 'LESS_ITEMS':
+          orderBy = Prisma.sql`"totalItems" ASC`;
+          break;
 
-      case 'MOST_LUMBER_BUCKS':
-        orderBy = Prisma.sql`u.lumber_bucks DESC`;
-        break;
+        case 'MOST_LUMBER_BUCKS':
+          orderBy = Prisma.sql`u.lumber_bucks DESC`;
+          break;
 
-      case 'LESS_LUMBER_BUCKS':
-        orderBy = Prisma.sql`u.lumber_bucks ASC`;
-        break;
+        case 'LESS_LUMBER_BUCKS':
+          orderBy = Prisma.sql`u.lumber_bucks ASC`;
+          break;
 
-      case 'MOST_CONTACTS':
-        orderBy = Prisma.sql`"totalContacts" DESC`;
-        break;
+        case 'MOST_CONTACTS':
+          orderBy = Prisma.sql`"totalContacts" DESC`;
+          break;
 
-      case 'LESS_CONTACTS':
-        orderBy = Prisma.sql`"totalContacts" ASC`;
-        break;
+        case 'LESS_CONTACTS':
+          orderBy = Prisma.sql`"totalContacts" ASC`;
+          break;
 
-      default:
-        orderBy = Prisma.sql`u.name ASC`;
-        break;
+        default:
+          orderBy = Prisma.sql`u.name ASC`;
+          break;
+      }
     }
 
     const myContactsCondition = filters.onlyMyContacts
@@ -236,51 +247,6 @@ export class ContactRepository {
         Prisma.sql`u.name ILIKE ${`%${filters.search.trim()}%`}`
       );
     }
-
-    // if (filters.relationStatus) {
-    //   switch (filters.relationStatus) {
-    //     case 'CONTACT':
-    //       conditions.push(
-    //         Prisma.sql`c.status = 'CONTACT'`
-    //       );
-    //       break;
-
-    //     case 'REQUEST_SENT':
-    //       conditions.push(
-    //         Prisma.sql`
-    //           c.status = 'PENDING'
-    //           AND c.requester_id = ${userId}
-    //         `
-    //       );
-    //       break;
-
-    //     case 'REQUEST_RECEIVED':
-    //       conditions.push(
-    //         Prisma.sql`
-    //           c.status = 'PENDING'
-    //           AND c.addressee_id = ${userId}
-    //         `
-    //       );
-    //       break;
-
-    //     case 'NOT_CONTACT':
-    //       conditions.push(
-    //         Prisma.sql`
-    //           (
-    //             c.id IS NULL
-    //             OR c.status = 'NOT_CONTACT'
-    //           )
-    //         `
-    //       );
-    //       break;
-    //   }
-    // }
-
-    // if (filters.onlyMyContacts) {
-    //   conditions.push(
-    //     Prisma.sql`c.status = 'CONTACT'`
-    //   );
-    // }
 
     let orderBy: Prisma.Sql;
 
@@ -845,6 +811,19 @@ export class ContactRepository {
 
         items : normalizedItems,
       };
+    });
+  }
+
+
+
+  public static async getUserReceivedContactRequestsCount(
+    userId : number,
+  ) {
+    return await prisma.contact.count({
+      where: {
+        addresseeId : userId,
+        status      : 'PENDING',
+      }
     });
   }
 }

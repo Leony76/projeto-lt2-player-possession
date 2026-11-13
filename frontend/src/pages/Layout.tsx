@@ -14,6 +14,8 @@ import { LuBoxes } from 'react-icons/lu';
 import { IoMdContact } from 'react-icons/io';
 import { BiSolidContact } from 'react-icons/bi';
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import { handleAxiosError } from '@/utils/handleAxiosError.util';
+import { ContactService } from '@/services/contact.service';
 
 
 const Layout = (): React.JSX.Element => {
@@ -24,9 +26,7 @@ const Layout = (): React.JSX.Element => {
 
   const [isAsideCollapsed, setIsAsideCollapsed] = useState<boolean>(false);
 
-  if (loading) return <PageLoading/>;
-
-  if (!user) return <Navigate to={'/'}/>;
+  const [receivedContactRequestsCount, setReceivedContactRequestsCount] = useState<number>(0);
 
   const currentTab = {
     '/home'        : 'HOME',
@@ -38,6 +38,7 @@ const Layout = (): React.JSX.Element => {
   } as const;
 
   const tab = currentTab[location.pathname as keyof typeof currentTab];
+  const iconSizeByCollapedStatus = isAsideCollapsed ? 1.4 : 1;
 
   const navLinksConfig: {
     to         : `/${string}`;
@@ -45,50 +46,56 @@ const Layout = (): React.JSX.Element => {
     tab        : NavLinks;
     currentTab : NavLinks | undefined;
     icon       : React.ElementType;
+    badgeCount?: number;
   }[] = [
     {
       to         : '/home',
       label      : 'Home',
       tab        : 'HOME',
       currentTab : tab,
-      icon       : () => <FaHome/>
+      icon       : () => <FaHome style={{ scale: iconSizeByCollapedStatus }}/>
     },
     {
       to         : '/items',
       label      : 'Items',
       tab        : 'ITEMS',
       currentTab : tab,
-      icon       : () => <LuBoxes />
+      icon       : () => <LuBoxes style={{ scale: iconSizeByCollapedStatus }}/>
     },
     {
       to         : '/my-items',
       label      : 'My items',
       tab        : 'MY_ITEMS',
       currentTab : tab,
-      icon       : () => <FaBoxOpen />
+      icon       : () => <FaBoxOpen style={{ scale: iconSizeByCollapedStatus }}/>
     },
     {
       to         : '/contacts',
       label      : 'Contacts',
       tab        : 'CONTACTS',
       currentTab : tab,
-      icon       : () => <IoMdContact />
+      icon       : () => <IoMdContact style={{ scale: iconSizeByCollapedStatus }}/>
     },
     {
       to         : '/my-contacts',
       label      : 'My Contacts',
       tab        : 'MY_CONTACTS',
       currentTab : tab,
-      icon       : () => <BiSolidContact />
+      icon       : () => <BiSolidContact style={{ scale: iconSizeByCollapedStatus }}/>,
+      badgeCount : receivedContactRequestsCount,
     },
     {
       to         : '/about',
       label      : 'About',
       tab        : 'ABOUT',
       currentTab : tab,
-      icon       : () => <FaInfoCircle/>
+      icon       : () => <FaInfoCircle style={{ scale: iconSizeByCollapedStatus }}/>
     },
   ];
+
+  const decrementReceivedContactRequestsCount = (): void => {
+    setReceivedContactRequestsCount(prev => Math.max(0, prev - 1));
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -110,6 +117,30 @@ const Layout = (): React.JSX.Element => {
     );
 
   }, [isAsideCollapsed, user?.id]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const getReceivedRequestsCount = async () => {
+      try {
+        const response = await ContactService.getReceivedContactRequestsCount();
+
+        setReceivedContactRequestsCount(response.count);
+
+      } catch (error:unknown) {
+        console.error(handleAxiosError(error));
+      }
+    };
+
+    getReceivedRequestsCount();
+
+    const interval = setInterval(getReceivedRequestsCount, 30000);
+
+    return () => clearInterval(interval);
+  }, [user?.id]);
+
+  if (loading) return <PageLoading/>;
+  if (!user) return <Navigate to={'/'}/>;
 
   return (
     <div className={styles.container}>
@@ -188,6 +219,7 @@ const Layout = (): React.JSX.Element => {
             <button
             type="button"
             data-is-collapsed={isAsideCollapsed}
+            style={{ width: '38px', alignSelf: 'center'}}
             title={isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             aria-label={isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             aria-expanded={!isAsideCollapsed}
@@ -237,7 +269,9 @@ const Layout = (): React.JSX.Element => {
 
         <div className={styles.main_footer}>
           <main className={styles.main}>
-            <Outlet/>
+            <Outlet context={{
+              decrementReceivedContactRequestsCount,
+            }}/>
           </main>
 
           <footer className={styles.footer}>

@@ -20,8 +20,9 @@ import type { ContactRelationStatus, ContactsRelationStatusFilter } from '@share
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { BiSolidContact } from 'react-icons/bi';
 import { CONTACTS_PER_PAGE } from '@/consts/contactsPerPage.const';
-import { useSearchParams } from 'react-router-dom';
+import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { useUpdateParams } from '@/hooks/useUpdateParams.hook';
+import type { LayoutOutletContext } from '@/types/layoutOutletContext.type';
 
 type Modals = 
 | 'CONFIRM_DENY_CONTACT_REQUEST'
@@ -31,6 +32,7 @@ type Modals =
 const MyContacts = (): React.JSX.Element => {
 
   const { showToast } = useToast();
+  const { decrementReceivedContactRequestsCount } = useOutletContext<LayoutOutletContext>();
 
   const [contacts, setContacts] = useState<ContactResponse[]>([]);
   const [totalContacts, setTotalContacts] = useState<number>(0);
@@ -99,7 +101,10 @@ const MyContacts = (): React.JSX.Element => {
     contactId : number,
     message   : string,
     status    : ContactRelationStatus,
-  ) => {
+  ): void => {
+    
+    decrementReceivedContactRequestsCount();
+
     setContacts(prev =>
       prev.map(contact =>
         contact.id === contactId

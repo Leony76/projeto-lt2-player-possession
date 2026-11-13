@@ -274,4 +274,21 @@ export class ContactService {
       requestStatus : 'NOT_CONTACT'
     };
   }
+
+
+
+  public static async getUserReceivedContactRequestsCount(
+    userId : number,
+  ): Promise<{count : number}> {
+
+    if (!userId) {
+      throw new APIError(401, "User not authenticated");
+    } 
+
+    const count = await ContactRepository.getUserReceivedContactRequestsCount(
+      userId
+    );
+
+    return { count };
+  }
 }

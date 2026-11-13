@@ -4,12 +4,13 @@ import styles from './css/AsideNavLink.module.css';
 import type { NavLinks } from '@/types/navLinks.type';
 
 type Props = {
-  to         : `/${string}`;
-  label      : string;
-  tab        : NavLinks;
-  currentTab?: NavLinks;
-  icon       : React.ElementType;
-  collapsed?: boolean;
+  to          : `/${string}`;
+  label       : string;
+  tab         : NavLinks;
+  currentTab ?: NavLinks;
+  icon        : React.ElementType;
+  collapsed  ?: boolean;
+  badgeCount ?: number;
 };
 
 const AsideNavLink = (props:Props): React.JSX.Element => {
@@ -21,20 +22,29 @@ const AsideNavLink = (props:Props): React.JSX.Element => {
   return (
     <li className={styles.li}> 
       <Link 
-        to={props.to} 
-         title={props.collapsed ? props.label : undefined} 
-        aria-current={isSelected ? 'page' : undefined}
-        className={
-          isSelected 
-          ? styles.selected_link
-          : styles.unselected_link
-        }
+      to={props.to} 
+      title={props.collapsed ? props.label : undefined} 
+      aria-current={isSelected ? 'page' : undefined}
+      className={
+        isSelected 
+        ? styles.selected_link
+        : styles.unselected_link
+      }
       > 
         <Icon/>
         
         {!props.collapsed && (
           <span>
             { props.label }
+          </span>
+        )}
+
+        {!!props.badgeCount && (
+          <span className={`
+            ${styles.badge} 
+            ${props.collapsed ? styles.badge_on_collapse : ''}
+          `}>
+            {props.badgeCount}
           </span>
         )}
       </Link> 
