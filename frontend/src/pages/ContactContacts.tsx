@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styles from './css/ContactContacts.module.css';
-import Layout from './Layout';
+import animations from '@assets/css/Animations.module.css';
 import PageTitle from '@/components/PageTitle';
 import imgPlaceholder from '@/assets/img/profile_image_placeholder.png';
 import SearchBar from '@/components/SearchBar';
@@ -213,117 +213,116 @@ const ContactContacts = (): React.JSX.Element => {
 
 
   return (
-    <Layout>
-      <>
-      {(contact && modal === 'CONFIRM_ACCEPT_CONTACT_REQUEST') && (
-        <ConfirmationModal
-          loading={isAcceptingContactRequest}
-          message={`Are you sure you want to accept the contact request from ${contact.name}?`}
-          onConfirm={() => handleAcceptContactRequest(contact.id)}
-          onCancel={() => {
-            setContact(null);
-            setModal(null);
-          }}
+    <>
+    {(contact && modal === 'CONFIRM_ACCEPT_CONTACT_REQUEST') && (
+      <ConfirmationModal
+        loading={isAcceptingContactRequest}
+        message={`Are you sure you want to accept the contact request from ${contact.name}?`}
+        onConfirm={() => handleAcceptContactRequest(contact.id)}
+        onCancel={() => {
+          setContact(null);
+          setModal(null);
+        }}
+      />
+    )}
+
+    {(contact && modal === 'CONFIRM_DENY_CONTACT_REQUEST') && (
+      <ConfirmationModal
+        loading={isDenyingContactRequest}
+        message={`Are you sure you want to deny the contact request from ${contact.name}?`}
+        onConfirm={() => handleDenyContactRequest(contact.id)}
+        onCancel={() => {
+          setModal(null);
+          setContact(null);
+        }}
+      />
+    )}
+
+    <div className={styles.container}>
+      <div className={styles.page_title_history_back_container}>
+        <button 
+        className={styles.history_back_button}
+        onClick={() => navigate(-1)}>
+          <FaArrowLeft />
+        </button>
+
+        <PageTitle
+          Icon={() => <BiSolidContact />}
+          title={`${contactName ?? '?'}'s contacts`}
         />
-      )}
-
-      {(contact && modal === 'CONFIRM_DENY_CONTACT_REQUEST') && (
-        <ConfirmationModal
-          loading={isDenyingContactRequest}
-          message={`Are you sure you want to deny the contact request from ${contact.name}?`}
-          onConfirm={() => handleDenyContactRequest(contact.id)}
-          onCancel={() => {
-            setModal(null);
-            setContact(null);
-          }}
-        />
-      )}
-
-      <div className={styles.container}>
-        <div className={styles.page_title_history_back_container}>
-          <button 
-          className={styles.history_back_button}
-          onClick={() => navigate(-1)}>
-            <FaArrowLeft />
-          </button>
-
-          <PageTitle
-            Icon={() => <BiSolidContact />}
-            title={`${contactName ?? '?'}'s contacts`}
-          />
-        </div>
-
-        <div className={styles.toolbar_container}>
-          <SearchBar
-            value={search}
-            placeholder="Search contact..."
-            debounceTime={400}
-            onSearch={handleSearch}
-            flex={4}
-          />
-
-          <Select
-            value={contactsAdvancedFilter ?? '_'}
-            selectConfig="CONTACTS_ADVANCED_FILTER"
-            onSelect={(filter) => handleAdvancedFilter(filter as ContactsAdvancedFilter)}
-            flex={0.67}
-          />
-        </div>
-
-        <nav className={styles.nav}>
-          <ul className={styles.ul}>
-            {loading && <LoadingState label='Contacts'/>}
-            
-            {(!loading && error) && <ErrorState error={error}/>}  
-
-            {(!loading && !error && contacts.length === 0) && <NotFoundState label='contacts'/>}
-
-            {(!loading && !error && contacts.length > 0) && (
-              contacts.map((contact) => (
-                <li 
-                className={styles.li}
-                key={contact.id}
-                >
-                  <ContactCard
-                    display='DETAILED'
-                    userId={contact.id}
-                    profileImageURL={contact.profileImageURL ?? imgPlaceholder}
-                    username={contact.name}
-                    joinedAt={toMonthDayYearTwelveHoursFormat(contact.joinedAt)}
-                    totalItems={contact.totalItems}
-                    relationStatus={contact.loggedUserContactStatus}
-                    onAddContact={handleAddContact}
-                    isAddingContact={isAddingContact}
-                    isAcceptingContactRequest={isAcceptingContactRequest}
-                    isDenyingContactRequest={isDenyingContactRequest}
-                    onAcceptContactRequest={() => {
-                      setModal('CONFIRM_ACCEPT_CONTACT_REQUEST');
-                      setContact(contact);
-                    }}
-                    onDenyContactRequest={() => {
-                      setModal('CONFIRM_DENY_CONTACT_REQUEST');
-                      setContact(contact);
-                    }}
-                  />
-                </li>
-              ))
-            )}
-          </ul>
-        </nav>
-
-        {pagination && pagination.totalPages > 1 && (
-          <PaginationNavButtons
-            hasPreviousPage={pagination.hasPreviousPage}
-            hasNextPage={pagination.hasNextPage}
-            loading={loading}
-            page={page}
-            totalPages={pagination.totalPages}
-            setPage={handlePage}
-          />
-        )}  
       </div>
-      </>
-    </Layout>
+
+      <div className={styles.toolbar_container}>
+        <SearchBar
+          value={search}
+          placeholder="Search contact..."
+          debounceTime={400}
+          onSearch={handleSearch}
+          flex={4}
+        />
+
+        <Select
+          value={contactsAdvancedFilter ?? '_'}
+          selectConfig="CONTACTS_ADVANCED_FILTER"
+          onSelect={(filter) => handleAdvancedFilter(filter as ContactsAdvancedFilter)}
+          flex={0.67}
+        />
+      </div>
+
+      <nav className={styles.nav}>
+        <ul className={styles.ul}>
+          {loading && <LoadingState label='Contacts'/>}
+          
+          {(!loading && error) && <ErrorState error={error}/>}  
+
+          {(!loading && !error && contacts.length === 0) && <NotFoundState label='contacts'/>}
+
+          {(!loading && !error && contacts.length > 0) && (
+            contacts.map((contact, index) => (
+              <li 
+              className={`${styles.li} ${animations.fade_in}`}
+              style={{ animationDelay: `${index * 80}ms` }}
+              key={contact.id}
+              >
+                <ContactCard
+                  display='DETAILED'
+                  userId={contact.id}
+                  profileImageURL={contact.profileImageURL ?? imgPlaceholder}
+                  username={contact.name}
+                  joinedAt={toMonthDayYearTwelveHoursFormat(contact.joinedAt)}
+                  totalItems={contact.totalItems}
+                  relationStatus={contact.loggedUserContactStatus}
+                  onAddContact={handleAddContact}
+                  isAddingContact={isAddingContact}
+                  isAcceptingContactRequest={isAcceptingContactRequest}
+                  isDenyingContactRequest={isDenyingContactRequest}
+                  onAcceptContactRequest={() => {
+                    setModal('CONFIRM_ACCEPT_CONTACT_REQUEST');
+                    setContact(contact);
+                  }}
+                  onDenyContactRequest={() => {
+                    setModal('CONFIRM_DENY_CONTACT_REQUEST');
+                    setContact(contact);
+                  }}
+                />
+              </li>
+            ))
+          )}
+        </ul>
+      </nav>
+
+      {pagination && pagination.totalPages > 1 && (
+        <PaginationNavButtons
+          hasPreviousPage={pagination.hasPreviousPage}
+          hasNextPage={pagination.hasNextPage}
+          loading={loading}
+          page={page}
+          totalPages={pagination.totalPages}
+          setPage={handlePage}
+        />
+      )}  
+    </div>
+    </>
   )
 }
 

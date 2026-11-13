@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import styles from './css/ItemDetails.module.css'
-import Layout from './Layout'
 import PageTitle from '@/components/PageTitle'
 import { BiDetail } from 'react-icons/bi'
 import { FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
@@ -56,10 +55,11 @@ const ItemDetails = (): React.JSX.Element => {
   }, [itemNewUnitsAmount]);
 
   const handleAddNewItemUnitsAmount = async (): Promise<void> => {
+
     if (isUpdating || !item) return;
 
     const validation = updateUnitsSchema.safeParse({
-      units: itemNewUnitsAmount,
+      units: Number(itemNewUnitsAmountOnInput),
     });
 
     if (!validation.success) {
@@ -71,21 +71,25 @@ const ItemDetails = (): React.JSX.Element => {
       setIsUpdating(true);
 
       const response = await ItemService.updateUserItemUnits(
-        item.id, 
+        item.id,
         validation.data.units
       );
 
-      if (!response.success) throw new Error('Unable to update item units');
+      if (!response.success) {
+        throw new Error('Unable to update item units');
+      }
 
-      setItem(prev => prev 
-        ? {
+      setItem(prev =>
+        prev ? {
           ...prev,
           unitsLoggedUserHas: validation.data.units,
         } : null
       );
 
+      setItemNewUnitsAmount(validation.data.units);
       setIsEditingUnits(false);
-      showToast('SUCCESS', response.message);     
+
+      showToast('SUCCESS', response.message);
     } catch (error: unknown) {
       showToast('ERROR', handleAxiosError(error));
     } finally {
@@ -93,31 +97,10 @@ const ItemDetails = (): React.JSX.Element => {
     }
   };
 
-  const validateNewUnits = (units: number): boolean => {
-    const result = updateUnitsSchema.safeParse({ units });
-
-    if (!result.success) {
-      showToast('ERROR', result.error.issues[0].message);
-      return false;
-    }
-
-    return true;
-  };
-
   const handleOnBlurUnitsInput = () => {
     if (itemNewUnitsAmountOnInput === '') {
       setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
-      return;
     }
-
-    const amount = Number(itemNewUnitsAmountOnInput);
-
-    if (!validateNewUnits(amount)) {
-      setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
-      return;
-    }
-
-    setItemNewUnitsAmount(amount);
   };
 
   const ITEMS_DESCRIPTIVE_INFOS_MAP: Record<string, string | number> = {
@@ -126,7 +109,7 @@ const ItemDetails = (): React.JSX.Element => {
     'State:'                         : ITEMS_STATE_MAP[item?.state!] ?? 'Not available',
     'Original price:'                : item?.originalPrice ? item?.originalPrice < 0 ? 'Not available' : toLumberBucksFormat(item?.originalPrice) : 'Not available',
     'Average market price:'          : item?.averageMarketPrice ? toLumberBucksFormat(item?.averageMarketPrice) : 'Not available',
-    'Average truckload price:'       : item?.averageTruckloadPrice ? toLumberBucksFormat(item?.averageTruckloadPrice) : 'Not available',
+    'Average truckload price:'       : item?.averageTruckloadPrice ? item?.averageTruckloadPrice < 0 ? 'Not available' : toLumberBucksFormat(item?.averageTruckloadPrice) : 'Not available',
     'Average truckload price (1x1):' : item?.averageTruckloadPrice1x1 ?toLumberBucksFormat(item?.averageTruckloadPrice1x1) : 'Not available',
     'Release year:'                  : item?.releaseYear ?? 'Not available',
     'Units you have:'                : item?.unitsLoggedUserHas ?? 'Not available',
@@ -162,186 +145,186 @@ const ItemDetails = (): React.JSX.Element => {
   const isWoodCategory = item?.category === 'WOOD';
 
   return (
-    <Layout>
-      <>
-      {(imageExpand && item) &&
-        <ImageExpand
-          imageURL={item.imageURL}
-          label={item.name}
-          onClick={() => setImageExpand(false)}
+    <>
+    {(imageExpand && item) &&
+      <ImageExpand
+        imageURL={item.imageURL}
+        label={item.name}
+        onClick={() => setImageExpand(false)}
+      />
+    }
+
+    <div className={styles.container}>
+      <div className={styles.page_title_history_back_container}>
+        <button 
+        className={styles.history_back_button}
+        onClick={() => navigate(-1)}>
+          <FaArrowLeft />
+        </button>
+
+        <PageTitle
+          title='Item Details'
+          Icon={() => <BiDetail />}
         />
-      }
+      </div>
 
-      <div className={styles.container}>
-        <div className={styles.page_title_history_back_container}>
-          <button 
-          className={styles.history_back_button}
-          onClick={() => navigate(-1)}>
-            <FaArrowLeft />
-          </button>
+      {(loading && !item) && <LoadingState label='item details'/> }
 
-          <PageTitle
-            title='Item Details'
-            Icon={() => <BiDetail />}
-          />
-        </div>
+      {(!loading && error) && <ErrorState error={error}/>}
 
-        {(loading && !item) && <LoadingState label='item details'/> }
+      {(!loading && !error && item) &&       
+        <div className={styles.main_infos_container}>
+          <figure 
+          role='button'
+          onClick={() => setImageExpand(true)}
+          className={styles.item_image_container}
+          >
+            <img 
+              className={styles.item_image}
+              src={item.imageURL} 
+              alt={item.name} 
+            />
+          </figure>
 
-        {(!loading && error) && <ErrorState error={error}/>}
+          <section className={styles.item_descriptive_infos_container}>
+            <dl>
+              { Object.entries(ITEMS_DESCRIPTIVE_INFOS_MAP).map(([label, detail]) => {
+                
+                const moneyClassName = 
+                  label === 'Original price:'          || 
+                  label === 'Average market price:'    || 
+                  label === 'Average truckload price:' || 
+                  label === 'Average truckload price (1x1):'
+                ;
 
-        {(!loading && !error && item) &&       
-          <div className={styles.main_infos_container}>
-            <figure 
-            role='button'
-            onClick={() => setImageExpand(true)}
-            className={styles.item_image_container}
-            >
-              <img 
-                className={styles.item_image}
-                src={item.imageURL} 
-                alt={item.name} 
-              />
-            </figure>
+                const stateCategoryClassName =
+                  label === 'Category:'
+                  ? `${tagColorByCategory[detail as Exclude<ItemsCategoryLabel, 'Category'>]} ${styles.category_state_tag}`
+                  : label === 'State:'
+                  ? `${tagColorByState[detail as Exclude<ItemsStateLabel, 'State'>]} ${styles.category_state_tag}`
+                  : ''
+                ;
 
-            <section className={styles.item_descriptive_infos_container}>
-              <dl>
-                { Object.entries(ITEMS_DESCRIPTIVE_INFOS_MAP).map(([label, detail]) => {
-                  
-                  const moneyClassName = 
-                    label === 'Original price:'          || 
-                    label === 'Average market price:'    || 
-                    label === 'Average truckload price:' || 
-                    label === 'Average truckload price (1x1):'
-                  ;
+                if (!isWoodCategory && label === 'Average truckload price (1x1):') {
+                  return null;
+                }
 
-                  const stateCategoryClassName =
-                    label === 'Category:'
-                    ? `${tagColorByCategory[detail as Exclude<ItemsCategoryLabel, 'Category'>]} ${styles.category_state_tag}`
-                    : label === 'State:'
-                    ? `${tagColorByState[detail as Exclude<ItemsStateLabel, 'State'>]} ${styles.category_state_tag}`
-                    : ''
-                  ;
+                // if (
+                  // (label === 'Average market price:' && item?.averageMarketPrice == null) ||
+                  // (label === 'Release year:' && item?.releaseYear == null) ||
+                  // (label === 'Description:' && !item?.description) ||
+                  // (label === 'Average truckload price:' && item?.averageTruckloadPrice1x1 == null) ||
+                  // (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
+                  // (label === 'Original price:' && (item?.originalPrice == null || item?.originalPrice == -1))
+                // ) return null;     
 
-                  if (!isWoodCategory && label === 'Average truckload price (1x1):') {
-                    return null;
-                  }
-
-                  // if (
-                    // (label === 'Average market price:' && item?.averageMarketPrice == null) ||
-                    // (label === 'Release year:' && item?.releaseYear == null) ||
-                    // (label === 'Description:' && !item?.description) ||
-                    // (label === 'Average truckload price:' && item?.averageTruckloadPrice1x1 == null) ||
-                    // (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
-                    // (label === 'Original price:' && (item?.originalPrice == null || item?.originalPrice == -1))
-                  // ) return null;     
-
-                  return (
-                    <div 
-                    className={styles.item}
-                    key={label}
+                return (
+                  <div 
+                  className={styles.item}
+                  key={label}
+                  >
+                    <dt>
+                      { label }
+                    </dt>
+                    
+                    <dd 
+                    data-money={ moneyClassName }
+                    data-description={label === 'Description:'}
+                    data-release-year={label === 'Release year:'}
+                    data-units-user-has={label === 'Units you have:'}
+                    className={ stateCategoryClassName }
                     >
-                      <dt>
-                        { label }
-                      </dt>
-                      
-                      <dd 
-                      data-money={ moneyClassName }
-                      data-description={label === 'Description:'}
-                      data-release-year={label === 'Release year:'}
-                      data-units-user-has={label === 'Units you have:'}
-                      className={ stateCategoryClassName }
-                      >
-                        { detail }
-                      </dd>
-                    </div>
-                  )
-                })}
-              </dl>
-
-              <div className={styles.add_item_container}>
-                { itemNewUnitsAmount > 0 || isEditingUnits ? (
-                  <div className={styles.new_item_units_container}>
-                    <IncrementDecrementButtons
-                      scale={1.2}
-                      onDecrement={() => {
-                        setItemNewUnitsAmount(prev => Math.max(0, prev - 1));
-                        setIsEditingUnits(true);
-                      }}
-                      onIncrement={() => {
-                        setIsEditingUnits(true);
-                        setItemNewUnitsAmount(prev =>
-                          Math.min(2147483647, prev + 1)
-                        );
-                      }}
-                    />
-
-                    {isEditingUnits && (
-                      <>
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        value={itemNewUnitsAmountOnInput}
-                        onBlur={handleOnBlurUnitsInput}
-                        onChange={(e) => {
-                          if (/^\d*$/.test(e.target.value)) {
-                            setItemNewUnitsAmountOnInput(e.target.value);
-                          }
-                        }}
-                      />
-
-                      <Button
-                        buttonStyle='DEFAULT'
-                        label={isUpdating ? 'Submitting...' : 'Submit'}
-                        loading={isUpdating}
-                        onClick={handleAddNewItemUnitsAmount}
-                        icon={() => <FaCheckCircle size={14} />}
-                        iconPosition={{ bottom: '-3px' }}
-                        padding={{
-                          X : '20px',
-                          Y : '4px'
-                        }}
-                        colors={{
-                          background  : '#cdffba',
-                          labelBorder : '#215f09'
-                        }}
-                      />
-                      </>
-                    )}
+                      { detail }
+                    </dd>
                   </div>
-                ) : (
-                  <Button
-                    buttonStyle='DEFAULT'
-                    icon={() => <IoAddCircle />}
-                    label='Add Item'
-                    onClick={() => {
+                )
+              })}
+            </dl>
+
+            <div className={styles.add_item_container}>
+              { itemNewUnitsAmount > 0 || isEditingUnits ? (
+                <div className={styles.new_item_units_container}>
+                  <IncrementDecrementButtons
+                    scale={1.2}
+                    canDecrement={itemNewUnitsAmount > 0}
+                    onDecrement={() => {
+                      setItemNewUnitsAmount(prev => Math.max(0, prev - 1));
+                      setIsEditingUnits(true);
+                    }}
+                    canIncrement={itemNewUnitsAmount < 2147483647}
+                    onIncrement={() => {
                       setIsEditingUnits(true);
                       setItemNewUnitsAmount(prev =>
                         Math.min(2147483647, prev + 1)
                       );
                     }}
-                    iconPosition={{
-                      bottom: '-2.5px'
-                    }}
-                    padding={{
-                      X: '20px',
-                      Y: '5px'
-                    }}
-                    colors={{
-                      background  : '#cdffba',
-                      labelBorder : '#215f09'
-                    }}
                   />
-                )}
-              </div>
-            </section>
-          </div>
-        }
 
-        {(!loading && !error && !item) && <NotFoundState label='item details'/>}
-      </div>
-      </>
-    </Layout>
+                  {isEditingUnits && (
+                    <>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={itemNewUnitsAmountOnInput}
+                      onBlur={handleOnBlurUnitsInput}
+                      onChange={(e) => {
+                        if (/^\d*$/.test(e.target.value)) {
+                          setItemNewUnitsAmountOnInput(e.target.value);
+                        }
+                      }}
+                    />
+
+                    <Button
+                      buttonStyle='DEFAULT'
+                      label={isUpdating ? 'Submitting...' : 'Submit'}
+                      loading={isUpdating}
+                      onClick={handleAddNewItemUnitsAmount}
+                      icon={() => <FaCheckCircle size={14} />}
+                      iconPosition={{ bottom: '-3px' }}
+                      padding={{
+                        X : '20px',
+                        Y : '4px'
+                      }}
+                      colors={{
+                        background  : '#cdffba',
+                        labelBorder : '#215f09'
+                      }}
+                    />
+                    </>
+                  )}
+                </div>
+              ) : (
+                <Button
+                  buttonStyle='DEFAULT'
+                  icon={() => <IoAddCircle />}
+                  label='Add Item'
+                  onClick={() => {
+                    setIsEditingUnits(true);
+                    setItemNewUnitsAmount(prev =>
+                      Math.min(2147483647, prev + 1)
+                    );
+                  }}
+                  iconPosition={{
+                    bottom: '-2.5px'
+                  }}
+                  padding={{
+                    X: '20px',
+                    Y: '5px'
+                  }}
+                  colors={{
+                    background  : '#cdffba',
+                    labelBorder : '#215f09'
+                  }}
+                />
+              )}
+            </div>
+          </section>
+        </div>
+      }
+
+      {(!loading && !error && !item) && <NotFoundState label='item details'/>}
+    </div>
+    </>
   )
 }
 

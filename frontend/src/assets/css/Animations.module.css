@@ -1,0 +1,25 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade_in {
+  opacity: 0;
+  animation: fadeInUp 450ms ease forwards;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .fade_in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

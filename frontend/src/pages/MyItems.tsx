@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styles from './css/MyItems.module.css';
-import Layout from './Layout';
+import animations from '@assets/css/Animations.module.css';
 import PageTitle from '@/components/PageTitle';
 import { FaBoxOpen } from 'react-icons/fa';
 import SearchBar from '@/components/SearchBar';
@@ -23,6 +23,7 @@ import { useUpdateParams } from '@/hooks/useUpdateParams.hook';
 const MyItems = (): React.JSX.Element => {
 
   const [items, setItems] = useState<UserItems[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
   
   const [pagination, setPagination] = useState<
     PaginatedResponse<UserItems>["pagination"] | null>(null)
@@ -62,6 +63,7 @@ const MyItems = (): React.JSX.Element => {
 
         setItems(result.items);
         setPagination(result.pagination);
+        setTotalItems(result.pagination.totalItems);
 
       } catch (error:unknown) {
         if (!controller.signal.aborted) setError(handleAxiosError(error));
@@ -117,80 +119,79 @@ const MyItems = (): React.JSX.Element => {
   };
   
   return (
-    <Layout tab='MY_ITEMS'>
-      <div className={styles.container}>
-        <PageTitle
-          Icon={() => <FaBoxOpen />}
-          title='My Items'
+    <div className={styles.container}>
+      <PageTitle
+        Icon={() => <FaBoxOpen />}
+        title={`My Items (${totalItems})`}
+      />
+
+      <div className={styles.toolbar_container}>
+        <SearchBar
+          value={search}
+          placeholder="Search item..."
+          debounceTime={400}
+          onSearch={handleSearch}
+          flex={4}
         />
 
-        <div className={styles.toolbar_container}>
-          <SearchBar
-            value={search}
-            placeholder="Search item..."
-            debounceTime={400}
-            onSearch={handleSearch}
-            flex={4}
-          />
+        <Select
+          value={itemsStateFilter ?? '_'}
+          selectConfig="ITEMS_STATE_FILTER"
+          onSelect={(filter) => handleStateFilter(filter as ItemsState)}
+          flex={0.67}
+        />
 
-          <Select
-            value={itemsStateFilter ?? '_'}
-            selectConfig="ITEMS_STATE_FILTER"
-            onSelect={(filter) => handleStateFilter(filter as ItemsState)}
-            flex={0.67}
-          />
+        <Select
+          value={itemsCategoryFilter ?? '_'}
+          selectConfig="ITEMS_CATEGORY_FILTER"
+          onSelect={(filter) => handleCategoryFilter(filter as ItemsCategory)}
+          flex={0.87}
+        />
 
-          <Select
-            value={itemsCategoryFilter ?? '_'}
-            selectConfig="ITEMS_CATEGORY_FILTER"
-            onSelect={(filter) => handleCategoryFilter(filter as ItemsCategory)}
-            flex={0.87}
-          />
-
-          <Select
-            value={itemsAdvancedFilter ?? '_'}
-            selectConfig="ITEMS_ADVANCED_FILTER"
-            onSelect={(filter) => handleAdvancedFilter(filter as ItemsAdvancedFilter)}
-            flex={1}
-          />
-        </div>
-
-        <nav className={styles.nav}>
-          {loading && <LoadingState label='Items'/>}
-
-          {(!loading && error) && <ErrorState error={error}/>}  
-
-          {!loading && !error && (
-            <ul className={styles.ul}>
-              {items.map((item) => (
-                <li
-                className={styles.li}
-                key={item.id}
-                >
-                  <ItemNavCard 
-                    page='HOME/USER_ITEMS'
-                    { ...item } 
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {(!loading && !error && items.length === 0) && <NotFoundState label='Items'/>}
-        </nav>
-
-        {pagination && pagination.totalPages > 1 && (
-          <PaginationNavButtons
-            hasPreviousPage={pagination.hasPreviousPage}
-            hasNextPage={pagination.hasNextPage}
-            loading={loading}
-            page={page}
-            totalPages={pagination.totalPages}
-            setPage={handlePage}
-          />
-        )}  
+        <Select
+          value={itemsAdvancedFilter ?? '_'}
+          selectConfig="ITEMS_ADVANCED_FILTER"
+          onSelect={(filter) => handleAdvancedFilter(filter as ItemsAdvancedFilter)}
+          flex={1}
+        />
       </div>
-    </Layout>
+
+      <nav className={styles.nav}>
+        {loading && <LoadingState label='Items'/>}
+
+        {(!loading && error) && <ErrorState error={error}/>}  
+
+        {!loading && !error && (
+          <ul className={styles.ul}>
+            {items.map((item, index) => (
+              <li
+              key={item.id}
+              className={`${styles.li} ${animations.fade_in}`}
+              style={{ animationDelay: `${index * 80}ms` }}
+              >
+                <ItemNavCard 
+                  page='HOME/USER_ITEMS'
+                  { ...item } 
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {(!loading && !error && items.length === 0) && <NotFoundState label='Items'/>}
+      </nav>
+
+      {pagination && pagination.totalPages > 1 && (
+        <PaginationNavButtons
+          hasPreviousPage={pagination.hasPreviousPage}
+          hasNextPage={pagination.hasNextPage}
+          loading={loading}
+          page={page}
+          totalPages={pagination.totalPages}
+          setPage={handlePage}
+        />
+      )}  
+    </div>
   )
 }
 

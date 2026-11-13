@@ -32,116 +32,75 @@ const Profile = (): React.JSX.Element => {
   ];
   
   return (
-    <Layout >
-      <>
-      <ProfileModals profile={profile} />
+    <>
+    <ProfileModals profile={profile} />
 
-      <div className={styles.container}>
-        <div className={styles.page_title_history_back_container}>
+    <div className={styles.container}>
+      <div className={styles.page_title_history_back_container}>
+        <button 
+        className={styles.history_back_button}
+        onClick={() => navigate(-1)}>
+          <FaArrowLeft />
+        </button>
+
+        <PageTitle
+          Icon={() => <FaUser />}
+          title='Profile'
+        />
+      </div>
+
+      <div className={styles.main_container}>
+        <div className={styles.profile_image_container}>
           <button 
-          className={styles.history_back_button}
-          onClick={() => navigate(-1)}>
-            <FaArrowLeft />
+          onClick={() => setters.setModal('PROFILE_IMAGE_EXPAND')}
+          className={styles.profile_image_inner_container}
+          >
+            <img 
+              className={styles.profile_image}
+              src={user?.profileImageURL ?? profileImagePlaceholder} 
+              alt={user?.name} 
+            />
           </button>
+          
 
-          <PageTitle
-            Icon={() => <FaUser />}
-            title='Profile'
-          />
+          <div className={styles.edit_profile_image_button}>
+            <Button
+              title='Edit profile image'
+              buttonStyle='DEFAULT'
+              label='Edit'
+              onClick={() => setters.setModal('EDIT_PROFILE_IMAGE')}
+              icon={() => <RiImageEditFill/>}
+              iconPosition={{
+                bottom: '-3px'
+              }}
+            />
+          </div>
         </div>
 
-        <div className={styles.main_container}>
-          <div className={styles.profile_image_container}>
-            <button 
-            onClick={() => setters.setModal('PROFILE_IMAGE_EXPAND')}
-            className={styles.profile_image_inner_container}
-            >
-              <img 
-                className={styles.profile_image}
-                src={user?.profileImageURL ?? profileImagePlaceholder} 
-                alt={user?.name} 
-              />
-            </button>
-           
+        <div className={styles.sections_container}>
+          <section className={styles.section_container}>
+            <SectionTitle
+              icon={() => <MdOutlinePublic />}
+              title='Public infos'
+            />
 
-            <div className={styles.edit_profile_image_button}>
-              <Button
-                title='Edit profile image'
-                buttonStyle='DEFAULT'
-                label='Edit'
-                onClick={() => setters.setModal('EDIT_PROFILE_IMAGE')}
-                icon={() => <RiImageEditFill/>}
-                iconPosition={{
-                  bottom: '-3px'
-                }}
-              />
-            </div>
-          </div>
+            <dl className={styles.dl}>
+              { userPublicInfos.map((item, index) => {
 
-          <div className={styles.sections_container}>
-            <section className={styles.section_container}>
-              <SectionTitle
-                icon={() => <MdOutlinePublic />}
-                title='Public infos'
-              />
+                const isId = item.label === 'Identifier (Id):';
 
-              <dl className={styles.dl}>
-                { userPublicInfos.map((item, index) => {
+                const modalField: Record<string, Modals> = {
+                  'Username:'     : 'EDIT_USERNAME'     ,
+                  'Lumber bucks:' : 'EDIT_LUMBER_BUCKS' ,                 
+                };
 
-                  const isId = item.label === 'Identifier (Id):';
-
-                  const modalField: Record<string, Modals> = {
-                    'Username:'     : 'EDIT_USERNAME'     ,
-                    'Lumber bucks:' : 'EDIT_LUMBER_BUCKS' ,                 
-                  };
-
-                  return (
-                    <div 
-                    className={styles.dt_dd_container} 
-                    style={{ marginLeft: isId ? '24px' : '0px' }}
-                    key={index}
-                    >
-                      { !isId &&
-                        <button 
-                        title='Edit'
-                        className={styles.edit_button}
-                        onClick={() => setters.setModal(modalField[item.label])}
-                        >
-                          <MdEditSquare />
-                        </button>
-                      }
-
-                      <dt className={styles.dt} title={item.label}>
-                        { item.label } 
-                      </dt>
-
-                      <dd className={styles.dd} title={item.value.toString()}> 
-                        { item.value } 
-                      </dd>
-                    </div> 
-                  )
-                })}
-              </dl>
-            </section>
-
-            <section className={styles.section_container}>
-              <SectionTitle
-                icon={() => <MdPublicOff />}
-                title='Private infos'
-              />
-              
-              <dl className={styles.dl}>
-                { userPrivateInfos.map((item, index) => {
-
-                  const modalField: Record<string, Modals> = {
-                    'Password:' : 'PASSWORD_VERIFICATION',                 
-                  };
-
-                  return (
-                    <div 
-                    className={styles.dt_dd_container} 
-                    key={index}
-                    >
+                return (
+                  <div 
+                  className={styles.dt_dd_container} 
+                  style={{ marginLeft: isId ? '24px' : '0px' }}
+                  key={index}
+                  >
+                    { !isId &&
                       <button 
                       title='Edit'
                       className={styles.edit_button}
@@ -149,24 +108,63 @@ const Profile = (): React.JSX.Element => {
                       >
                         <MdEditSquare />
                       </button>
-                      
-                      <dt className={styles.dt} title={item.label}>
-                        { item.label } 
-                      </dt>
+                    }
 
-                      <dd className={styles.dd} title={item.value.toString()}> 
-                        { item.value }
-                      </dd>
-                    </div>        
-                  )
-                })}
-              </dl>
-            </section>
-          </div>
+                    <dt className={styles.dt} title={item.label}>
+                      { item.label } 
+                    </dt>
+
+                    <dd className={styles.dd} title={item.value.toString()}> 
+                      { item.value } 
+                    </dd>
+                  </div> 
+                )
+              })}
+            </dl>
+          </section>
+
+          <section className={styles.section_container}>
+            <SectionTitle
+              icon={() => <MdPublicOff />}
+              title='Private infos'
+            />
+            
+            <dl className={styles.dl}>
+              { userPrivateInfos.map((item, index) => {
+
+                const modalField: Record<string, Modals> = {
+                  'Password:' : 'PASSWORD_VERIFICATION',                 
+                };
+
+                return (
+                  <div 
+                  className={styles.dt_dd_container} 
+                  key={index}
+                  >
+                    <button 
+                    title='Edit'
+                    className={styles.edit_button}
+                    onClick={() => setters.setModal(modalField[item.label])}
+                    >
+                      <MdEditSquare />
+                    </button>
+                    
+                    <dt className={styles.dt} title={item.label}>
+                      { item.label } 
+                    </dt>
+
+                    <dd className={styles.dd} title={item.value.toString()}> 
+                      { item.value }
+                    </dd>
+                  </div>        
+                )
+              })}
+            </dl>
+          </section>
         </div>
       </div>
-      </>
-    </Layout>
+    </div>
+    </>
   )
 }
 

@@ -269,20 +269,17 @@ export class ItemRepository {
         take: 6,
       }),
 
-      prisma.userItem.aggregate({
+      prisma.userItem.count({
         where: {
           userId,
           units: { gt: 0 },
-        },
-        _sum: {
-          units: true,
         },
       }),
     ]);
 
     return {
       items,
-      totalItems : totalItems._sum.units ?? 0,
+      totalItems : totalItems,
     };
   }
 

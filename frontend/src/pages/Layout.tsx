@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import fireAxe from '@public/fire_axe_decal.webp';
 import styles from './css/Layout.module.css';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { MdLogout } from "react-icons/md";
 import type { NavLinks } from '@/types/navLinks.type';
 import AsideNavLink from '@/components/AsideNavLink';
@@ -15,22 +15,29 @@ import { IoMdContact } from 'react-icons/io';
 import { BiSolidContact } from 'react-icons/bi';
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 
-type Props = {
-  children : React.ReactNode;
-  tab     ?: NavLinks;
-};
 
-const Layout = (props:Props): React.JSX.Element => {
+const Layout = (): React.JSX.Element => {
 
   const { user, signOut, loading } = useAuth();
 
-  const [isAsideCollapsed, setIsAsideCollapsed] = useState<boolean>(() => {
-    return localStorage.getItem('asideCollapsed') === 'true';
-  });
+  const location = useLocation();
+
+  const [isAsideCollapsed, setIsAsideCollapsed] = useState<boolean>(false);
 
   if (loading) return <PageLoading/>;
 
   if (!user) return <Navigate to={'/'}/>;
+
+  const currentTab = {
+    '/home'        : 'HOME',
+    '/items'       : 'ITEMS',
+    '/my-items'    : 'MY_ITEMS',
+    '/contacts'    : 'CONTACTS',
+    '/my-contacts' : 'MY_CONTACTS',
+    '/about'       : 'ABOUT',
+  } as const;
+
+  const tab = currentTab[location.pathname as keyof typeof currentTab];
 
   const navLinksConfig: {
     to         : `/${string}`;
@@ -43,65 +50,82 @@ const Layout = (props:Props): React.JSX.Element => {
       to         : '/home',
       label      : 'Home',
       tab        : 'HOME',
-      currentTab : props.tab,
+      currentTab : tab,
       icon       : () => <FaHome/>
     },
     {
       to         : '/items',
       label      : 'Items',
       tab        : 'ITEMS',
-      currentTab : props.tab,
+      currentTab : tab,
       icon       : () => <LuBoxes />
     },
     {
       to         : '/my-items',
       label      : 'My items',
       tab        : 'MY_ITEMS',
-      currentTab : props.tab,
+      currentTab : tab,
       icon       : () => <FaBoxOpen />
     },
     {
       to         : '/contacts',
       label      : 'Contacts',
       tab        : 'CONTACTS',
-      currentTab : props.tab,
+      currentTab : tab,
       icon       : () => <IoMdContact />
     },
     {
       to         : '/my-contacts',
       label      : 'My Contacts',
       tab        : 'MY_CONTACTS',
-      currentTab : props.tab,
+      currentTab : tab,
       icon       : () => <BiSolidContact />
     },
     {
       to         : '/about',
       label      : 'About',
       tab        : 'ABOUT',
-      currentTab : props.tab,
+      currentTab : tab,
       icon       : () => <FaInfoCircle/>
     },
   ];
 
   useEffect(() => {
-    localStorage.setItem('asideCollapsed', String(isAsideCollapsed));
-  }, [isAsideCollapsed]);
+    if (!user) return;
+
+    const savedPreference = localStorage.getItem(
+      `asideCollapsed_${user.id}`
+    );
+
+    setIsAsideCollapsed(savedPreference === 'true');
+
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    localStorage.setItem(
+      `asideCollapsed_${user.id}`, 
+      String(isAsideCollapsed)
+    );
+
+  }, [isAsideCollapsed, user?.id]);
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <figure 
-        title="Player's Possession"
+        title="LT2 Player's Possession"
         className={styles.logo_site_title_container}
         >
           <img 
             src={fireAxe} 
             className={styles.logo}
-            alt="Player's Possession"
+            alt="LT2 Player's Possession"
           />
   
           <figcaption className={styles.site_title}>
-            Player's Possession
+            LT2 Player's Possession
           </figcaption>
         </figure>
 
@@ -213,7 +237,7 @@ const Layout = (props:Props): React.JSX.Element => {
 
         <div className={styles.main_footer}>
           <main className={styles.main}>
-            {props.children}
+            <Outlet/>
           </main>
 
           <footer className={styles.footer}>

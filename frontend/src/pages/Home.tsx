@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './css/Home.module.css';
+import animations from '@assets/css/Animations.module.css';
 import { FaHome } from "react-icons/fa";
-import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
 import imgPlaceholder from '@/assets/img/profile_image_placeholder.png';
 import ContactCard from '@/components/ContactCard';
@@ -30,8 +30,10 @@ const Home = (): React.JSX.Element => {
   useEffect(() => {
     (async() => {
       try {
-        const items = await ItemService.getUserItemsFromHome();
-        const contacts = await ContactService.getContactsFromHome();
+        const [items, contacts] = await Promise.all([
+          ItemService.getUserItemsFromHome(),
+          ContactService.getContactsFromHome()
+        ]);
         
         setItems(items);
         setContacts(contacts);
@@ -44,114 +46,112 @@ const Home = (): React.JSX.Element => {
   },[]);
 
   return (
-    <Layout tab='HOME'>
-      <div className={styles.container}>
-        <PageTitle
-          Icon={() => <FaHome/>}
-          title='Home'
-        />
-      
-        <section className={styles.contacts}>
-          <div className={styles.label_see_all_container}>
-            <SectionTitle
-              title={`My Contacts (${contacts?.totalContacts ?? '?'})`}
-              icon={() => <BiSolidContact />}
-              size='21px'
-            />
+    <div className={styles.container}>
+      <PageTitle
+        Icon={() => <FaHome/>}
+        title='Home'
+      />
+    
+      <section className={styles.contacts}>
+        <div className={styles.label_see_all_container}>
+          <SectionTitle
+            title={`My Contacts (${contacts?.totalContacts ?? '?'})`}
+            icon={() => <BiSolidContact />}
+            size='21px'
+          />
 
-            {((contacts?.contacts.length ?? 0) > 8) && <SeeAllLink to='/my-contacts'/>}
-          </div>
+          {((contacts?.contacts.length ?? 0) > 8) && <SeeAllLink to='/my-contacts'/>}
+        </div>
 
-          <nav className={styles.nav}>
-            <ul className={styles.ul}>  
-              {loading && (
-                <div>
-                  <LoadingState label='Contacts'/>
-                </div>
-              )}
-              
-              {(!loading && error) && (
-                <div>
-                  <ErrorState error={error}/>
-                </div>
-              )} 
-              
-              {(!loading && !error && contacts) && (
-                <>
-                <li className={styles.li}>
-                  <AddContactButton/>
-                </li>
-
-                {contacts.contacts.slice(0, 8).map((contact) => (               
-                  <li 
-                  className={styles.li}
-                  key={contact.id}
-                  >
-                    <ContactCard
-                      display='SIMPLE'
-                      profileImageURL={contact.profileImageURL || imgPlaceholder}
-                      username={contact.name}
-                      userId={contact.id}
-                    />
-                  </li>
-                ))}
-                </>
-              )}
-            </ul>
-          </nav>
-        </section>
-
-        <section className={styles.my_items}>
-          <div className={styles.label_see_all_container}>
-            <SectionTitle
-              icon={() => <LuBoxes/>}
-              title={`My Items (${items?.totalItems ?? '?'})`}
-              size='21px'
-            />
+        <nav className={styles.nav}>
+          <ul className={styles.ul}>  
+            {loading && (
+              <div>
+                <LoadingState label='Contacts'/>
+              </div>
+            )}
             
-            {(items?.items.length ?? 0) > 5 && <SeeAllLink to='/my-items'/>}       
-          </div>
+            {(!loading && error) && (
+              <div>
+                <ErrorState error={error}/>
+              </div>
+            )} 
+            
+            {(!loading && !error && contacts) && (
+              <>
+              <li className={`${styles.li} ${animations.fade_in}`}>
+                <AddContactButton />
+              </li>
 
-          <nav className={styles.nav}>
-            <ul className={styles.ul}>
-              {loading && (
-                <div>
-                  <LoadingState label='Items'/>
-                </div>
-              )}
-              
-              {(!loading && error) && (
-                <div>
-                  <ErrorState error={error}/>
-                </div>
-              )} 
-              
-              {(!loading && !error && items?.items) && (
-                <>
+              {contacts.contacts.slice(0, 8).map((contact, index) => (               
                 <li 
-                className={styles.li}
+                key={contact.id}
+                className={`${styles.li} ${animations.fade_in}`}
+                style={{ animationDelay: `${index * 80}ms` }}
                 >
-                  <AddItemNavCard/>
+                  <ContactCard
+                    display='SIMPLE'
+                    profileImageURL={contact.profileImageURL || imgPlaceholder}
+                    username={contact.name}
+                    userId={contact.id}
+                  />
                 </li>
-                  
-                {items.items.slice(0, 5).map((item) => (
-                  <li 
-                  className={styles.li}
-                  key={item.id}
-                  >
-                    <ItemNavCard
-                      page='HOME/USER_ITEMS'
-                      { ...item }
-                    />
-                  </li>
-                ))}
-                </>
-              )}
-            </ul>
-          </nav>
-        </section>
-      </div>
-    </Layout>
+              ))}
+              </>
+            )}
+          </ul>
+        </nav>
+      </section>
+
+      <section className={styles.my_items}>
+        <div className={styles.label_see_all_container}>
+          <SectionTitle
+            icon={() => <LuBoxes/>}
+            title={`My Items (${items?.totalItems ?? '?'})`}
+            size='21px'
+          />
+          
+          {(items?.items.length ?? 0) > 5 && <SeeAllLink to='/my-items'/>}       
+        </div>
+
+        <nav className={styles.nav}>
+          <ul className={styles.ul}>
+            {loading && (
+              <div>
+                <LoadingState label='Items'/>
+              </div>
+            )}
+            
+            {(!loading && error) && (
+              <div>
+                <ErrorState error={error}/>
+              </div>
+            )} 
+            
+            {(!loading && !error && items?.items) && (
+              <>
+              <li className={`${styles.li} ${animations.fade_in}`}>
+                <AddItemNavCard />
+              </li>
+                
+              {items.items.slice(0, 5).map((item, index) => (
+                <li
+                key={item.id}
+                className={`${styles.li} ${animations.fade_in}`}
+                style={{ animationDelay: `${index * 80}ms` }}
+                >
+                  <ItemNavCard
+                    page="HOME/USER_ITEMS"
+                    {...item}
+                  />
+                </li>
+              ))}
+              </>
+            )}
+          </ul>
+        </nav>
+      </section>
+    </div>
   )
 }
 

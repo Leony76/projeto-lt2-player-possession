@@ -146,7 +146,7 @@ export class ContactRepository {
         FROM users u
 
         LEFT JOIN LATERAL (
-          SELECT SUM(ui.units) AS total
+          SELECT COUNT(*) AS total
           FROM user_items ui
           WHERE ui.user_id = u.id
             AND ui.units > 0
@@ -766,12 +766,11 @@ export class ContactRepository {
           },
         }),
 
-        tx.userItem.aggregate({
+        tx.userItem.count({
           where: {
             userId : contactId,
             units : { gt : 0 },
           },
-          _sum: { units : true },
         }),
 
         tx.contact.count({
@@ -833,7 +832,7 @@ export class ContactRepository {
         lumberBucks     : contact.lumberBucks,
         joinedAt        : contact.createdAt,
 
-        totalItems    : itemsStats._sum.units ?? 0,
+        totalItems    : itemsStats,
         totalContacts : contactsStats,
 
         loggedUserContactStatus,

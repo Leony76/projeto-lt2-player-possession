@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styles from './css/MyContacts.module.css';
-import Layout from './Layout';
+import animations from '@assets/css/Animations.module.css';
 import PageTitle from '@/components/PageTitle';
 import imgPlaceholder from '@/assets/img/profile_image_placeholder.png';
 import SearchBar from '@/components/SearchBar';
@@ -33,6 +33,7 @@ const MyContacts = (): React.JSX.Element => {
   const { showToast } = useToast();
 
   const [contacts, setContacts] = useState<ContactResponse[]>([]);
+  const [totalContacts, setTotalContacts] = useState<number>(0);
   const [contact, setContact] = useState<ContactResponse | null>(null);
 
   const [pagination, setPagination] = useState<
@@ -76,6 +77,7 @@ const MyContacts = (): React.JSX.Element => {
 
         setContacts(result.items);
         setPagination(result.pagination);
+        setTotalContacts(result.pagination.totalItems);
 
       } catch (error:unknown) {
         if (!controller.signal.aborted) setError(handleAxiosError(error));
@@ -195,114 +197,113 @@ const MyContacts = (): React.JSX.Element => {
   };
 
   return (
-    <Layout tab='MY_CONTACTS'>
-      <>
-      {(contact && modal === 'CONFIRM_ACCEPT_CONTACT_REQUEST') && (
-        <ConfirmationModal
-          loading={isAcceptingContactRequest}
-          message={`Are you sure you want to accept the contact request from ${contact.name}?`}
-          onConfirm={() => handleAcceptContactRequest(contact.id)}
-          onCancel={() => {
-            setContact(null);
-            setModal(null);
-          }}
+    <>
+    {(contact && modal === 'CONFIRM_ACCEPT_CONTACT_REQUEST') && (
+      <ConfirmationModal
+        loading={isAcceptingContactRequest}
+        message={`Are you sure you want to accept the contact request from ${contact.name}?`}
+        onConfirm={() => handleAcceptContactRequest(contact.id)}
+        onCancel={() => {
+          setContact(null);
+          setModal(null);
+        }}
+      />
+    )}
+
+    {(contact && modal === 'CONFIRM_DENY_CONTACT_REQUEST') && (
+      <ConfirmationModal
+        loading={isDenyingContactRequest}
+        message={`Are you sure you want to deny the contact request from ${contact.name}?`}
+        onConfirm={() => handleDenyContactRequest(contact.id)}
+        onCancel={() => {
+          setModal(null);
+          setContact(null);
+        }}
+      />
+    )}
+
+    <div className={styles.container}>
+      <PageTitle
+        Icon={() => <BiSolidContact />}
+        title={`My Contacts (${totalContacts})`}
+      />
+
+      <div className={styles.toolbar_container}>
+        <SearchBar
+          value={search}
+          placeholder="Search contact..."
+          debounceTime={400}
+          onSearch={handleSearch}
+          flex={4}
         />
-      )}
 
-      {(contact && modal === 'CONFIRM_DENY_CONTACT_REQUEST') && (
-        <ConfirmationModal
-          loading={isDenyingContactRequest}
-          message={`Are you sure you want to deny the contact request from ${contact.name}?`}
-          onConfirm={() => handleDenyContactRequest(contact.id)}
-          onCancel={() => {
-            setModal(null);
-            setContact(null);
-          }}
-        />
-      )}
-
-      <div className={styles.container}>
-        <PageTitle
-          Icon={() => <BiSolidContact />}
-          title='My Contacts'
+        <Select
+          value={contactsRelationStatusFilter ?? '_'}
+          selectConfig="CONTACTS_RELATION_STATUS"
+          onSelect={(filter) => handleContactRelationStatusFilter(filter as ContactsRelationStatusFilter)}
+          flex={0.67}
         />
 
-        <div className={styles.toolbar_container}>
-          <SearchBar
-            value={search}
-            placeholder="Search contact..."
-            debounceTime={400}
-            onSearch={handleSearch}
-            flex={4}
-          />
-
-          <Select
-            value={contactsRelationStatusFilter ?? '_'}
-            selectConfig="CONTACTS_RELATION_STATUS"
-            onSelect={(filter) => handleContactRelationStatusFilter(filter as ContactsRelationStatusFilter)}
-            flex={0.67}
-          />
-
-          <Select
-            value={contactsAdvancedFilter ?? '_'}
-            selectConfig="CONTACTS_ADVANCED_FILTER"
-            onSelect={(filter) => handleAdvancedFilter(filter as ContactsAdvancedFilter)}
-            flex={0.67}
-          />
-        </div>
-
-        <nav className={styles.nav}>
-          <ul className={styles.ul}>
-            {loading && <LoadingState label='Contacts'/>}
-            
-            {(!loading && error) && <ErrorState error={error}/>}  
-
-            {(!loading && !error && contacts.length === 0) && <NotFoundState label='contacts'/>}
-
-            {(!loading && !error && contacts.length > 0) && (
-              contacts.map((contact) => (
-                <li 
-                className={styles.li}
-                key={contact.id}
-                >
-                  <ContactCard
-                    display='DETAILED'
-                    userId={contact.id}
-                    profileImageURL={contact.profileImageURL ?? imgPlaceholder}
-                    username={contact.name}
-                    joinedAt={toMonthDayYearTwelveHoursFormat(contact.joinedAt)}
-                    totalItems={contact.totalItems}
-                    relationStatus={contact.loggedUserContactStatus}
-                    isAcceptingContactRequest={isAcceptingContactRequest}
-                    isDenyingContactRequest={isDenyingContactRequest}
-                    onAcceptContactRequest={() => {
-                      setModal('CONFIRM_ACCEPT_CONTACT_REQUEST');
-                      setContact(contact);
-                    }}
-                    onDenyContactRequest={() => {
-                      setModal('CONFIRM_DENY_CONTACT_REQUEST');
-                      setContact(contact);
-                    }}
-                  />
-                </li>
-              ))
-            )}
-          </ul>
-        </nav>
-
-        {pagination && pagination.totalPages > 1 && (
-          <PaginationNavButtons
-            hasPreviousPage={pagination.hasPreviousPage}
-            hasNextPage={pagination.hasNextPage}
-            loading={loading}
-            page={page}
-            totalPages={pagination.totalPages}
-            setPage={handlePage}
-          />
-        )}  
+        <Select
+          value={contactsAdvancedFilter ?? '_'}
+          selectConfig="CONTACTS_ADVANCED_FILTER"
+          onSelect={(filter) => handleAdvancedFilter(filter as ContactsAdvancedFilter)}
+          flex={0.67}
+        />
       </div>
-      </>
-    </Layout>
+
+      <nav className={styles.nav}>
+        <ul className={styles.ul}>
+          {loading && <LoadingState label='Contacts'/>}
+          
+          {(!loading && error) && <ErrorState error={error}/>}  
+
+          {(!loading && !error && contacts.length === 0) && <NotFoundState label='contacts'/>}
+
+          {(!loading && !error && contacts.length > 0) && (
+            contacts.map((contact, index) => (
+              <li 
+              key={contact.id}
+              className={`${styles.li} ${animations.fade_in}`}
+              style={{ animationDelay: `${index * 80}ms` }}
+              >
+                <ContactCard
+                  display='DETAILED'
+                  userId={contact.id}
+                  profileImageURL={contact.profileImageURL ?? imgPlaceholder}
+                  username={contact.name}
+                  joinedAt={toMonthDayYearTwelveHoursFormat(contact.joinedAt)}
+                  totalItems={contact.totalItems}
+                  relationStatus={contact.loggedUserContactStatus}
+                  isAcceptingContactRequest={isAcceptingContactRequest}
+                  isDenyingContactRequest={isDenyingContactRequest}
+                  onAcceptContactRequest={() => {
+                    setModal('CONFIRM_ACCEPT_CONTACT_REQUEST');
+                    setContact(contact);
+                  }}
+                  onDenyContactRequest={() => {
+                    setModal('CONFIRM_DENY_CONTACT_REQUEST');
+                    setContact(contact);
+                  }}
+                />
+              </li>
+            ))
+          )}
+        </ul>
+      </nav>
+
+      {pagination && pagination.totalPages > 1 && (
+        <PaginationNavButtons
+          hasPreviousPage={pagination.hasPreviousPage}
+          hasNextPage={pagination.hasNextPage}
+          loading={loading}
+          page={page}
+          totalPages={pagination.totalPages}
+          setPage={handlePage}
+        />
+      )}  
+    </div>
+    </>
   )
 }
 

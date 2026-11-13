@@ -99,6 +99,8 @@ export class ItemService {
       throw new APIError(400, "Unable to find item details");
     } if (units === null) {
       throw new APIError(400, "No units was provided.");
+    } if (!Number.isSafeInteger(units) || units < 0 || units > 2147483647) {
+      throw new APIError(400, "Invalid units amount.");
     }
 
     const result = await ItemRepository.updateUserItemUnits(itemId, units, userId);

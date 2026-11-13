@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styles from './css/ContactItems.module.css';
-import Layout from './Layout';
+import animations from '@assets/css/Animations.module.css';
 import PageTitle from '@/components/PageTitle';
 import { LuBoxes } from 'react-icons/lu';
 import SearchBar from '@/components/SearchBar';
@@ -124,88 +124,87 @@ const ContactItems = (): React.JSX.Element => {
   };
 
   return (
-    <Layout>
-      <div className={styles.container}>
-        <div className={styles.page_title_history_back_container}>
-          <button 
-          className={styles.history_back_button}
-          onClick={() => navigate(-1)}>
-            <FaArrowLeft />
-          </button>
+    <div className={styles.container}>
+      <div className={styles.page_title_history_back_container}>
+        <button 
+        className={styles.history_back_button}
+        onClick={() => navigate(-1)}>
+          <FaArrowLeft />
+        </button>
 
-          <PageTitle
-            Icon={() => <LuBoxes />}
-            title={`${contactName ?? '?'}'s items`}
-          />
-        </div>
-
-        <div className={styles.toolbar_container}>
-          <SearchBar
-            value={search}
-            placeholder="Search item..."
-            debounceTime={400}
-            onSearch={handleSearch}
-            flex={4}
-          />
-
-          <Select
-            value={itemsStateFilter ?? '_'}
-            selectConfig="ITEMS_STATE_FILTER"
-            onSelect={(filter) => handleStateFilter(filter as ItemsState)}
-            flex={0.67}
-          />
-
-          <Select
-            value={itemsCategoryFilter ?? '_'}
-            selectConfig="ITEMS_CATEGORY_FILTER"
-            onSelect={(filter) => handleCategoryFilter(filter as ItemsCategory)}
-            flex={0.87}
-          />
-
-          <Select
-            value={itemsAdvancedFilter ?? '_'}
-            selectConfig="ITEMS_ADVANCED_FILTER"
-            onSelect={(filter) => handleAdvancedFilter(filter as ItemsAdvancedFilter)}
-            flex={1}
-          />
-        </div>
-
-        <nav className={styles.nav}>
-          {loading && <LoadingState label='Items'/>}
-
-          {(!loading && error) && <ErrorState error={error}/>}  
-
-          {!loading && !error && (
-            <ul className={styles.ul}>
-              {items.map((item) => (
-                <li
-                className={styles.li}
-                key={item.id}
-                >
-                  <ItemNavCard 
-                    page='HOME/USER_ITEMS'
-                    { ...item } 
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {(!loading && !error && items.length === 0) && <NotFoundState label='Items'/>}
-        </nav>
-
-        {pagination && pagination.totalPages > 1 && (
-          <PaginationNavButtons
-            hasPreviousPage={pagination.hasPreviousPage}
-            hasNextPage={pagination.hasNextPage}
-            loading={loading}
-            page={page}
-            totalPages={pagination.totalPages}
-            setPage={handlePage}
-          />
-        )}  
+        <PageTitle
+          Icon={() => <LuBoxes />}
+          title={`${contactName ?? '?'}'s items`}
+        />
       </div>
-    </Layout>
+
+      <div className={styles.toolbar_container}>
+        <SearchBar
+          value={search}
+          placeholder="Search item..."
+          debounceTime={400}
+          onSearch={handleSearch}
+          flex={4}
+        />
+
+        <Select
+          value={itemsStateFilter ?? '_'}
+          selectConfig="ITEMS_STATE_FILTER"
+          onSelect={(filter) => handleStateFilter(filter as ItemsState)}
+          flex={0.67}
+        />
+
+        <Select
+          value={itemsCategoryFilter ?? '_'}
+          selectConfig="ITEMS_CATEGORY_FILTER"
+          onSelect={(filter) => handleCategoryFilter(filter as ItemsCategory)}
+          flex={0.87}
+        />
+
+        <Select
+          value={itemsAdvancedFilter ?? '_'}
+          selectConfig="ITEMS_ADVANCED_FILTER"
+          onSelect={(filter) => handleAdvancedFilter(filter as ItemsAdvancedFilter)}
+          flex={1}
+        />
+      </div>
+
+      <nav className={styles.nav}>
+        {loading && <LoadingState label='Items'/>}
+
+        {(!loading && error) && <ErrorState error={error}/>}  
+
+        {!loading && !error && (
+          <ul className={styles.ul}>
+            {items.map((item, index) => (
+              <li
+              className={`${styles.li} ${animations.fade_in}`}
+              style={{ animationDelay: `${index * 80}ms` }}
+              key={item.id}
+              >
+                <ItemNavCard 
+                  page='HOME/USER_ITEMS'
+                  { ...item } 
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {(!loading && !error && items.length === 0) && <NotFoundState label='Items'/>}
+      </nav>
+
+      {pagination && pagination.totalPages > 1 && (
+        <PaginationNavButtons
+          hasPreviousPage={pagination.hasPreviousPage}
+          hasNextPage={pagination.hasNextPage}
+          loading={loading}
+          page={page}
+          totalPages={pagination.totalPages}
+          setPage={handlePage}
+        />
+      )}  
+    </div>
   )
 }
 

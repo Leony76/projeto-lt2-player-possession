@@ -229,6 +229,10 @@
       font-weight: 600;
       font-style: italic;
       text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.151);
+      max-width: 200px;       
+      white-space: nowrap;      
+      overflow: hidden;         
+      text-overflow: ellipsis;
     }
   }
 }
