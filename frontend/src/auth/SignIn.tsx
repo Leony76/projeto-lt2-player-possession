@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import styles from './css/SignIn.module.css'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
+import lumberTycoon2Logo from '@public/lumber_tycoon_2_logo.webp';
+import fireAxeLogo from '@public/fire_axe_decal.webp';
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -54,45 +56,64 @@ const SignIn = (): React.JSX.Element => {
   }
 
   return (
-    <div className={styles.container}>
-      <form 
-      onSubmit={handleSubmit(onSubmit)} 
-      className={styles.form_container}
-      >
-        <h1 className={styles.login_h1}>
-          Sign In
-        </h1>
-
-        <div className={styles.inputs_container}>
-          <Input
-            label='Username'
-            type='text'
-            placeholder='ex: username_123'
-            error={errors.username?.message}
-            onClear={() => setValue('username', '')}
-            {...register("username")}
+    <div className={styles.container}>    
+      <div className={styles.form_container}>   
+        <div className={styles.logo_container}>
+          <img 
+            src={lumberTycoon2Logo} 
+            alt="Lumber Tycoon 2 Logo" 
+            width={200}
           />
 
-          <Input
-            label='Password'
-            type='password'
-            placeholder='********'
-            error={errors.password?.message}
-            onClear={() => setValue('password', '')}
-            {...register("password")}
+          <img 
+            src={fireAxeLogo} 
+            className={styles.fire_axe_logo}
+            alt="Player's Possession Logo" 
+            width={50}
+            height={50}
           />
 
-          { errorMessage && <ErrorMessage error={errorMessage}/>}
+          <h1>
+            Player's Possession
+          </h1>
         </div>
 
-        <Button
-          label={isSubmitting ? "Processing..." : "Sign In"}
-          type="submit"
-          disabled={isSubmitting} 
-          buttonStyle='FORM'
-          loading={loading}
-          icon={() => <FaSignInAlt />}
-        />
+        <h2>
+          Sign In
+        </h2>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.inputs_container}>
+            <Input
+              label='Username'
+              type='text'
+              placeholder='ex: username_123'
+              error={errors.username?.message}
+              onClear={() => setValue('username', '')}
+              {...register("username")}
+            />
+
+            <Input
+              label='Password'
+              type='password'
+              placeholder='********'
+              error={errors.password?.message}
+              onClear={() => setValue('password', '')}
+              {...register("password")}
+            />
+
+            { errorMessage && <ErrorMessage error={errorMessage}/>}
+          </div>
+
+          <Button
+            label={isSubmitting ? "Processing..." : "Sign In"}
+            type="submit"
+            disabled={isSubmitting} 
+            buttonStyle='FORM'
+            loading={loading}
+            icon={() => <FaSignInAlt />}
+          />
+        </form>
 
         <p className={styles.dont_have_an_account}>
           Don't have an account? 
@@ -104,7 +125,7 @@ const SignIn = (): React.JSX.Element => {
             Sign up! 
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   )
 }

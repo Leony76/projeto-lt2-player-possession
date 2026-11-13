@@ -10,7 +10,7 @@
 
     padding: 5px 20px 5px 5px;
 
-    background-color: rgb(204, 142, 105);
+    background-image: linear-gradient(rgb(204, 141, 105) 75%,#D7A589);
 
     border-bottom: 3px solid #761B23;
 
@@ -153,14 +153,14 @@
 
       box-sizing: border-box;
 
-      background-color: #694028;
+      background-image: linear-gradient(to right, #694028 75%,#694028de);
       border-right: 3px solid #cc8e69;
       padding: 8px;
 
       position: sticky;
 
       top: 46px;
-      height: calc(100vh - 46px);
+      height: calc(100vh - 47px);
 
       align-self: start;
 

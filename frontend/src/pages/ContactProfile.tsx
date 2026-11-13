@@ -158,10 +158,14 @@ const ContactProfile = (): React.JSX.Element | null => {
                       }}
                     />
                     </>
-                  ) : states.contact.loggedUserContactStatus === 'REQUEST_RECEIVED' ? (
+                  ) : (states.contact.loggedUserContactStatus === 'REQUEST_RECEIVED' && states.contact.contactRequestSentAt) ? (
                     <div className={styles.request_received}>
                       <span>
                         Contact request received
+                      </span>
+
+                      <span style={{ fontSize: '12px' }}>
+                        Sent at { toMonthDayYearTwelveHoursFormat(states.contact.contactRequestSentAt) }
                       </span>
 
                       <div>

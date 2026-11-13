@@ -122,10 +122,16 @@ export class ContactRepository {
           name : string;
           profileImageURL : string | null;
           joinedAt : Date;
+          contactRequestSentAt: Date | null;
           totalItems    : number;
           lumberBucks   : number;
           totalContacts : number;
-          loggedUserContactStatus : 'CONTACT' | 'PENDING' | 'NOT_CONTACT';
+          loggedUserContactStatus:
+          | 'CONTACT'
+          | 'REQUEST_SENT'
+          | 'REQUEST_RECEIVED'
+          | 'NOT_CONTACT'
+          ;
         }[]
       >(Prisma.sql`
         SELECT
@@ -134,6 +140,13 @@ export class ContactRepository {
           u.profile_image_url AS "profileImageURL",
           u.created_at AS "joinedAt",
           u.lumber_bucks AS "lumberBucks",
+
+          CASE
+            WHEN c.status = 'PENDING'
+              AND c.addressee_id = ${userId}
+            THEN c.created_at
+            ELSE NULL
+          END AS "contactRequestSentAt",
 
           COALESCE(items.total, 0)::float8 AS "totalItems",
 
@@ -304,12 +317,14 @@ export class ContactRepository {
         joinedAt        : Date;
         totalItems      : number;
         lumberBucks     : number;
+        contactRequestSentAt: Date | null;
         totalContacts   : number;
         loggedUserContactStatus:
-          | 'CONTACT'
-          | 'REQUEST_SENT'
-          | 'REQUEST_RECEIVED'
-          | 'NOT_CONTACT';
+        | 'CONTACT'
+        | 'REQUEST_SENT'
+        | 'REQUEST_RECEIVED'
+        | 'NOT_CONTACT'
+        ;
       }[]>(Prisma.sql`
         SELECT
           u.id,
@@ -317,6 +332,13 @@ export class ContactRepository {
           u.profile_image_url AS "profileImageURL",
           u.created_at AS "joinedAt",
           u.lumber_bucks AS "lumberBucks",
+
+          CASE
+            WHEN c.status = 'PENDING'
+              AND c.addressee_id = ${userId}
+            THEN c.created_at
+            ELSE NULL
+          END AS "contactRequestSentAt",
 
           COALESCE(items.total, 0)::float8 AS "totalItems",
 
@@ -765,11 +787,20 @@ export class ContactRepository {
             status      : true,
             requesterId : true,
             addresseeId : true,
+            createdAt   : true,
           },
         }),
       ]);
 
       if (!contact) return null;
+
+      const contactRequestSentAt =
+        loggedUserRelation?.status === 'PENDING' 
+        &&
+        loggedUserRelation.addresseeId === userId
+          ? loggedUserRelation.createdAt.toISOString()
+          : null
+      ;
 
       const loggedUserContactStatus =
         loggedUserRelation?.status === 'CONTACT'
@@ -802,6 +833,7 @@ export class ContactRepository {
         totalContacts : contactsStats,
 
         loggedUserContactStatus,
+        contactRequestSentAt,
 
         contacts : userContacts.map((user) => ({
           id              : user.id,

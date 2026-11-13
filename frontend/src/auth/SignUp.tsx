@@ -2,6 +2,8 @@ import Input from '@/components/Input'
 import React, { useState } from 'react'
 import styles from './css/SignUp.module.css'
 import Button from '@/components/Button'
+import lumberTycoon2Logo from '@public/lumber_tycoon_2_logo.webp';
+import fireAxeLogo from '@public/fire_axe_decal.webp';
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -52,53 +54,72 @@ const SignUp = (): React.JSX.Element => {
 
   return (
     <div className={styles.container}>
-      <form 
-      onSubmit={handleSubmit(onSubmit)} 
-      className={styles.form_container}
-      >
-        <h1 className={styles.login_h1}>
-          Sign Up
-        </h1>
-
-        <div className={styles.inputs_container}>
-          <Input
-            label='Username'
-            type='text'
-            placeholder='ex: username_123'
-            {...register("username")}
-            onClear={() => setValue('username', '')}
-            error={errors.username?.message}
-          />
-          
-          <Input
-            label='Password'
-            type='password'
-            placeholder='********'
-            {...register("password")}
-            onClear={() => setValue('password', '')}
-            error={errors.password?.message}
-            />
-
-          <Input
-            label='Repeat Password'
-            type='password'
-            placeholder='********'
-            {...register("confirmPassword")}
-            onClear={() => setValue('confirmPassword', '')}
-            error={errors.confirmPassword?.message}
+      <div className={styles.form_container}>
+        <div className={styles.logo_container}>
+          <img 
+            src={lumberTycoon2Logo} 
+            alt="Lumber Tycoon 2 Logo" 
+            width={150}
           />
 
-           { errorMessage && <ErrorMessage error={errorMessage}/>}
+          <img 
+            src={fireAxeLogo} 
+            className={styles.fire_axe_logo}
+            alt="Player's Possession Logo" 
+            width={50}
+            height={50}
+          />
+
+          <h1>
+            Player's Possession
+          </h1>
         </div>
 
-        <Button
-          label={isSubmitting ? "Processing..." : "Sign Up"}
-          type='submit'
-          disabled={isSubmitting}
-          buttonStyle='FORM'
-          loading={loading}
-          icon={() => <GiArchiveRegister size={17}/>}
-        />
+        <h2>
+          Sign Up
+        </h2>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.inputs_container}>
+            <Input
+              label='Username'
+              type='text'
+              placeholder='ex: username_123'
+              {...register("username")}
+              onClear={() => setValue('username', '')}
+              error={errors.username?.message}
+            />
+            
+            <Input
+              label='Password'
+              type='password'
+              placeholder='********'
+              {...register("password")}
+              onClear={() => setValue('password', '')}
+              error={errors.password?.message}
+              />
+
+            <Input
+              label='Repeat Password'
+              type='password'
+              placeholder='********'
+              {...register("confirmPassword")}
+              onClear={() => setValue('confirmPassword', '')}
+              error={errors.confirmPassword?.message}
+            />
+
+            { errorMessage && <ErrorMessage error={errorMessage}/>}
+          </div>
+
+          <Button
+            label={isSubmitting ? "Processing..." : "Sign Up"}
+            type='submit'
+            disabled={isSubmitting}
+            buttonStyle='FORM'
+            loading={loading}
+            icon={() => <GiArchiveRegister size={17}/>}
+          />
+        </form>
 
         <p className={styles.already_have_an_account}>
           Already have an account? 
@@ -110,7 +131,7 @@ const SignUp = (): React.JSX.Element => {
             Sign in! 
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   )
 }

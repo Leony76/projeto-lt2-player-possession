@@ -278,6 +278,7 @@ const MyContacts = (): React.JSX.Element => {
                   profileImageURL={contact.profileImageURL ?? imgPlaceholder}
                   username={contact.name}
                   joinedAt={toMonthDayYearTwelveHoursFormat(contact.joinedAt)}
+                  contactRequestSentAt={contact.contactRequestSentAt}
                   totalItems={contact.totalItems}
                   relationStatus={contact.loggedUserContactStatus}
                   isAcceptingContactRequest={isAcceptingContactRequest}

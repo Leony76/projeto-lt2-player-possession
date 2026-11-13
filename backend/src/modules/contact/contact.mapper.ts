@@ -12,6 +12,7 @@ export class ContactMapper {
       profileImageURL : string | null;
       joinedAt        : Date;
       totalItems      : number;
+      contactRequestSentAt: Date | null;
       loggedUserContactStatus : string;
     }[],
     totalUsers : number,
@@ -44,16 +45,18 @@ export class ContactMapper {
       profileImageURL: string | null;
       joinedAt: Date;
       totalItems: number;
+      contactRequestSentAt: Date | null;
       loggedUserContactStatus: string;
     }[],
   ): ContactResponse[] {
 
     return data.map(contact => ({
-      id              : contact.id,
-      name            : contact.name,
-      profileImageURL : contact.profileImageURL,
-      joinedAt        : contact.joinedAt.toISOString(),
-      totalItems      : contact.totalItems,
+      id                      : contact.id,
+      name                    : contact.name,
+      profileImageURL         : contact.profileImageURL,
+      joinedAt                : contact.joinedAt.toISOString(),
+      totalItems              : contact.totalItems,
+      contactRequestSentAt    : contact.contactRequestSentAt?.toISOString() ?? null,
       loggedUserContactStatus : contact.loggedUserContactStatus as ContactRelationStatus,
     }));
   }
@@ -70,6 +73,7 @@ export class ContactMapper {
       totalItems  : number;
       totalContacts           : number;
       loggedUserContactStatus : string;
+      contactRequestSentAt    : string | null;
 
       contacts: {
         id              : number;
@@ -94,6 +98,7 @@ export class ContactMapper {
       ...data,
       joinedAt : data.joinedAt.toISOString(),
       loggedUserContactStatus : data.loggedUserContactStatus as ContactRelationStatus,
+      contactRequestSentAt    : data.contactRequestSentAt,
       items : data.items.map((item) => ({
         ...item,
         originalPrice: item.originalPrice ?? -1
