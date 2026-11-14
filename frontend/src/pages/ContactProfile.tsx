@@ -3,10 +3,10 @@ import animations from '@assets/css/Animations.module.css';
 import PageTitle from '@/components/PageTitle';
 import imgPlaceholder from '@/assets/img/profile_image_placeholder.png';
 import { FaArrowLeft, FaCheck, FaClock, FaMinus, FaPlus, FaUser } from 'react-icons/fa';
-import { MdOutlinePublic } from 'react-icons/md';
+import { MdMessage, MdOutlinePublic } from 'react-icons/md';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import SectionTitle from '@/components/SectionTitle';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useOutletContext } from 'react-router-dom';
 import Button from '@/components/Button';
 import { IoMdContact } from 'react-icons/io';
 import ContactCard from '@/components/ContactCard';
@@ -18,11 +18,13 @@ import { IoClose } from 'react-icons/io5';
 import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
 import { useContactProfile } from '@/hooks/pages/useContactProfile.hook';
 import ContactProfileModals from '@/components/modals/pages/ContactProfileModals';
+import type { OpenCloseMessageChatOutletContext } from '@/types/OpenCloseMessageChatOutletContext.type';
 
 const ContactProfile = (): React.JSX.Element | null => {
 
   const contactProfile = useContactProfile();
   const { handlers, hooks, setters, states, user, misc } = contactProfile;
+  const { openCloseMessageChat } = useOutletContext<OpenCloseMessageChatOutletContext>();
 
   const USER_DESCRIPTIVE_INFOS_MAP: { label: string, value: string | number }[] = [
     { label: 'Identifier (Id):' , value: states.contact?.id ?? '?' },
@@ -99,7 +101,10 @@ const ContactProfile = (): React.JSX.Element | null => {
                   })}
                 </dl>
 
-                <div className={styles.contact_actions_container}>
+                <div 
+                className={styles.contact_actions_container}
+                data-undo-contact={states.contact.loggedUserContactStatus === 'CONTACT'}
+                >
                   {states.contact.loggedUserContactStatus === 'CONTACT' ? (
                     <>
                     <div className={styles.contacts_label_being_contacts}>
@@ -113,7 +118,7 @@ const ContactProfile = (): React.JSX.Element | null => {
 
                     <Button
                       buttonStyle='DEFAULT'
-                      label='Undo contact'
+                      label='Undo Contact'
                       onClick={() => setters.setModal('CONFIRM_UNDO_CONTACT')}
                       icon={() => <FaMinus />}
                       iconPosition={{
@@ -203,7 +208,7 @@ const ContactProfile = (): React.JSX.Element | null => {
                         />
                       </div>
                     </div>
-                  ) : (
+                  ) : states.contact.loggedUserContactStatus === 'NOT_CONTACT' && (
                     <Button
                       buttonStyle='DEFAULT'
                       label={states.isAddingContact ? 'Adding...' : "Add Contact"}
@@ -213,6 +218,9 @@ const ContactProfile = (): React.JSX.Element | null => {
                         : hooks.showToast('ERROR', 'Unable to procced the operation')
                       }
                       icon={() => <FaPlus />}
+                      iconPosition={{
+                        bottom: '-3px'
+                      }}
                       brightness={{
                         active : 0.4,
                         hover  : 0.7,
@@ -222,7 +230,30 @@ const ContactProfile = (): React.JSX.Element | null => {
                         labelBorder: '#548e37fd'
                       }}
                     />
-                  )}           
+                  )}  
+                  
+                  {states.contact.loggedUserContactStatus === 'CONTACT' && (
+                    <Button
+                      buttonStyle='DEFAULT'
+                      label='Message'
+                      icon={() => <MdMessage />}
+                      padding={{
+                        Y: '4.5px'
+                      }}
+                      iconPosition={{
+                        bottom: '-4px'
+                      }}
+                      brightness={{
+                        hover  : 0.80,
+                        active : 0.60
+                      }}
+                      colors={{
+                        background: '#ffff002d',
+                        labelBorder: 'darkgoldenrod'
+                      }}
+                      onClick={openCloseMessageChat}
+                    />         
+                  )}
                 </div>
               </div>
             </div>

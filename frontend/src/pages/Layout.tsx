@@ -16,6 +16,7 @@ import { BiSolidContact } from 'react-icons/bi';
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
 import { ContactService } from '@/services/contact.service';
+import { MessageChat } from '@/components/modals/MessageChat';
 
 
 const Layout = (): React.JSX.Element => {
@@ -25,6 +26,7 @@ const Layout = (): React.JSX.Element => {
   const location = useLocation();
 
   const [isAsideCollapsed, setIsAsideCollapsed] = useState<boolean>(false);
+  const [isMessageChatOpen, setIsChatMessageOpen] = useState<boolean>(false);
 
   const [receivedContactRequestsCount, setReceivedContactRequestsCount] = useState<number>(0);
 
@@ -93,6 +95,10 @@ const Layout = (): React.JSX.Element => {
     },
   ];
 
+  const openCloseMessageChat = (): void => {
+    setIsChatMessageOpen(prev => !prev);
+  }
+
   const decrementReceivedContactRequestsCount = (): void => {
     setReceivedContactRequestsCount(prev => Math.max(0, prev - 1));
   };
@@ -143,6 +149,14 @@ const Layout = (): React.JSX.Element => {
   if (!user) return <Navigate to={'/'}/>;
 
   return (
+    <>
+    {isMessageChatOpen && (
+      <MessageChat
+        conversationId={1}
+        closeMessageChat={() => setIsChatMessageOpen(false)}
+      />
+    )}
+
     <div className={styles.container}>
       <header className={styles.header}>
         <figure 
@@ -271,6 +285,7 @@ const Layout = (): React.JSX.Element => {
           <main className={styles.main}>
             <Outlet context={{
               decrementReceivedContactRequestsCount,
+              openCloseMessageChat,
             }}/>
           </main>
 
@@ -282,6 +297,7 @@ const Layout = (): React.JSX.Element => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
