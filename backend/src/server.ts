@@ -12,6 +12,6 @@ configureSocketAuth(io);
 
 const port = Number(process.env.PORT ?? 3000);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`API available on port ${port}`);
 });

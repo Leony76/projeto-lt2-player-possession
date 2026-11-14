@@ -18,13 +18,13 @@ import { IoClose } from 'react-icons/io5';
 import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates';
 import { useContactProfile } from '@/hooks/pages/useContactProfile.hook';
 import ContactProfileModals from '@/components/modals/pages/ContactProfileModals';
-import type { OpenCloseMessageChatOutletContext } from '@/types/OpenCloseMessageChatOutletContext.type';
+import type { MessageChatOutletContext } from '@/types/messageChatOutletContext.type';
 
 const ContactProfile = (): React.JSX.Element | null => {
 
   const contactProfile = useContactProfile();
   const { handlers, hooks, setters, states, user, misc } = contactProfile;
-  const { openCloseMessageChat } = useOutletContext<OpenCloseMessageChatOutletContext>();
+  const { openConversationWithContact } = useOutletContext<MessageChatOutletContext>();
 
   const USER_DESCRIPTIVE_INFOS_MAP: { label: string, value: string | number }[] = [
     { label: 'Identifier (Id):' , value: states.contact?.id ?? '?' },
@@ -251,7 +251,15 @@ const ContactProfile = (): React.JSX.Element | null => {
                         background: '#ffff002d',
                         labelBorder: 'darkgoldenrod'
                       }}
-                      onClick={openCloseMessageChat}
+                      onClick={() => {
+                        if (!states.contact) return;
+
+                        openConversationWithContact({
+                          id              : states.contact.id,
+                          username        : states.contact.name,
+                          profileImageURL : states.contact.profileImageURL,
+                        });
+                      }}
                     />         
                   )}
                 </div>

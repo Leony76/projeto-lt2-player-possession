@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import fireAxe from '@public/fire_axe_decal.webp';
 import styles from './css/Layout.module.css';
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdMessage } from "react-icons/md";
 import type { NavLinks } from '@/types/navLinks.type';
 import AsideNavLink from '@/components/AsideNavLink';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
@@ -17,6 +17,7 @@ import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-ico
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
 import { ContactService } from '@/services/contact.service';
 import { MessageChat } from '@/components/modals/MessageChat';
+import type { InitialChatContact, Message } from '@shared/dtos/message.dto';
 
 
 const Layout = (): React.JSX.Element => {
@@ -26,6 +27,9 @@ const Layout = (): React.JSX.Element => {
   const location = useLocation();
 
   const [isAsideCollapsed, setIsAsideCollapsed] = useState<boolean>(false);
+
+  const [initialChatContact, setInitialChatContact] = useState<InitialChatContact | null>(null);
+
   const [isMessageChatOpen, setIsChatMessageOpen] = useState<boolean>(false);
 
   const [receivedContactRequestsCount, setReceivedContactRequestsCount] = useState<number>(0);
@@ -99,6 +103,23 @@ const Layout = (): React.JSX.Element => {
     setIsChatMessageOpen(prev => !prev);
   }
 
+  const openMessageChat = (): void => {
+    setInitialChatContact(null);
+    setIsChatMessageOpen(true);
+  };
+
+  const openConversationWithContact = (
+    contact: InitialChatContact
+  ): void => {
+    setInitialChatContact(contact);
+    setIsChatMessageOpen(true);
+  };
+
+  const closeMessageChat = (): void => {
+    setIsChatMessageOpen(false);
+    setInitialChatContact(null);
+  };
+
   const decrementReceivedContactRequestsCount = (): void => {
     setReceivedContactRequestsCount(prev => Math.max(0, prev - 1));
   };
@@ -148,12 +169,36 @@ const Layout = (): React.JSX.Element => {
   if (loading) return <PageLoading/>;
   if (!user) return <Navigate to={'/'}/>;
 
+  // const CHAT_MESSAGE_EXAMPLE: Message[] = [
+  //   {
+  //     content: 'Oi, como vai ?',
+  //     conversationId: 1,
+  //     id: 1,
+  //     createdAt: '2026-11-14T09:24:00.000Z',
+  //     senderId: user.id,
+  //   },
+  //   {
+  //     content: 'Vou bem, e você ?',
+  //     conversationId: 1,
+  //     id: 2,
+  //     createdAt: '2026-11-14T09:26:00.000Z',
+  //     senderId: 2,
+  //   },
+  //   {
+  //     content: 'Eu queria um fire axe, e vi que você tem um.',
+  //     conversationId: 1,
+  //     id: 3,
+  //     createdAt: '2026-11-14T09:27:00.000Z',
+  //     senderId: user.id,
+  //   },
+  // ];
+
   return (
     <>
     {isMessageChatOpen && (
       <MessageChat
-        conversationId={1}
-        closeMessageChat={() => setIsChatMessageOpen(false)}
+        initialContact={initialChatContact}
+        closeChat={closeMessageChat}
       />
     )}
 
@@ -210,6 +255,17 @@ const Layout = (): React.JSX.Element => {
                 </figure>
               </Link>
             </li>
+            
+            {!isMessageChatOpen &&
+              <li className={styles.li}>
+                <button 
+                className={styles.open_message_chat}
+                onClick={() => setIsChatMessageOpen(true)}
+                >
+                  <MdMessage />
+                </button>
+              </li>
+            }
 
             <li className={styles.li}> 
               <button 
@@ -285,6 +341,7 @@ const Layout = (): React.JSX.Element => {
           <main className={styles.main}>
             <Outlet context={{
               decrementReceivedContactRequestsCount,
+              openConversationWithContact,
               openCloseMessageChat,
             }}/>
           </main>

@@ -1,27 +1,40 @@
 import type { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
+import * as cookie from 'cookie';
 
-export const configureSocketAuth = (
-  io : Server
-) => {
+const jwtSecret = process.env['JWT_SECRET']!;
+
+export const configureSocketAuth = (io: Server) => {
   io.use((socket, next) => {
     try {
-      const token = socket.handshake.auth.token;
+      const cookies = cookie.parseCookie(
+        socket.handshake.headers.cookie ?? ''
+      );
+
+      const token = cookies['access_token'];
 
       if (!token) {
         return next(new Error('Unauthorized'));
       }
 
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET!
-      ) as { id: number };
+      const payload = jwt.verify(token, jwtSecret, {
+        algorithms: ['HS256'],
+      });
 
-      socket.data.userId = decoded.id;
+      if (
+        typeof payload === 'string' ||
+        typeof payload === 'number' ||
+        typeof payload.sub !== 'number'
+      ) {
+        return next(new Error('Invalid token'));
+      }
 
-      next();
+      socket.data.userId = payload.sub;
+
+      return next();
+
     } catch {
-      next(new Error('Unauthorized'));
+      return next(new Error('Unauthorized'));
     }
   });
 };

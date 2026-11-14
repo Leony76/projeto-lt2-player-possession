@@ -1,13 +1,5 @@
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
-
+import {createContext, useCallback, useContext, useEffect, useState, type ReactNode,} from "react";
 import axios from "axios";
 import { AuthService } from "../services/auth.service";
 import type { LoggedUserMainInfosResponse } from "@shared/dtos/loggedUserMainInfos.dto";

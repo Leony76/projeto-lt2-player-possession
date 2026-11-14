@@ -1,0 +1,51 @@
+.conversations_list {
+  height: 100%;
+  max-height: 300px;
+  min-height: 0px;
+  overflow-y: auto;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .conversation_card {
+    display: flex;
+    width: 100%;
+    border-radius: 12px;
+
+    img {
+      height: 48px;
+      width: 48px;
+
+      border-radius: 50%;
+    }
+
+    .username_unread_messages_count_content_container {
+      display: flex;
+      flex-direction: column;
+      padding: 0px 4px;
+      justify-content: center;
+      gap: 4px;
+      flex: 1;
+
+      .username_unread_messages_count_container {
+        display: flex;
+
+        strong {
+          font-size: 15px;
+        }
+      }
+
+
+
+      p {
+        text-align: left;
+        max-width: 220px;     
+        white-space: nowrap;    
+        overflow: hidden;         
+        text-overflow: ellipsis;  
+      }
+    }
+  }
+}

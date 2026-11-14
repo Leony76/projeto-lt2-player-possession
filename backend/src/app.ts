@@ -6,6 +6,7 @@ import { errorMiddleware } from './middlewares/error.middleware.js';
 import UserRoutes from "./modules/user/user.routes.js";
 import ItemRoutes from "./modules/item/item.routes.js";
 import ContactRoutes from "./modules/contact/contact.routes.js";
+import ConversationRoutes from './modules/conversation/conversation.routes.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/auth"    , AuthRoutes);
 app.use("/api/user"    , UserRoutes);
 app.use("/api/item"    , ItemRoutes);
 app.use("/api/contact" , ContactRoutes);
+app.use('/api/conversations', ConversationRoutes);
 
 app.use(errorMiddleware);
 
