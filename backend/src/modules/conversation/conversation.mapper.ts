@@ -25,6 +25,7 @@ export class ConversationMapper {
   ): ConversationListItem[] {
     return conversations.map((conversation) => {
       const contact = conversation.participants[0]?.user;
+      const lastMessage = conversation.messages[0];
 
       if (!contact) {
         throw new APIError(400, `Contact not found for conversation ${conversation.id}`);
@@ -39,10 +40,10 @@ export class ConversationMapper {
           profileImageURL : contact.profileImageURL,
         },
 
-        lastMessage: conversation.messages[0]
+        lastMessage: lastMessage
           ? {
-              ...conversation.messages[0],
-              createdAt: conversation.messages[0].createdAt.toISOString(),
+              ...lastMessage,
+              createdAt: lastMessage.createdAt.toISOString(),
             }
           : null,
 

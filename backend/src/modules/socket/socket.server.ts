@@ -2,11 +2,14 @@ import { Server } from 'socket.io';
 import type { Server as HTTPServer } from 'http';
 import { MessageService } from '../message/message.service.js';
 import { ConversationRepository } from '../conversation/conversation.repository.js';
-import { ConversationService } from '../conversation/conversation.service.js';
+import { SendMessagePayload } from '@shared/dtos/message.dto.js';
+import { APIError } from '@backend/middlewares/error.middleware.js';
 
 let io: Server;
 
-export const initializeSocket = (server: HTTPServer) => {
+export const initializeSocket = (
+  server : HTTPServer
+) => {
   io = new Server(server, {
     cors: {
       origin      : process.env.FRONTEND_URL,
@@ -18,8 +21,6 @@ export const initializeSocket = (server: HTTPServer) => {
     const userId = socket.data.userId;
 
     socket.join(`user:${userId}`);
-
-    console.log(`User connected: ${socket.data.userId}`);
 
     socket.on('conversation:leave', (conversationId: number) => {
       socket.leave(`conversation:${conversationId}`);
@@ -45,7 +46,10 @@ export const initializeSocket = (server: HTTPServer) => {
       }
     });
 
-    socket.on('message:send', async (data, callback) => {
+    socket.on('message:send', async (
+      data : SendMessagePayload, 
+      callback
+    ) => {     
       try {
         const result = await MessageService.send(
           socket.data.userId,

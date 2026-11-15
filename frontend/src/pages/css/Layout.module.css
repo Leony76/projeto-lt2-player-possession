@@ -133,9 +133,20 @@
           }
 
           .open_message_chat {
-            padding: 4px;
-            scale: 1.5;
+            padding: 5px;
             color: yellow;
+            position: relative;
+            
+            span {
+              position: absolute;
+              bottom: 0;
+              right: 0;
+              color: rgb(218, 255, 218);
+              padding: 1px 5px;
+              border-radius: 10px;
+              font-size: 11px;
+              background-color: rgb(0, 128, 0);
+            }
 
             &:hover {
               color: white;

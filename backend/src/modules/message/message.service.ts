@@ -1,8 +1,61 @@
+import { Prisma } from "@backend/generated/prisma/client.js";
 import { prisma } from "@backend/lib/prisma.js";
 import { APIError } from "@backend/middlewares/error.middleware.js";
 import { InitialChatContact, SendMessagePayload } from "@shared/dtos/message.dto.js";
 
 export class MessageService {
+
+  private static async countRecipientUnreadMessages(
+    tx             : Prisma.TransactionClient,
+    conversationId : number,
+    recipientId    : number,
+  ) {
+    const participant = await tx.conversationParticipant.findUnique({
+      where: {
+        conversationId_userId: {
+          conversationId,
+          userId : recipientId,
+        },
+      },
+      select: {
+        lastReadAt: true,
+      },
+    });
+
+    return tx.message.count({
+      where: {
+        conversationId,
+        senderId: {
+          not: recipientId,
+        },
+        ...(participant?.lastReadAt
+          ? {
+              createdAt: {
+                gt: participant.lastReadAt,
+              },
+            }
+          : {}),
+      },
+    });
+  }
+
+
+
+  private static async updateConversation(
+    tx : Prisma.TransactionClient,
+    conversationId : number,
+  ) {
+    return tx.conversation.update({
+      where: {
+        id: conversationId,
+      },
+      data: {
+        updatedAt: new Date(),
+      },
+    });
+  }
+
+
 
   public static async send(
     userId  : number,
@@ -12,6 +65,10 @@ export class MessageService {
 
     if (!content) {
       throw new APIError(400, 'Message cannot be empty');
+    }
+
+    if (content.length > 1000) {
+      throw new APIError(400, 'Message length cap is 1000 characters');
     }
 
     const hasConversationId = payload.conversationId !== undefined;
@@ -25,6 +82,7 @@ export class MessageService {
 
       // 1. Envio para uma conversa que já existe.
       if (hasConversationId) {
+
         const conversationId = payload.conversationId!;
 
         const conversation = await tx.conversation.findFirst({
@@ -80,53 +138,27 @@ export class MessageService {
           },
         });
 
-        const recipientParticipant = await tx.conversationParticipant.findUnique({
-          where: {
-            conversationId_userId: {
-              conversationId,
-              userId: contact.id,
-            },
-          },
-          select: {
-            lastReadAt: true,
-          },
-        });
+        const recipientUnreadMessagesCount = await this.countRecipientUnreadMessages(
+          tx,
+          conversationId,
+          contact.id,
+        );
 
-        const recipientUnreadMessagesCount = await tx.message.count({
-          where: {
-            conversationId,
-            senderId: {
-              not: contact.id,
-            },
-            ...(recipientParticipant?.lastReadAt
-              ? {
-                  createdAt: {
-                    gt: recipientParticipant.lastReadAt,
-                  },
-                }
-              : {}),
-          },
-        });
-
-        const updatedConversation = await tx.conversation.update({
-          where: {
-            id: conversation.id,
-          },
-          data: {
-            updatedAt: new Date(),
-          },
-        });
+        const updatedConversation = await this.updateConversation(
+          tx,
+          conversationId,
+        )
 
         return {
           message,
+          recipientUnreadMessagesCount,
           conversation: {
-            id: updatedConversation.id,
-            contact: formattedContact,
-            lastMessage: message,
-            updatedAt: updatedConversation.updatedAt,
+            id          : updatedConversation.id,
+            contact     : formattedContact,
+            lastMessage : message,
+            updatedAt   : updatedConversation.updatedAt,
             unreadMessagesCount: 0,
           },
-          recipientUnreadMessagesCount,
         };
       }
 
@@ -143,12 +175,12 @@ export class MessageService {
           status: 'CONTACT',
           OR: [
             {
-              requesterId: userId,
-              addresseeId: recipientId,
+              requesterId : userId,
+              addresseeId : recipientId,
             },
             {
-              requesterId: recipientId,
-              addresseeId: userId,
+              requesterId : recipientId,
+              addresseeId : userId,
             },
           ],
         },
@@ -204,43 +236,17 @@ export class MessageService {
         },
       });
 
-      const recipientParticipant = await tx.conversationParticipant.findUnique({
-        where: {
-          conversationId_userId: {
-            conversationId: conversation.id,
-            userId: recipientId,
-          },
-        },
-        select: {
-          lastReadAt: true,
-        },
-      });
-
-      const recipientUnreadMessagesCount = await tx.message.count({
-        where: {
-          conversationId: conversation.id,
-          senderId: {
-            not: recipientId,
-          },
-          ...(recipientParticipant?.lastReadAt
-            ? {
-                createdAt: {
-                  gt: recipientParticipant.lastReadAt,
-                },
-              }
-            : {}),
-        },
-      });
+      const recipientUnreadMessagesCount = await this.countRecipientUnreadMessages(
+        tx,
+        conversation.id,
+        recipientId,
+      );
 
       // Atualiza a data da conversa.
-      const updatedConversation = await tx.conversation.update({
-        where: {
-          id: conversation.id,
-        },
-        data: {
-          updatedAt: new Date(),
-        },
-      });
+      const updatedConversation = await this.updateConversation(
+        tx,
+        conversation.id,
+      );
 
       // 2.5. Recupera os dados públicos do destinatário.
       const contact = await tx.user.findUnique({

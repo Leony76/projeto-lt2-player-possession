@@ -4,7 +4,7 @@ import { seedUsers } from "./seeds/users.seed";
 
 const main = async() => {
   await seedItems();
-  await seedUsers();
+  // await seedUsers();
   
   console.log("All seeds completed!");
 }

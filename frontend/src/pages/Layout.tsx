@@ -17,7 +17,9 @@ import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-ico
 import { handleAxiosError } from '@/utils/handleAxiosError.util';
 import { ContactService } from '@/services/contact.service';
 import { MessageChat } from '@/components/modals/MessageChat';
-import type { InitialChatContact, Message } from '@shared/dtos/message.dto';
+import type { InitialChatContact } from '@shared/dtos/message.dto';
+import { MessageService } from '@/services/message.service';
+import { socket } from '@/services/socket.service';
 
 
 const Layout = (): React.JSX.Element => {
@@ -29,10 +31,13 @@ const Layout = (): React.JSX.Element => {
   const [isAsideCollapsed, setIsAsideCollapsed] = useState<boolean>(false);
 
   const [initialChatContact, setInitialChatContact] = useState<InitialChatContact | null>(null);
-
   const [isMessageChatOpen, setIsChatMessageOpen] = useState<boolean>(false);
+  const [isMessageChatMinimized, setIsMessageChatMinimized] = useState<boolean>(false);
 
+  
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState<number>(0);
   const [receivedContactRequestsCount, setReceivedContactRequestsCount] = useState<number>(0);
+
 
   const currentTab = {
     '/home'        : 'HOME',
@@ -103,16 +108,12 @@ const Layout = (): React.JSX.Element => {
     setIsChatMessageOpen(prev => !prev);
   }
 
-  const openMessageChat = (): void => {
-    setInitialChatContact(null);
-    setIsChatMessageOpen(true);
-  };
-
   const openConversationWithContact = (
     contact: InitialChatContact
   ): void => {
-    setInitialChatContact(contact);
+    setInitialChatContact({ ...contact });
     setIsChatMessageOpen(true);
+    setIsMessageChatMinimized(false);
   };
 
   const closeMessageChat = (): void => {
@@ -122,6 +123,22 @@ const Layout = (): React.JSX.Element => {
 
   const decrementReceivedContactRequestsCount = (): void => {
     setReceivedContactRequestsCount(prev => Math.max(0, prev - 1));
+  };
+
+  const getUnreadMessagesCount = async (): Promise<void> => {
+    try {
+      const response = await MessageService.getConversations();
+
+      const total = response.conversations.reduce(
+        (accumulator, conversation) =>
+          accumulator + conversation.unreadMessagesCount, 0
+      );
+
+      setUnreadMessagesCount(total);
+
+    } catch (error: unknown) {
+      console.error('Unable to get unread messages count:', error);
+    }
   };
 
   useEffect(() => {
@@ -146,6 +163,30 @@ const Layout = (): React.JSX.Element => {
   }, [isAsideCollapsed, user?.id]);
 
   useEffect(() => {
+    const handleConversationRead = (): void => {
+      getUnreadMessagesCount();
+    };
+
+    socket.on('conversation:read', handleConversationRead);
+
+    return () => {
+      socket.off('conversation:read', handleConversationRead);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleConversationUpdated = (): void => {
+      getUnreadMessagesCount();
+    };
+
+    socket.on('conversation:updated', handleConversationUpdated);
+
+    return () => {
+      socket.off('conversation:updated', handleConversationUpdated);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!user) return;
 
     const getReceivedRequestsCount = async () => {
@@ -160,8 +201,12 @@ const Layout = (): React.JSX.Element => {
     };
 
     getReceivedRequestsCount();
+    getUnreadMessagesCount();
 
-    const interval = setInterval(getReceivedRequestsCount, 30000);
+    const interval = setInterval(() => {
+      getReceivedRequestsCount();
+      getUnreadMessagesCount();
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [user?.id]);
@@ -169,36 +214,14 @@ const Layout = (): React.JSX.Element => {
   if (loading) return <PageLoading/>;
   if (!user) return <Navigate to={'/'}/>;
 
-  // const CHAT_MESSAGE_EXAMPLE: Message[] = [
-  //   {
-  //     content: 'Oi, como vai ?',
-  //     conversationId: 1,
-  //     id: 1,
-  //     createdAt: '2026-11-14T09:24:00.000Z',
-  //     senderId: user.id,
-  //   },
-  //   {
-  //     content: 'Vou bem, e você ?',
-  //     conversationId: 1,
-  //     id: 2,
-  //     createdAt: '2026-11-14T09:26:00.000Z',
-  //     senderId: 2,
-  //   },
-  //   {
-  //     content: 'Eu queria um fire axe, e vi que você tem um.',
-  //     conversationId: 1,
-  //     id: 3,
-  //     createdAt: '2026-11-14T09:27:00.000Z',
-  //     senderId: user.id,
-  //   },
-  // ];
-
   return (
     <>
     {isMessageChatOpen && (
       <MessageChat
         initialContact={initialChatContact}
+        isMinimized={isMessageChatMinimized}
         closeChat={closeMessageChat}
+        setIsMinimized={setIsMessageChatMinimized}
       />
     )}
 
@@ -257,12 +280,21 @@ const Layout = (): React.JSX.Element => {
             </li>
             
             {!isMessageChatOpen &&
-              <li className={styles.li}>
+              <li className={`${styles.li} ${styles.message_chat_li}`}>
                 <button 
                 className={styles.open_message_chat}
                 onClick={() => setIsChatMessageOpen(true)}
                 >
-                  <MdMessage />
+                  <MdMessage size={20}/>
+
+                  {unreadMessagesCount > 0 && 
+                    <span title={`${unreadMessagesCount} unread messages`}>
+                      {unreadMessagesCount > 99
+                        ? '99+'
+                        : unreadMessagesCount
+                      }
+                    </span>
+                  }
                 </button>
               </li>
             }

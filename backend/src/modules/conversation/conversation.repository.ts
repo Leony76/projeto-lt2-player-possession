@@ -68,52 +68,6 @@ export class ConversationRepository {
 
 
 
-  public static async findAllByUserId(userId: number) {
-
-    return prisma.conversation.findMany({
-      where: {
-        participants: {
-          some: {
-            userId,
-          },
-        },
-      },
-
-      include: {
-        participants: {
-          where: {
-            userId: {
-              not: userId,
-            },
-          },
-
-          select: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                profileImageURL: true,
-              },
-            },
-          },
-        },
-
-        messages: {
-          take: 1,
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
-      },
-
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    });
-  }
-
-
-
   public static async findByIdAndUserId(
     conversationId: number,
     userId: number,
