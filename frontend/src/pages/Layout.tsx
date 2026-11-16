@@ -1,55 +1,23 @@
-import React, { useEffect, useState } from 'react';
 import fireAxe from '@public/fire_axe_decal.webp';
 import styles from './css/Layout.module.css';
-import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Link, Navigate, Outlet } from 'react-router-dom';
 import { MdLogout, MdMessage } from "react-icons/md";
 import type { NavLinks } from '@/types/navLinks.type';
 import AsideNavLink from '@/components/AsideNavLink';
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util';
 import { FaBoxOpen, FaHome, FaInfoCircle, FaWallet } from 'react-icons/fa';
-import { useAuth } from '@/contexts/AuthContext';
 import PageLoading from '@/components/PageLoading';
 import profileImagePlaceholder from '@/assets/img/profile_image_placeholder.png';
 import { LuBoxes } from 'react-icons/lu';
 import { IoMdContact } from 'react-icons/io';
 import { BiSolidContact } from 'react-icons/bi';
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import { handleAxiosError } from '@/utils/handleAxiosError.util';
-import { ContactService } from '@/services/contact.service';
 import { MessageChat } from '@/components/modals/MessageChat';
-import type { InitialChatContact } from '@shared/dtos/message.dto';
-import { MessageService } from '@/services/message.service';
-import { socket } from '@/services/socket.service';
-
+import { useLayout } from '@/hooks/pages/useLayout.hook';
 
 const Layout = (): React.JSX.Element => {
 
-  const { user, signOut, loading } = useAuth();
-
-  const location = useLocation();
-
-  const [isAsideCollapsed, setIsAsideCollapsed] = useState<boolean>(false);
-
-  const [initialChatContact, setInitialChatContact] = useState<InitialChatContact | null>(null);
-  const [isMessageChatOpen, setIsChatMessageOpen] = useState<boolean>(false);
-  const [isMessageChatMinimized, setIsMessageChatMinimized] = useState<boolean>(false);
-
-  
-  const [unreadMessagesCount, setUnreadMessagesCount] = useState<number>(0);
-  const [receivedContactRequestsCount, setReceivedContactRequestsCount] = useState<number>(0);
-
-
-  const currentTab = {
-    '/home'        : 'HOME',
-    '/items'       : 'ITEMS',
-    '/my-items'    : 'MY_ITEMS',
-    '/contacts'    : 'CONTACTS',
-    '/my-contacts' : 'MY_CONTACTS',
-    '/about'       : 'ABOUT',
-  } as const;
-
-  const tab = currentTab[location.pathname as keyof typeof currentTab];
-  const iconSizeByCollapedStatus = isAsideCollapsed ? 1.4 : 1;
+  const { states, setters, user, handlers, signOut } = useLayout();
 
   const navLinksConfig: {
     to         : `/${string}`;
@@ -63,165 +31,59 @@ const Layout = (): React.JSX.Element => {
       to         : '/home',
       label      : 'Home',
       tab        : 'HOME',
-      currentTab : tab,
-      icon       : () => <FaHome style={{ scale: iconSizeByCollapedStatus }}/>
+      currentTab : states.tab,
+      icon       : () => <FaHome style={{ scale: states.iconSizeByCollapedStatus }}/>
     },
     {
       to         : '/items',
       label      : 'Items',
       tab        : 'ITEMS',
-      currentTab : tab,
-      icon       : () => <LuBoxes style={{ scale: iconSizeByCollapedStatus }}/>
+      currentTab : states.tab,
+      icon       : () => <LuBoxes style={{ scale: states.iconSizeByCollapedStatus }}/>
     },
     {
       to         : '/my-items',
       label      : 'My items',
       tab        : 'MY_ITEMS',
-      currentTab : tab,
-      icon       : () => <FaBoxOpen style={{ scale: iconSizeByCollapedStatus }}/>
+      currentTab : states.tab,
+      icon       : () => <FaBoxOpen style={{ scale: states.iconSizeByCollapedStatus }}/>
     },
     {
       to         : '/contacts',
       label      : 'Contacts',
       tab        : 'CONTACTS',
-      currentTab : tab,
-      icon       : () => <IoMdContact style={{ scale: iconSizeByCollapedStatus }}/>
+      currentTab : states.tab,
+      icon       : () => <IoMdContact style={{ scale: states.iconSizeByCollapedStatus }}/>
     },
     {
       to         : '/my-contacts',
       label      : 'My Contacts',
       tab        : 'MY_CONTACTS',
-      currentTab : tab,
-      icon       : () => <BiSolidContact style={{ scale: iconSizeByCollapedStatus }}/>,
-      badgeCount : receivedContactRequestsCount,
+      currentTab : states.tab,
+      icon       : () => <BiSolidContact style={{ scale: states.iconSizeByCollapedStatus }}/>,
+      badgeCount : states.receivedContactRequestsCount,
     },
     {
       to         : '/about',
       label      : 'About',
       tab        : 'ABOUT',
-      currentTab : tab,
-      icon       : () => <FaInfoCircle style={{ scale: iconSizeByCollapedStatus }}/>
+      currentTab : states.tab,
+      icon       : () => <FaInfoCircle style={{ scale: states.iconSizeByCollapedStatus }}/>
     },
   ];
 
-  const openCloseMessageChat = (): void => {
-    setIsChatMessageOpen(prev => !prev);
-  }
 
-  const openConversationWithContact = (
-    contact: InitialChatContact
-  ): void => {
-    setInitialChatContact({ ...contact });
-    setIsChatMessageOpen(true);
-    setIsMessageChatMinimized(false);
-  };
-
-  const closeMessageChat = (): void => {
-    setIsChatMessageOpen(false);
-    setInitialChatContact(null);
-  };
-
-  const decrementReceivedContactRequestsCount = (): void => {
-    setReceivedContactRequestsCount(prev => Math.max(0, prev - 1));
-  };
-
-  const getUnreadMessagesCount = async (): Promise<void> => {
-    try {
-      const response = await MessageService.getConversations();
-
-      const total = response.conversations.reduce(
-        (accumulator, conversation) =>
-          accumulator + conversation.unreadMessagesCount, 0
-      );
-
-      setUnreadMessagesCount(total);
-
-    } catch (error: unknown) {
-      console.error('Unable to get unread messages count:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (!user) return;
-
-    const savedPreference = localStorage.getItem(
-      `asideCollapsed_${user.id}`
-    );
-
-    setIsAsideCollapsed(savedPreference === 'true');
-
-  }, [user?.id]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    localStorage.setItem(
-      `asideCollapsed_${user.id}`, 
-      String(isAsideCollapsed)
-    );
-
-  }, [isAsideCollapsed, user?.id]);
-
-  useEffect(() => {
-    const handleConversationRead = (): void => {
-      getUnreadMessagesCount();
-    };
-
-    socket.on('conversation:read', handleConversationRead);
-
-    return () => {
-      socket.off('conversation:read', handleConversationRead);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleConversationUpdated = (): void => {
-      getUnreadMessagesCount();
-    };
-
-    socket.on('conversation:updated', handleConversationUpdated);
-
-    return () => {
-      socket.off('conversation:updated', handleConversationUpdated);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    const getReceivedRequestsCount = async () => {
-      try {
-        const response = await ContactService.getReceivedContactRequestsCount();
-
-        setReceivedContactRequestsCount(response.count);
-
-      } catch (error:unknown) {
-        console.error(handleAxiosError(error));
-      }
-    };
-
-    getReceivedRequestsCount();
-    getUnreadMessagesCount();
-
-    const interval = setInterval(() => {
-      getReceivedRequestsCount();
-      getUnreadMessagesCount();
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [user?.id]);
-
-  if (loading) return <PageLoading/>;
+  if (states.loading) return <PageLoading/>;
   if (!user) return <Navigate to={'/'}/>;
 
   return (
     <>
-    {isMessageChatOpen && (
+    {states.isMessageChatOpen && (
       <MessageChat
-        initialContact={initialChatContact}
-        isMinimized={isMessageChatMinimized}
-        closeChat={closeMessageChat}
-        setIsMinimized={setIsMessageChatMinimized}
+        initialContact={states.initialChatContact}
+        isMinimized={states.isMessageChatMinimized}
+        closeChat={handlers.handleCloseMessageChat}
+        setIsMinimized={setters.setIsMessageChatMinimized}
       />
     )}
 
@@ -279,19 +141,19 @@ const Layout = (): React.JSX.Element => {
               </Link>
             </li>
             
-            {!isMessageChatOpen &&
+            {!states.isMessageChatOpen &&
               <li className={`${styles.li} ${styles.message_chat_li}`}>
                 <button 
                 className={styles.open_message_chat}
-                onClick={() => setIsChatMessageOpen(true)}
+                onClick={() => setters.setIsChatMessageOpen(true)}
                 >
                   <MdMessage size={20}/>
 
-                  {unreadMessagesCount > 0 && 
-                    <span title={`${unreadMessagesCount} unread messages`}>
-                      {unreadMessagesCount > 99
+                  {states.unreadMessagesCount > 0 && 
+                    <span title={`${states.unreadMessagesCount} unread messages`}>
+                      {states.unreadMessagesCount > 99
                         ? '99+'
-                        : unreadMessagesCount
+                        : states.unreadMessagesCount
                       }
                     </span>
                   }
@@ -314,21 +176,21 @@ const Layout = (): React.JSX.Element => {
       
       <div className={`
         ${styles.main_footer_aside}
-        ${isAsideCollapsed ? styles.collapsed : ''}
+        ${states.isAsideCollapsed ? styles.collapsed : ''}
       `}>
         <aside className={styles.aside}>
-          {isAsideCollapsed &&
+          {states.isAsideCollapsed &&
             <button
             type="button"
-            data-is-collapsed={isAsideCollapsed}
+            data-is-collapsed={states.isAsideCollapsed}
             style={{ width: '38px', alignSelf: 'center'}}
-            title={isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            aria-label={isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            aria-expanded={!isAsideCollapsed}
+            title={states.isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={states.isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-expanded={!states.isAsideCollapsed}
             className={styles.aside_toggle_button}
-            onClick={() => setIsAsideCollapsed(prev => !prev)}
+            onClick={() => setters.setIsAsideCollapsed(prev => !prev)}
             >
-              {isAsideCollapsed
+              {states.isAsideCollapsed
                 ? <MdKeyboardDoubleArrowRight />
                 : <MdKeyboardDoubleArrowLeft />
               }
@@ -344,19 +206,19 @@ const Layout = (): React.JSX.Element => {
                 >
                   <AsideNavLink                 
                     {...item}
-                    collapsed={isAsideCollapsed}
+                    collapsed={states.isAsideCollapsed}
                   />
 
-                  {!isAsideCollapsed && index === 0 &&
+                  {!states.isAsideCollapsed && index === 0 &&
                     <button
                     type="button"
-                    title={isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                    aria-label={isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                    aria-expanded={!isAsideCollapsed}               
+                    title={states.isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                    aria-label={states.isAsideCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                    aria-expanded={!states.isAsideCollapsed}               
                     className={styles.aside_toggle_button}
-                    onClick={() => setIsAsideCollapsed(prev => !prev)}
+                    onClick={() => setters.setIsAsideCollapsed(prev => !prev)}
                     >
-                      {isAsideCollapsed
+                      {states.isAsideCollapsed
                         ? <MdKeyboardDoubleArrowRight />
                         : <MdKeyboardDoubleArrowLeft />
                       }
@@ -372,9 +234,9 @@ const Layout = (): React.JSX.Element => {
         <div className={styles.main_footer}>
           <main className={styles.main}>
             <Outlet context={{
-              decrementReceivedContactRequestsCount,
-              openConversationWithContact,
-              openCloseMessageChat,
+              decrementReceivedContactRequestsCount : handlers.decrementReceivedContactRequestsCount,
+              openConversationWithContact : handlers.openConversationWithContact,
+              openCloseMessageChat        : handlers.openCloseMessageChat,
             }}/>
           </main>
 

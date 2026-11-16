@@ -10,3 +10,12 @@ export type PaginatedResponse<T> = {
   };
 };
 
+export type ScrollPaginatedResponse<T> = {
+  items: T[];
+  pagination: {
+    page    : number;
+    limit   : number;
+    hasMore : boolean;
+  };
+};
+

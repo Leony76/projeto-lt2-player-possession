@@ -35,7 +35,6 @@ const SearchBar = ({
     }
   }, [value]);
 
-  // Executa a pesquisa com debounce.
   useEffect(() => {
 
     if (isFirstRender.current) {

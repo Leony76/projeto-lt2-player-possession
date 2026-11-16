@@ -1,119 +1,32 @@
-import React, { useEffect, useState } from 'react'
 import styles from './css/ItemDetails.module.css'
 import PageTitle from '@/components/PageTitle'
 import { BiDetail } from 'react-icons/bi'
 import { FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
-import { useNavigate, useParams } from 'react-router-dom'
 import ImageExpand from '@/components/ImageExpand'
 import { toLumberBucksFormat } from '@/utils/toLumberBucksFormat.util'
 import { ITEMS_CATEGORY_MAP, type ItemsCategoryLabel } from '@shared/maps/filters/items/itemCategory.map'
 import { ITEMS_STATE_MAP, type ItemsStateLabel } from '@shared/maps/filters/items/itemState.map'
-import type { ItemDetailsResponse } from '@shared/dtos/item.dto'
-import { ItemService } from '@/services/item.service'
-import { handleAxiosError } from '@/utils/handleAxiosError.util'
 import { ErrorState, LoadingState, NotFoundState } from '@/components/ListStates'
 import Button from '@/components/Button'
 import { IoAddCircle } from 'react-icons/io5'
 import IncrementDecrementButtons from '@/components/IncrementDecrementButtons'
-import { useToast } from '@/contexts/ToastContext'
-import { updateUnitsSchema } from '@shared/schemas/item.schema'
+import { useItemDetails } from '@/hooks/pages/useItemDetails.hook'
 
 const ItemDetails = (): React.JSX.Element => {
 
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const { showToast } = useToast();
-
-  const [imageExpand, setImageExpand] = useState<boolean>(false);
-  const [item, setItem] = useState<ItemDetailsResponse | null>(null);
-  const [itemNewUnitsAmount, setItemNewUnitsAmount] = useState<number>(0);
-  const [itemNewUnitsAmountOnInput, setItemNewUnitsAmountOnInput] = useState<string>("0");
-  const [isEditingUnits, setIsEditingUnits] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-
-  useEffect(() => {
-    ( async() => {
-      try {
-        const item = await ItemService.getItemDetails(Number(id));
-
-        setItemNewUnitsAmount(item.unitsLoggedUserHas);
-        setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
-        setItem(item);
-      } catch (error:unknown) {
-        setError(handleAxiosError(error));
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [id]);
-
-  useEffect(() => {
-    setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
-  }, [itemNewUnitsAmount]);
-
-  const handleAddNewItemUnitsAmount = async (): Promise<void> => {
-
-    if (isUpdating || !item) return;
-
-    const validation = updateUnitsSchema.safeParse({
-      units: Number(itemNewUnitsAmountOnInput),
-    });
-
-    if (!validation.success) {
-      showToast('ERROR', validation.error.issues[0].message);
-      return;
-    }
-
-    try {
-      setIsUpdating(true);
-
-      const response = await ItemService.updateUserItemUnits(
-        item.id,
-        validation.data.units
-      );
-
-      if (!response.success) {
-        throw new Error('Unable to update item units');
-      }
-
-      setItem(prev =>
-        prev ? {
-          ...prev,
-          unitsLoggedUserHas: validation.data.units,
-        } : null
-      );
-
-      setItemNewUnitsAmount(validation.data.units);
-      setIsEditingUnits(false);
-
-      showToast('SUCCESS', response.message);
-    } catch (error: unknown) {
-      showToast('ERROR', handleAxiosError(error));
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  const handleOnBlurUnitsInput = () => {
-    if (itemNewUnitsAmountOnInput === '') {
-      setItemNewUnitsAmountOnInput(String(itemNewUnitsAmount));
-    }
-  };
+  const { states, hooks, setters, handlers } = useItemDetails();
 
   const ITEMS_DESCRIPTIVE_INFOS_MAP: Record<string, string | number> = {
-    'Name:'                          : item?.name ?? 'Not available',
-    'Category:'                      : ITEMS_CATEGORY_MAP[item?.category!] ?? 'Not available',
-    'State:'                         : ITEMS_STATE_MAP[item?.state!] ?? 'Not available',
-    'Original price:'                : item?.originalPrice ? item?.originalPrice < 0 ? 'Not available' : toLumberBucksFormat(item?.originalPrice) : 'Not available',
-    'Average market price:'          : item?.averageMarketPrice ? toLumberBucksFormat(item?.averageMarketPrice) : 'Not available',
-    'Average truckload price:'       : item?.averageTruckloadPrice ? item?.averageTruckloadPrice < 0 ? 'Not available' : toLumberBucksFormat(item?.averageTruckloadPrice) : 'Not available',
-    'Average truckload price (1x1):' : item?.averageTruckloadPrice1x1 ?toLumberBucksFormat(item?.averageTruckloadPrice1x1) : 'Not available',
-    'Release year:'                  : item?.releaseYear ?? 'Not available',
-    'Units you have:'                : item?.unitsLoggedUserHas ?? 'Not available',
-    'Description:'                   : `${item?.description ?? 'Not available'}`,
+    'Name:'                          : states.item?.name ?? 'Not available',
+    'Category:'                      : ITEMS_CATEGORY_MAP[states.item?.category!] ?? 'Not available',
+    'State:'                         : ITEMS_STATE_MAP[states.item?.state!] ?? 'Not available',
+    'Original price:'                : states.item?.originalPrice ? states.item?.originalPrice < 0 ? 'Not available' : toLumberBucksFormat(states.item?.originalPrice) : 'Not available',
+    'Average market price:'          : states.item?.averageMarketPrice ? toLumberBucksFormat(states.item?.averageMarketPrice) : 'Not available',
+    'Average truckload price:'       : states.item?.averageTruckloadPrice ? states.item?.averageTruckloadPrice < 0 ? 'Not available' : toLumberBucksFormat(states.item?.averageTruckloadPrice) : 'Not available',
+    'Average truckload price (1x1):' : states.item?.averageTruckloadPrice1x1 ?toLumberBucksFormat(states.item?.averageTruckloadPrice1x1) : 'Not available',
+    'Release year:'                  : states.item?.releaseYear ?? 'Not available',
+    'Units you have:'                : states.item?.unitsLoggedUserHas ?? 'Not available',
+    'Description:'                   : `${states.item?.description ?? 'Not available'}`,
   };
 
   const tagColorByCategory: Record<Exclude<ItemsCategoryLabel, 'Category'>, string> = {
@@ -142,15 +55,13 @@ const ItemDetails = (): React.JSX.Element => {
     Loose : styles.loose,
   };
 
-  const isWoodCategory = item?.category === 'WOOD';
-
   return (
     <>
-    {(imageExpand && item) &&
+    {(states.imageExpand && states.item) &&
       <ImageExpand
-        imageURL={item.imageURL}
-        label={item.name}
-        onClick={() => setImageExpand(false)}
+        imageURL={states.item.imageURL}
+        label={states.item.name}
+        onClick={() => setters.setImageExpand(false)}
       />
     }
 
@@ -158,7 +69,7 @@ const ItemDetails = (): React.JSX.Element => {
       <div className={styles.page_title_history_back_container}>
         <button 
         className={styles.history_back_button}
-        onClick={() => navigate(-1)}>
+        onClick={() => hooks.navigate(-1)}>
           <FaArrowLeft />
         </button>
 
@@ -168,21 +79,21 @@ const ItemDetails = (): React.JSX.Element => {
         />
       </div>
 
-      {(loading && !item) && <LoadingState label='item details'/> }
+      {(states.loading && !states.item) && <LoadingState label='item details'/> }
 
-      {(!loading && error) && <ErrorState error={error}/>}
+      {(!states.loading && states.error) && <ErrorState error={states.error}/>}
 
-      {(!loading && !error && item) &&       
+      {(!states.loading && !states.error && states.item) &&       
         <div className={styles.main_infos_container}>
           <figure 
           role='button'
-          onClick={() => setImageExpand(true)}
+          onClick={() => setters.setImageExpand(true)}
           className={styles.item_image_container}
           >
             <img 
               className={styles.item_image}
-              src={item.imageURL} 
-              alt={item.name} 
+              src={states.item.imageURL} 
+              alt={states.item.name} 
             />
           </figure>
 
@@ -205,18 +116,9 @@ const ItemDetails = (): React.JSX.Element => {
                   : ''
                 ;
 
-                if (!isWoodCategory && label === 'Average truckload price (1x1):') {
+                if (!states.isWoodCategory && label === 'Average truckload price (1x1):') {
                   return null;
-                }
-
-                // if (
-                  // (label === 'Average market price:' && item?.averageMarketPrice == null) ||
-                  // (label === 'Release year:' && item?.releaseYear == null) ||
-                  // (label === 'Description:' && !item?.description) ||
-                  // (label === 'Average truckload price:' && item?.averageTruckloadPrice1x1 == null) ||
-                  // (label === 'Average truckload price (1x1):' && item?.averageTruckloadPrice1x1 == null)
-                  // (label === 'Original price:' && (item?.originalPrice == null || item?.originalPrice == -1))
-                // ) return null;     
+                }  
 
                 return (
                   <div 
@@ -242,43 +144,43 @@ const ItemDetails = (): React.JSX.Element => {
             </dl>
 
             <div className={styles.add_item_container}>
-              { itemNewUnitsAmount > 0 || isEditingUnits ? (
+              { states.itemNewUnitsAmount > 0 || states.isEditingUnits ? (
                 <div className={styles.new_item_units_container}>
                   <IncrementDecrementButtons
                     scale={1.2}
-                    canDecrement={itemNewUnitsAmount > 0}
+                    canDecrement={states.itemNewUnitsAmount > 0}
                     onDecrement={() => {
-                      setItemNewUnitsAmount(prev => Math.max(0, prev - 1));
-                      setIsEditingUnits(true);
+                      setters.setItemNewUnitsAmount(prev => Math.max(0, prev - 1));
+                      setters.setIsEditingUnits(true);
                     }}
-                    canIncrement={itemNewUnitsAmount < 2147483647}
+                    canIncrement={states.itemNewUnitsAmount < 2147483647}
                     onIncrement={() => {
-                      setIsEditingUnits(true);
-                      setItemNewUnitsAmount(prev =>
+                      setters.setIsEditingUnits(true);
+                      setters.setItemNewUnitsAmount(prev =>
                         Math.min(2147483647, prev + 1)
                       );
                     }}
                   />
 
-                  {isEditingUnits && (
+                  {states.isEditingUnits && (
                     <>
                     <input
                       type="text"
                       inputMode="numeric"
-                      value={itemNewUnitsAmountOnInput}
-                      onBlur={handleOnBlurUnitsInput}
+                      value={states.itemNewUnitsAmountOnInput}
+                      onBlur={handlers.handleOnBlurUnitsInput}
                       onChange={(e) => {
                         if (/^\d*$/.test(e.target.value)) {
-                          setItemNewUnitsAmountOnInput(e.target.value);
+                          setters.setItemNewUnitsAmountOnInput(e.target.value);
                         }
                       }}
                     />
 
                     <Button
                       buttonStyle='DEFAULT'
-                      label={isUpdating ? 'Submitting...' : 'Submit'}
-                      loading={isUpdating}
-                      onClick={handleAddNewItemUnitsAmount}
+                      label={states.isUpdating ? 'Submitting...' : 'Submit'}
+                      loading={states.isUpdating}
+                      onClick={handlers.handleAddNewItemUnitsAmount}
                       icon={() => <FaCheckCircle size={14} />}
                       iconPosition={{ bottom: '-3px' }}
                       padding={{
@@ -299,8 +201,8 @@ const ItemDetails = (): React.JSX.Element => {
                   icon={() => <IoAddCircle />}
                   label='Add Item'
                   onClick={() => {
-                    setIsEditingUnits(true);
-                    setItemNewUnitsAmount(prev =>
+                    setters.setIsEditingUnits(true);
+                    setters.setItemNewUnitsAmount(prev =>
                       Math.min(2147483647, prev + 1)
                     );
                   }}
@@ -322,7 +224,7 @@ const ItemDetails = (): React.JSX.Element => {
         </div>
       }
 
-      {(!loading && !error && !item) && <NotFoundState label='item details'/>}
+      {(!states.loading && !states.error && !states.item) && <NotFoundState label='item details'/>}
     </div>
     </>
   )

@@ -40,9 +40,7 @@ export const initializeSocket = (
 
 
 
-    socket.on('conversation:read', async(
-      conversationId : number
-    ) => {
+    socket.on('conversation:read', async( conversationId ) => {
       try {
         await ConversationRepository.markAsRead(
           conversationId,
@@ -51,7 +49,7 @@ export const initializeSocket = (
 
         getIO()
           .to(`user:${socket.data.userId}`)
-          .emit('conversation:read', conversationId);
+          .emit('conversation:read', conversationId );
 
       } catch (error: unknown) {
         console.error(error);

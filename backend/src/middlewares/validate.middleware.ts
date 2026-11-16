@@ -22,7 +22,7 @@ export const validate = (
     if (source === "body") {
       req.body = validation.data;
     } else {
-      res.locals["validatedData"] = validation.data;
+      res.locals.validatedData = validation.data;
     }
 
     return next();

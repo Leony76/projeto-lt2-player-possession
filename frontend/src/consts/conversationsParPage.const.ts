@@ -1,0 +1,1 @@
+export const CONVERSATIONS_PER_PAGE: number = 10;

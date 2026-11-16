@@ -9,6 +9,30 @@ import { MessageMapper } from "./message.mapper.js";
 
 export class MessageService {
 
+
+  public static async get(
+    userId         : number,
+    conversationId : number,
+  ) {
+
+    if (!Number.isInteger(conversationId) || conversationId <= 0) {
+      throw new APIError(400, 'Invalid conversation ID');
+    }
+
+    const conversation = await MessageRepository.findByIdAndUserId(
+      conversationId,
+      userId,
+    );
+
+    if (!conversation) {
+      throw new APIError(404, 'Conversation not found');
+    }
+
+    return conversation.messages;
+  }
+
+
+
   public static async send(
     userId  : number,
     payload : SendMessagePayload,

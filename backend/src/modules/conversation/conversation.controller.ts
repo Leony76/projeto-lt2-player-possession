@@ -1,37 +1,21 @@
 import type { Request, Response } from 'express';
 import { ConversationService } from './conversation.service.js';
+import { GetConversationsQuery } from '@shared/schemas/conversation.schema.js';
 
 export class ConversationController {
 
-  public static async getConversations(
+  public static async get(
     req: Request,
     res: Response,
   ) {
-    const userId = Number(req.authUserId!);
+    const userId = Number(req.authUserId);
+    const query = res.locals.validatedData as GetConversationsQuery;
 
-    const conversations = await ConversationService.getConversations(userId);
-
-    return res.status(200).json({
-      conversations,
-    });
-  }
-
-
-
-  public static async getMessages(
-    req: Request,
-    res: Response,
-  ) {
-    const userId = Number(req.authUserId!);
-    const conversationId = Number(req.params.conversationId);
-
-    const messages = await ConversationService.getMessages(
+    const result = await ConversationService.getConversations(
       userId,
-      conversationId,
+      query,
     );
 
-    return res.status(200).json({
-      messages,
-    });
+    return res.status(200).json(result);
   }
 }

@@ -7,6 +7,7 @@ import UserRoutes from "./modules/user/user.routes.js";
 import ItemRoutes from "./modules/item/item.routes.js";
 import ContactRoutes from "./modules/contact/contact.routes.js";
 import ConversationRoutes from './modules/conversation/conversation.routes.js';
+import MessageRoutes from './modules/message/message.routes.js';
 
 const app = express();
 
@@ -18,11 +19,12 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/auth"    , AuthRoutes);
-app.use("/api/user"    , UserRoutes);
-app.use("/api/item"    , ItemRoutes);
-app.use("/api/contact" , ContactRoutes);
-app.use('/api/conversations', ConversationRoutes);
+app.use("/api/auth"          , AuthRoutes         );
+app.use("/api/user"          , UserRoutes         );
+app.use("/api/item"          , ItemRoutes         );
+app.use("/api/contact"       , ContactRoutes      );
+app.use('/api/conversations' , ConversationRoutes );
+app.use('/api/messages'      , MessageRoutes      );
 
 app.use(errorMiddleware);
 

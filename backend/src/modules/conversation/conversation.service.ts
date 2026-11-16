@@ -1,53 +1,34 @@
-import { APIError } from '@backend/middlewares/error.middleware.js';
 import { ConversationRepository } from './conversation.repository.js';
 import { ConversationMapper } from './conversation.mapper.js';
-import { MessageRepository } from '../message/message.repository.js';
+import { ScrollPaginatedResponse } from '@shared/dtos/pagination.dto.js';
+import { ConversationListItem } from '@shared/dtos/message.dto.js';
+import { GetConversationsQuery } from '@shared/schemas/conversation.schema.js';
 
 export class ConversationService {
 
   public static async getConversations(
-    userId : number
-  ) {
-    const conversations = await ConversationRepository.getUserConversations(userId);
+    userId : number,
+    query  : GetConversationsQuery,
+  ): Promise<ScrollPaginatedResponse<ConversationListItem>> {
 
-    const conversationsWithUnread = await Promise.all(
-      conversations.map(async conversation => {
-        const unreadMessagesCount =
-          await MessageRepository.countUnreadMessages(
-            conversation.id,
-            userId,
-          );
-
-        return {
-          ...conversation,
-          unreadMessagesCount,
-        };
-      }),
-    );
-
-     return ConversationMapper.toConversationListResponse(conversationsWithUnread);
-  }
-
-
-
-  public static async getMessages(
-    userId         : number,
-    conversationId : number,
-  ) {
-
-    if (!Number.isInteger(conversationId) || conversationId <= 0) {
-      throw new APIError(400, 'Invalid conversation ID');
-    }
-
-    const conversation = await ConversationRepository.findByIdAndUserId(
-      conversationId,
+    const rows = await ConversationRepository.getUserConversations(
       userId,
+      query.search ?? "",
+      query.advancedFilter,
+      query.page,
+      query.limit,
     );
 
-    if (!conversation) {
-      throw new APIError(404, 'Conversation not found');
-    }
+    const hasMore = rows.length > query.limit;
+    const conversations = rows.slice(0, query.limit);
 
-    return conversation.messages;
+    return {
+      items : ConversationMapper.toConversationListResponse(conversations),
+      pagination: {
+        page  : query.page,
+        limit : query.limit,
+        hasMore,
+      },
+    };
   }
 }

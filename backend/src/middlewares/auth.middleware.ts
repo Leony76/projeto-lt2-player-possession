@@ -8,7 +8,7 @@ export const requireAuth = (
   res  : Response, 
   next : NextFunction
 ) => {
-  const token = req.cookies?.["access_token"];
+  const token = req.cookies?.access_token;
 
   if (!token) {
     return res.status(401).json({ message: "Not authenticated" });
@@ -20,19 +20,28 @@ export const requireAuth = (
     });
 
     if (
-      typeof payload === "number" 
-      ||
+      typeof payload === "string" ||
+      typeof payload === "number" ||
       typeof payload.sub !== "number"
     ) {
       return res.status(401).json({
-        message: "Invalid Token",
+        message : "Invalid Token",
       });
     }
 
     req.authUserId = payload.sub;
 
     return next();
-  } catch {
+  } catch (error : unknown) {
+    
+    if (error instanceof jwt.TokenExpiredError) {
+      console.warn("JWT expired:", error.expiredAt);
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      console.warn("Invalid JWT:", error.message);
+    } else {
+      console.error("Authentication error:", error);
+    }
+
     return res.status(401).json({
       message: "Invalid or expired session",
     });

@@ -1,55 +1,33 @@
-import { APIError } from "@backend/middlewares/error.middleware.js";
+import { ConversationQueryRow } from "@backend/types/conversationRowQuery.type.js";
 import type { ConversationListItem } from "@shared/dtos/message.dto.js";
 
 export class ConversationMapper {
 
   public static toConversationListResponse(
-    conversations: {
-      id: number;
-      participants: {
-        user: {
-          id: number;
-          name: string;
-          profileImageURL: string | null;
-        };
-      }[];
-      messages: {
-        id: number;
-        content: string;
-        senderId: number;
-        createdAt: Date;
-      }[];
-      updatedAt: Date;
-      unreadMessagesCount: number;
-    }[],
-  ): ConversationListItem[] {
-    return conversations.map((conversation) => {
-      const contact = conversation.participants[0]?.user;
-      const lastMessage = conversation.messages[0];
+    rows: ConversationQueryRow[],
+  ) : ConversationListItem[] {
 
-      if (!contact) {
-        throw new APIError(400, `Contact not found for conversation ${conversation.id}`);
-      }
+    return rows.map(row => ({
+      id: row.id,
 
-      return {
-        id: conversation.id,
+      contact: {
+        id              : row.contactId,
+        username        : row.contactName,
+        profileImageURL : row.contactProfileImageURL,
+      },
 
-        contact: {
-          id              : contact.id,
-          username        : contact.name,
-          profileImageURL : contact.profileImageURL,
-        },
+      lastMessage: row.lastMessageId !== null
+        ? {
+            id        : row.lastMessageId,
+            content   : row.lastMessageContent!,
+            senderId  : row.lastMessageSenderId!,
+            createdAt : row.lastMessageCreatedAt!.toISOString(),
+          }
+        : null,
 
-        lastMessage: lastMessage
-          ? {
-              ...lastMessage,
-              createdAt: lastMessage.createdAt.toISOString(),
-            }
-          : null,
+      updatedAt : row.updatedAt.toISOString(),
 
-        updatedAt: conversation.updatedAt.toISOString(),
-        unreadMessagesCount: conversation.unreadMessagesCount,
-      };
-    });
+      unreadMessagesCount : Number(row.unreadMessagesCount),
+    }));
   }
 }

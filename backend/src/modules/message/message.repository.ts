@@ -21,6 +21,33 @@ export class MessageRepository {
 
 
 
+  public static async findByIdAndUserId(
+    conversationId : number,
+    userId         : number,
+  ) {
+    return await prisma.conversation.findFirst({
+      where: {
+        id: conversationId,
+
+        participants: {
+          some: {
+            userId,
+          },
+        },
+      },
+
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: 'asc',
+          },
+        },
+      },
+    });
+  }
+
+
+
   public static async countRecipientUnreadMessages(
     tx             : Prisma.TransactionClient,
     conversationId : number,

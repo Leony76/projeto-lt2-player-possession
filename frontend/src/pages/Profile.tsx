@@ -1,5 +1,4 @@
 import styles from './css/Profile.module.css';
-import Layout from './Layout';
 import PageTitle from '@/components/PageTitle';
 import { FaArrowLeft, FaUser } from 'react-icons/fa';
 import profileImagePlaceholder from '@/assets/img/profile_image_placeholder.png';
