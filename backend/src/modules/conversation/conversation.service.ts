@@ -1,6 +1,7 @@
 import { APIError } from '@backend/middlewares/error.middleware.js';
 import { ConversationRepository } from './conversation.repository.js';
 import { ConversationMapper } from './conversation.mapper.js';
+import { MessageRepository } from '../message/message.repository.js';
 
 export class ConversationService {
 
@@ -12,7 +13,7 @@ export class ConversationService {
     const conversationsWithUnread = await Promise.all(
       conversations.map(async conversation => {
         const unreadMessagesCount =
-          await ConversationRepository.countUnreadMessages(
+          await MessageRepository.countUnreadMessages(
             conversation.id,
             userId,
           );

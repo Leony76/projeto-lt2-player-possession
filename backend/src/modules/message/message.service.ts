@@ -1,61 +1,13 @@
-import { Prisma } from "@backend/generated/prisma/client.js";
+
 import { prisma } from "@backend/lib/prisma.js";
 import { APIError } from "@backend/middlewares/error.middleware.js";
-import { InitialChatContact, SendMessagePayload } from "@shared/dtos/message.dto.js";
+import { SendMessagePayload } from "@shared/dtos/message.dto.js";
+import { MessageRepository } from "./message.repository.js";
+import { ConversationRepository } from "../conversation/conversation.repository.js";
+import { ContactRepository } from "../contact/contact.repository.js";
+import { MessageMapper } from "./message.mapper.js";
 
 export class MessageService {
-
-  private static async countRecipientUnreadMessages(
-    tx             : Prisma.TransactionClient,
-    conversationId : number,
-    recipientId    : number,
-  ) {
-    const participant = await tx.conversationParticipant.findUnique({
-      where: {
-        conversationId_userId: {
-          conversationId,
-          userId : recipientId,
-        },
-      },
-      select: {
-        lastReadAt: true,
-      },
-    });
-
-    return tx.message.count({
-      where: {
-        conversationId,
-        senderId: {
-          not: recipientId,
-        },
-        ...(participant?.lastReadAt
-          ? {
-              createdAt: {
-                gt: participant.lastReadAt,
-              },
-            }
-          : {}),
-      },
-    });
-  }
-
-
-
-  private static async updateConversation(
-    tx : Prisma.TransactionClient,
-    conversationId : number,
-  ) {
-    return tx.conversation.update({
-      where: {
-        id: conversationId,
-      },
-      data: {
-        updatedAt: new Date(),
-      },
-    });
-  }
-
-
 
   public static async send(
     userId  : number,
@@ -64,218 +16,139 @@ export class MessageService {
     const content = payload.content.trim();
 
     if (!content) {
-      throw new APIError(400, 'Message cannot be empty');
+      throw new APIError(400, "Message cannot be empty");
     }
 
     if (content.length > 1000) {
-      throw new APIError(400, 'Message length cap is 1000 characters');
+      throw new APIError(400, "Message length cap is 1000 characters");
     }
 
     const hasConversationId = payload.conversationId !== undefined;
     const hasRecipientId = payload.recipientId !== undefined;
 
     if (hasConversationId === hasRecipientId) {
-      throw new APIError(400, 'Provide exactly one conversation identifier');
+      throw new APIError(400, "Provide exactly one conversation identifier");
     }
 
     return prisma.$transaction(async tx => {
 
-      // 1. Envio para uma conversa que já existe.
       if (hasConversationId) {
-
         const conversationId = payload.conversationId!;
 
-        const conversation = await tx.conversation.findFirst({
-          where: {
-            id: conversationId,
-            participants: {
-              some: {
-                userId,
-              },
-            },
-          },
-          include: {
-            participants: {
-              where: {
-                userId: {
-                  not: userId,
-                },
-              },
-              select: {
-                user: {
-                  select: {
-                    id: true,
-                    name: true,
-                    profileImageURL: true,
-                  },
-                },
-              },
-            },
-          },
-        });
+        const conversation = await ConversationRepository.findConversationForUser(
+          tx,
+          conversationId,
+          userId,
+        );
 
         if (!conversation) {
-          throw new APIError(403, 'Not a conversation participant');
+          throw new APIError(403, "Not a conversation participant");
         }
 
         const contact = conversation.participants[0]?.user;
 
         if (!contact) {
-          throw new APIError(404, 'Conversation contact not found');
+          throw new APIError(404, "Conversation contact not found");
         }
 
-        const formattedContact: InitialChatContact = {
-          id              : contact.id,
-          username        : contact.name,
-          profileImageURL : contact.profileImageURL,
-        };
-
-        const message = await tx.message.create({
-          data: {
-            conversationId,
-            senderId: userId,
-            content,
-          },
-        });
-
-        const recipientUnreadMessagesCount = await this.countRecipientUnreadMessages(
+        const message = await MessageRepository.create(
           tx,
+          content,
           conversationId,
-          contact.id,
+          userId,
         );
 
-        const updatedConversation = await this.updateConversation(
-          tx,
-          conversationId,
-        )
+        const recipientUnreadMessagesCount =
+          await MessageRepository.countRecipientUnreadMessages(
+            tx,
+            conversationId,
+            contact.id,
+          );
+
+        const updatedConversation = await ConversationRepository.update(
+          tx, 
+          conversationId
+        );
 
         return {
           message,
           recipientUnreadMessagesCount,
           conversation: {
-            id          : updatedConversation.id,
-            contact     : formattedContact,
-            lastMessage : message,
-            updatedAt   : updatedConversation.updatedAt,
-            unreadMessagesCount: 0,
+            id                  : updatedConversation.id,
+            contact             : MessageMapper.toContactFormat(contact),
+            updatedAt           : updatedConversation.updatedAt,
+            lastMessage         : message,
+            unreadMessagesCount : 0,
           },
         };
       }
 
-      // 2. Primeira mensagem para um contato.
+
       const recipientId = payload.recipientId!;
 
       if (recipientId === userId) {
-        throw new APIError(400, 'Cannot message yourself');
+        throw new APIError(400, "Cannot message yourself");
       }
 
-      // 2.1. Verifica se existe uma relação de contato aceita.
-      const contactRelation = await tx.contact.findFirst({
-        where: {
-          status: 'CONTACT',
-          OR: [
-            {
-              requesterId : userId,
-              addresseeId : recipientId,
-            },
-            {
-              requesterId : recipientId,
-              addresseeId : userId,
-            },
-          ],
-        },
-      });
-
-      if (!contactRelation) {
-        throw new APIError(403, 'You can only message your contacts');
-      }
-
-      // 2.2. Procura uma conversa que tenha os dois usuários.
-      const existingConversation = await tx.conversation.findFirst({
-        where: {
-          AND: [
-            {
-              participants: {
-                some: {
-                  userId,
-                },
-              },
-            },
-            {
-              participants: {
-                some: {
-                  userId: recipientId,
-                },
-              },
-            },
-          ],
-        },
-      });
-
-      // 2.3. Reutiliza a conversa existente ou cria uma nova.
-      const conversation = existingConversation
-        ? existingConversation
-        : await tx.conversation.create({
-            data: {
-              participants: {
-                create: [
-                  { userId },
-                  { userId: recipientId },
-                ],
-              },
-            },
-          })
-      ;
-
-      // 2.4. Persiste a primeira mensagem.
-      const message = await tx.message.create({
-        data: {
-          conversationId: conversation.id,
-          senderId: userId,
-          content,
-        },
-      });
-
-      const recipientUnreadMessagesCount = await this.countRecipientUnreadMessages(
+      const contactRelation = await ContactRepository.findAcceptedContactRelation(
         tx,
-        conversation.id,
+        userId,
         recipientId,
       );
 
-      // Atualiza a data da conversa.
-      const updatedConversation = await this.updateConversation(
-        tx,
-        conversation.id,
+      if (!contactRelation) {
+        throw new APIError(403, "You can only message your contacts");
+      }
+
+      const existingConversation = await ConversationRepository
+        .findConversationBetweenUsers(
+          tx,
+          userId,
+          recipientId,
       );
 
-      // 2.5. Recupera os dados públicos do destinatário.
-      const contact = await tx.user.findUnique({
-        where: {
-          id: recipientId,
-        },
-        select: {
-          id: true,
-          name: true,
-          profileImageURL: true,
-        },
-      });
+      const conversation = existingConversation ??
+        await ConversationRepository.create(
+          tx,
+          userId,
+          recipientId,
+        );
+
+      const message = await MessageRepository.create(
+        tx,
+        content,
+        conversation.id,
+        userId,
+      );
+
+      const recipientUnreadMessagesCount =
+        await MessageRepository.countRecipientUnreadMessages(
+          tx,
+          conversation.id,
+          recipientId,
+        );
+
+      const updatedConversation =
+        await ConversationRepository.update(tx, conversation.id);
+
+      const contact = await ContactRepository.findContactById(
+        tx,
+        recipientId,
+      );
 
       if (!contact) {
-        throw new APIError(404, 'Recipient not found');
+        throw new APIError(404, "Recipient not found");
       }
 
       return {
         message,
+        recipientUnreadMessagesCount,
         conversation: {
           id                  : updatedConversation.id,
-          lastMessage         : message,
+          contact             : MessageMapper.toContactFormat(contact),
           updatedAt           : updatedConversation.updatedAt,
-          unreadMessagesCount : recipientUnreadMessagesCount,
-          contact : {
-            id              : contact.id,
-            username        : contact.name,
-            profileImageURL : contact.profileImageURL,
-          },
+          lastMessage         : message,
+          unreadMessagesCount : 0,
         },
       };
     });

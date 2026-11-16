@@ -858,4 +858,44 @@ export class ContactRepository {
       }
     });
   }
+
+
+
+  public static async findAcceptedContactRelation(
+    tx          : Prisma.TransactionClient,
+    userId      : number,
+    recipientId : number,
+  ) {
+    return tx.contact.findFirst({
+      where: {
+        status: "CONTACT",
+        OR: [
+          {
+            requesterId: userId,
+            addresseeId: recipientId,
+          },
+          {
+            requesterId: recipientId,
+            addresseeId: userId,
+          },
+        ],
+      },
+    });
+  }
+
+
+
+  public static async findContactById(
+    tx     : Prisma.TransactionClient,
+    userId : number,
+  ) {
+    return tx.user.findUnique({
+      where: { id: userId },
+      select: {
+        id   : true,
+        name : true,
+        profileImageURL : true,
+      },
+    });
+  }
 }

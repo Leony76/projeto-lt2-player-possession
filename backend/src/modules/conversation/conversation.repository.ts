@@ -1,3 +1,4 @@
+import { Prisma } from "@backend/generated/prisma/client.js";
 import { prisma } from "@backend/lib/prisma.js";
 
 export class ConversationRepository {
@@ -69,11 +70,10 @@ export class ConversationRepository {
 
 
   public static async findByIdAndUserId(
-    conversationId: number,
-    userId: number,
+    conversationId : number,
+    userId         : number,
   ) {
-
-    return prisma.conversation.findFirst({
+    return await prisma.conversation.findFirst({
       where: {
         id: conversationId,
 
@@ -113,37 +113,91 @@ export class ConversationRepository {
 
 
 
-  public static async countUnreadMessages(
+  public static async findConversationForUser(
+    tx             : Prisma.TransactionClient,
     conversationId : number,
     userId         : number,
   ) {
-    const participant = await prisma.conversationParticipant.findUnique({
+    return tx.conversation.findFirst({
       where: {
-        conversationId_userId: {
-          conversationId,
-          userId,
+        id: conversationId,
+        participants: {
+          some: { userId },
         },
       },
-      select: {
-        lastReadAt: true,
+      include: {
+        participants: {
+          where: {
+            userId: { not: userId },
+          },
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                profileImageURL: true,
+              },
+            },
+          },
+        },
       },
     });
+  }
 
-    if (!participant) return 0;
 
-    return prisma.message.count({
+
+  public static async findConversationBetweenUsers(
+    tx          : Prisma.TransactionClient,
+    userId      : number,
+    recipientId : number,
+  ) {
+    return tx.conversation.findFirst({
       where: {
-        conversationId,
-        senderId: {
-          not: userId,
+        AND: [
+          {
+            participants: {
+              some: { userId },
+            },
+          },
+          {
+            participants: {
+              some: { userId: recipientId },
+            },
+          },
+        ],
+      },
+    });
+  }
+
+
+
+  public static async create(
+    tx          : Prisma.TransactionClient,
+    userId      : number,
+    recipientId : number,
+  ) {
+    return tx.conversation.create({
+      data: {
+        participants: {
+          create: [
+            { userId },
+            { userId: recipientId },
+          ],
         },
-        ...(participant.lastReadAt
-          ? {
-              createdAt: {
-                gt: participant.lastReadAt,
-              },
-            }
-          : {}),
+      },
+    });
+  }
+
+
+
+  public static async update(
+    tx             : Prisma.TransactionClient,
+    conversationId : number,
+  ) {
+    return tx.conversation.update({
+      where: { id: conversationId },
+      data: {
+        updatedAt: new Date(),
       },
     });
   }

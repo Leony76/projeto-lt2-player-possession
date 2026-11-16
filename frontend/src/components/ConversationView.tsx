@@ -33,6 +33,7 @@ export const ConversationView = ({
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasLoadedMessagesRef = useRef(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [content, setContent] = useState<string>('');
@@ -190,6 +191,17 @@ export const ConversationView = ({
 
 
 
+  useEffect(() => {
+    if (isLoading) return;
+
+    messagesEndRef.current?.scrollIntoView({
+      behavior : 'smooth',
+      block    : 'end',
+    });
+  }, [messages, isLoading]);
+
+
+
   const sendMessage = (): void => {
     const trimmedContent = content.trim();
 
@@ -297,6 +309,8 @@ export const ConversationView = ({
             </div>
           ))
         )}
+
+        <div ref={messagesEndRef} style={{ marginTop: '-7px' }}/>
       </div>
 
       <div className={styles.input_send_button_container}>

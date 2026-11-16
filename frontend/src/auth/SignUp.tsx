@@ -44,7 +44,11 @@ const SignUp = (): React.JSX.Element => {
         password: data.password,
       });
 
-      navigate("/");
+      navigate("/", {
+        state: {
+          canSignIn: 'You can now sign in with your registered credentials',
+        }
+      });
     } catch (error: unknown) {
       setErrorMessage(handleError(error));
     } finally {

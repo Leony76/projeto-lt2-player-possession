@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './css/SignIn.module.css'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
@@ -12,12 +12,14 @@ import { useAuth } from '@/contexts/AuthContext'
 import { handleError } from '@/utils/handleError.util'
 import ErrorMessage from '@/components/ErrorMessage'
 import { FaSignInAlt } from 'react-icons/fa'
+import { useToast } from '@/contexts/ToastContext';
 
 const SignIn = (): React.JSX.Element => {
 
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { showToast } = useToast();
 
   const {
     register,
@@ -54,6 +56,17 @@ const SignIn = (): React.JSX.Element => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (!location.state?.canSignIn) return;
+
+    showToast('SUCCESS', location.state.canSignIn);
+
+    navigate(location.pathname, { 
+      replace : true, 
+      state   : {} 
+    });
+  }, [location, navigate]);
 
   return (
     <div className={styles.container}>    

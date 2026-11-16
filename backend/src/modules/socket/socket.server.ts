@@ -3,7 +3,6 @@ import type { Server as HTTPServer } from 'http';
 import { MessageService } from '../message/message.service.js';
 import { ConversationRepository } from '../conversation/conversation.repository.js';
 import { SendMessagePayload } from '@shared/dtos/message.dto.js';
-import { APIError } from '@backend/middlewares/error.middleware.js';
 
 let io: Server;
 
@@ -18,19 +17,32 @@ export const initializeSocket = (
   });
 
   io.on('connection', (socket) => {
-    const userId = socket.data.userId;
+
+    const userId: number = socket.data.userId;
+
+
 
     socket.join(`user:${userId}`);
 
-    socket.on('conversation:leave', (conversationId: number) => {
+
+
+    socket.on('conversation:leave', (
+      conversationId : number
+    ) => {
       socket.leave(`conversation:${conversationId}`);
     });
+
+
 
     socket.on('disconnect', () => {
       console.log(`User disconnected: ${socket.data.userId}`);
     });
 
-    socket.on('conversation:read', async (conversationId: number) => {
+
+
+    socket.on('conversation:read', async(
+      conversationId : number
+    ) => {
       try {
         await ConversationRepository.markAsRead(
           conversationId,
@@ -41,10 +53,12 @@ export const initializeSocket = (
           .to(`user:${socket.data.userId}`)
           .emit('conversation:read', conversationId);
 
-      } catch (error) {
+      } catch (error: unknown) {
         console.error(error);
       }
     });
+
+
 
     socket.on('message:send', async (
       data : SendMessagePayload, 
@@ -99,7 +113,11 @@ export const initializeSocket = (
       }
     });
 
-    socket.on('conversation:join', async (conversationId: number) => {
+
+
+    socket.on('conversation:join', async (
+      conversationId : number
+    ) => {
       try {
         const participant = await ConversationRepository
           .findParticipantByConversationAndUserId(
@@ -120,9 +138,7 @@ export const initializeSocket = (
 };
 
 export const getIO = () => {
-  if (!io) {
-    throw new Error('Socket.IO not initialized');
-  }
-
+  if (!io) throw new Error('Socket.IO not initialized');
+  
   return io;
 };
