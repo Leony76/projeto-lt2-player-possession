@@ -1,13 +1,13 @@
 import type { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
-import * as cookie from 'cookie';
+import { parseCookie } from 'cookie';
 
-const jwtSecret = process.env['JWT_SECRET']!;
+const jwtSecret = process.env.JWT_SECRET!;
 
 export const configureSocketAuth = (io: Server) => {
   io.use((socket, next) => {
     try {
-      const cookies = cookie.parseCookie(
+      const cookies = parseCookie(
         socket.handshake.headers.cookie ?? ''
       );
 

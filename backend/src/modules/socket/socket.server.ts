@@ -37,6 +37,10 @@ export const initializeSocket = (
 
       if (!rateLimit.allowed) return;
 
+      if (!Number.isInteger(conversationId) || conversationId <= 0) {
+        return;
+      }
+
       socket.leave(`conversation:${conversationId}`);
     });
 
@@ -58,6 +62,10 @@ export const initializeSocket = (
       );
 
       if (!rateLimit.allowed) return;
+
+      if (!Number.isInteger(conversationId) || conversationId <= 0) {
+        return;
+      }
 
       try {
         await ConversationRepository.markAsRead(
@@ -96,7 +104,7 @@ export const initializeSocket = (
 
         return;
       }
-
+      
       try {
         const result = await MessageService.send(
           socket.data.userId,
@@ -159,6 +167,10 @@ export const initializeSocket = (
       );
 
       if (!rateLimit.allowed) return;
+
+      if (!Number.isInteger(conversationId) || conversationId <= 0) {
+        return;
+      }
 
       try {
         const participant = await ConversationRepository

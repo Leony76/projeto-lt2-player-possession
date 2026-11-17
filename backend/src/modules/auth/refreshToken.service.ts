@@ -1,7 +1,6 @@
 import { generateRefreshToken, hashRefreshToken } from "@backend/config/jwt.config.js";
 import { prisma } from "@backend/lib/prisma.js";
 
-
 const REFRESH_TOKEN_EXPIRATION_DAYS = 7;
 
 export class RefreshTokenService {

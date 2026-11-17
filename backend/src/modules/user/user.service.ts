@@ -15,7 +15,7 @@ export class UserService {
     file     ?: Express.Multer.File | undefined,
     imageURL ?: string
   ): Promise<EditProfileImageResponse> {
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } 
 
@@ -47,7 +47,7 @@ export class UserService {
     username : string,
     userId   : number | undefined,
   ): Promise<{ username: string }> {
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     }  if (!username) {
       throw new APIError(400, "No username was provided");
@@ -68,7 +68,7 @@ export class UserService {
     username : string,
     userId   : number | undefined,
   ): Promise<EditUsernameResponse> {
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     }  if (!username) {
       throw new APIError(400, "No username was provided");
@@ -94,10 +94,10 @@ export class UserService {
     lumberBucks : number,
     userId      : number | undefined,
   ): Promise<EditLumberBucksResponse> {
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
-    }  if (lumberBucks === null) {
-      throw new APIError(400, "No lumber bucks amount was provided");
+    } if (!Number.isFinite(lumberBucks) || lumberBucks < 0 || !Number.isInteger(lumberBucks)) {
+      throw new APIError(400, "Invalid lumber bucks amount");
     }
 
     const newAmountOf = await UserRepository.editLumberBucks(lumberBucks, userId);
@@ -111,7 +111,7 @@ export class UserService {
     password : string,
     userId   : number | undefined,
   ): Promise<PasswordVerificationResponse> {
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     }  if (!password) {
       throw new APIError(400, "No password was provided");
@@ -134,7 +134,7 @@ export class UserService {
     newPassword : string,
     userId      : number | undefined,
   ): Promise<EditPasswordResponse> {
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     }  if (!newPassword) {
       throw new APIError(400, "No password was provided");

@@ -2,7 +2,7 @@ import "dotenv/config";
 import app from "./app.js";
 import http from 'http';
 import { initializeSocket } from "./modules/socket/socket.server.js";
-import { configureSocketAuth } from "./modules/socket/socket.middleware.js";
+import { configureSocketAuth } from "./middlewares/socket.middleware.js";
 
 const server = http.createServer(app);
 
