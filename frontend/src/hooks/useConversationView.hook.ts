@@ -16,13 +16,14 @@ type Props = {
 export const useConversationView = ({
   onConversationCreated,
   selectedChat,
-}:Props) => {
+}: Props) => {
 
   const { user } = useAuth();
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasLoadedMessagesRef = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [sendMessageError, setSendMessageError] = useState<string | null>(null);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [content, setContent] = useState<string>('');
@@ -49,20 +50,22 @@ export const useConversationView = ({
     if (!trimmedContent) return;
 
     if (!isSocketConnected || !socket.connected) {
-      console.error('Socket is not connected yet');
+      setSendMessageError('Socket is not connected yet');
       return;
     }
 
+    // Limpa o erro anterior ao tentar novamente
+    setSendMessageError(null);
+
     const payload = conversationId !== null
-    ? {
-        conversationId,
-        content: trimmedContent,
-      }
-    : {
-        recipientId: contact.id,
-        content: trimmedContent,
-      }
-    ;
+      ? {
+          conversationId,
+          content: trimmedContent,
+        }
+      : {
+          recipientId: contact.id,
+          content: trimmedContent,
+        };
 
     socket.timeout(10000).emit(
       'message:send',
@@ -79,15 +82,18 @@ export const useConversationView = ({
         }
       ) => {
         if (timeoutError) {
-          console.error('Server did not respond to message:send');
+          setSendMessageError('Server did not respond. Please try again.');
           return;
         }
 
         if (!response.success || !response.data) {
-          console.error(response.error ?? 'Unable to send message');
+          setSendMessageError(
+            response.error ?? 'Unable to send message'
+          );
           return;
         }
 
+        setSendMessageError(null);
         setContent('');
 
         if (conversationId === null) {
@@ -263,6 +269,7 @@ export const useConversationView = ({
       messages,
       content,
       isSocketConnected,
+      sendMessageError,
     },
 
     refs: {

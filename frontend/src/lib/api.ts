@@ -10,8 +10,8 @@ export const api = axios.create({
 });
 
 const refreshClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
+  baseURL         : import.meta.env.VITE_API_URL,
+  withCredentials : true,
 });
 
 
@@ -30,11 +30,20 @@ api.interceptors.response.use(
   response => response,
 
   async error => {
+
     const originalRequest = error.config as RetryConfig | undefined;
 
+    const status = error.response?.status;
+    const code = error.response?.data?.code;
+
+    const shouldRefresh = [
+      "ACCESS_TOKEN_EXPIRED",
+      "ACCESS_TOKEN_MISSING",
+    ].includes(code);
+
     if (
-      error.response?.status !== 401 ||
-      error.response?.data?.code !== "ACCESS_TOKEN_EXPIRED" ||
+      status !== 401 ||
+      !shouldRefresh ||
       !originalRequest ||
       originalRequest._retry ||
       isAuthEndpoint(originalRequest.url)
@@ -59,7 +68,7 @@ api.interceptors.response.use(
 
       return api(originalRequest);
 
-    } catch (refreshError) {
+    } catch (refreshError : unknown) {
       window.dispatchEvent(new Event("session-expired"));
 
       return Promise.reject(refreshError);

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { AuthService } from "./auth.service.js";
-import { accessTokenCookieOptions, cookieOptions, refreshTokenCookieOptions } from "../../config/cookies.config.js";
+import { accessTokenCookieOptions, refreshTokenCookieOptions } from "../../config/cookies.config.js";
 import { RefreshTokenService } from "./refreshToken.service.js";
 import { generateToken } from "@backend/config/jwt.config.js";
 
@@ -33,12 +33,11 @@ export class AuthController {
       data.password,
     );
 
-
-    res.cookie("access_token", result.token, cookieOptions);
-
     const accessToken = generateToken(result.user.id);
 
-    const refreshToken = await RefreshTokenService.create(result.user.id);
+    const refreshToken = await RefreshTokenService.create(
+      result.user.id,
+    );
 
     res.cookie(
       "access_token",
@@ -82,7 +81,7 @@ export class AuthController {
     req : Request, 
     res : Response
   ) {
-    const refreshToken = req.cookies?.["refresh_token"];
+    const refreshToken = req.cookies?.refresh_token;
 
     if (refreshToken) {
       await RefreshTokenService.revoke(refreshToken);

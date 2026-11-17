@@ -3,6 +3,7 @@ import type { Server as HTTPServer } from 'http';
 import { MessageService } from '../message/message.service.js';
 import { ConversationRepository } from '../conversation/conversation.repository.js';
 import { SendMessagePayload } from '@shared/dtos/message.dto.js';
+import { checkSocketRateLimit } from '@backend/middlewares/socketRateLimit.middleware.js';
 
 let io: Server;
 
@@ -14,21 +15,28 @@ export const initializeSocket = (
       origin      : process.env.FRONTEND_URL,
       credentials : true,
     },
+
+    maxHttpBufferSize: 64 * 1024,
   });
 
   io.on('connection', (socket) => {
 
     const userId: number = socket.data.userId;
 
-
-
     socket.join(`user:${userId}`);
-
-
 
     socket.on('conversation:leave', (
       conversationId : number
     ) => {
+      const rateLimit = checkSocketRateLimit(
+        socket.data.userId,
+        "conversation:leave",
+        20,
+        10000,
+      );
+
+      if (!rateLimit.allowed) return;
+
       socket.leave(`conversation:${conversationId}`);
     });
 
@@ -41,6 +49,16 @@ export const initializeSocket = (
 
 
     socket.on('conversation:read', async( conversationId ) => {
+
+      const rateLimit = checkSocketRateLimit(
+        socket.data.userId,
+        "conversation:read",
+        20,
+        10000,
+      );
+
+      if (!rateLimit.allowed) return;
+
       try {
         await ConversationRepository.markAsRead(
           conversationId,
@@ -62,6 +80,23 @@ export const initializeSocket = (
       data : SendMessagePayload, 
       callback
     ) => {     
+
+      const rateLimit = checkSocketRateLimit(
+        socket.data.userId,
+        "message:send",
+        5,
+        10000,
+      );
+
+      if (!rateLimit.allowed) {
+        callback?.({
+          success : false,
+          error   : "Too many messages sent at once. Please await a while",
+        });
+
+        return;
+      }
+
       try {
         const result = await MessageService.send(
           socket.data.userId,
@@ -116,6 +151,15 @@ export const initializeSocket = (
     socket.on('conversation:join', async (
       conversationId : number
     ) => {
+      const rateLimit = checkSocketRateLimit(
+        socket.data.userId,
+        "conversation:join",
+        10,
+        10000,
+      );
+
+      if (!rateLimit.allowed) return;
+
       try {
         const participant = await ConversationRepository
           .findParticipantByConversationAndUserId(

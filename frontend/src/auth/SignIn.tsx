@@ -102,6 +102,7 @@ const SignIn = (): React.JSX.Element => {
               type='text'
               placeholder='ex: username_123'
               error={errors.username?.message}
+              errorHasBackgroundContrast
               onClear={() => setValue('username', '')}
               {...register("username")}
             />
@@ -111,11 +112,15 @@ const SignIn = (): React.JSX.Element => {
               type='password'
               placeholder='********'
               error={errors.password?.message}
+              errorHasBackgroundContrast
               onClear={() => setValue('password', '')}
               {...register("password")}
             />
 
-            { errorMessage && <ErrorMessage error={errorMessage}/>}
+            { errorMessage && <ErrorMessage 
+              error={errorMessage}
+              hasBackgroundContrast
+            />}
           </div>
 
           <Button

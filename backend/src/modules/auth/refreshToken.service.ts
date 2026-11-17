@@ -9,7 +9,6 @@ export class RefreshTokenService {
   public static async create(
     userId : number
   ) {
-
     const token = generateRefreshToken();
     const tokenHash = hashRefreshToken(token);
 
@@ -35,7 +34,6 @@ export class RefreshTokenService {
   public static async rotate(
     token: string
   ) {
-
     const tokenHash = hashRefreshToken(token);
 
     const newToken = generateRefreshToken();
@@ -99,7 +97,6 @@ export class RefreshTokenService {
   public static async revoke(
     token : string
   ) {
-
     const tokenHash = hashRefreshToken(token);
 
     await prisma.refreshToken.updateMany({

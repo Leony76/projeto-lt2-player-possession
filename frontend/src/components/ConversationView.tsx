@@ -10,6 +10,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { toFormatTimeByDate } from '@/utils/toFormatTimeByDate.util';
 import { LoadingState } from './ListStates';
 import { useConversationView } from '@/hooks/useConversationView.hook';
+import ErrorMessage from './ErrorMessage';
 
 type Props = {
   onBack       : () => void;
@@ -127,6 +128,10 @@ export const ConversationView = ({
         >
           { states.content.trim().length } / 1000
         </span>
+      }
+
+      {states.sendMessageError && 
+        <ErrorMessage error={states.sendMessageError}/>
       }
     </div>
   );

@@ -89,6 +89,7 @@ const SignUp = (): React.JSX.Element => {
               label='Username'
               type='text'
               placeholder='ex: username_123'
+              errorHasBackgroundContrast
               {...register("username")}
               onClear={() => setValue('username', '')}
               error={errors.username?.message}
@@ -98,6 +99,7 @@ const SignUp = (): React.JSX.Element => {
               label='Password'
               type='password'
               placeholder='********'
+              errorHasBackgroundContrast
               {...register("password")}
               onClear={() => setValue('password', '')}
               error={errors.password?.message}
@@ -107,12 +109,16 @@ const SignUp = (): React.JSX.Element => {
               label='Repeat Password'
               type='password'
               placeholder='********'
+              errorHasBackgroundContrast
               {...register("confirmPassword")}
               onClear={() => setValue('confirmPassword', '')}
               error={errors.confirmPassword?.message}
             />
 
-            { errorMessage && <ErrorMessage error={errorMessage}/>}
+            { errorMessage && <ErrorMessage 
+              error={errorMessage}
+              hasBackgroundContrast
+            />}
           </div>
 
           <Button
