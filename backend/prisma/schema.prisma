@@ -8,9 +8,13 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+
+
 datasource db {
   provider = "postgresql"
 }
+
+
 
 model User {
   id  Int      @id @default(autoincrement())
@@ -32,8 +36,31 @@ model User {
   conversations           ConversationParticipant[]
   sentMessages            Message[] @relation("MessageSender")
 
+  refreshTokens  RefreshToken[]
+
   @@map("users")
 }
+
+
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+
+  userId    Int      @map("user_id")
+  tokenHash String   @unique @map("token_hash")
+
+  expiresAt DateTime @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+
 
 model Contact {
   id Int @id @default(autoincrement())
@@ -57,6 +84,8 @@ model Contact {
   @@map("contacts")
 }
 
+
+
 model Conversation {
   id        Int      @id @default(autoincrement())
 
@@ -68,6 +97,8 @@ model Conversation {
 
   @@map("conversations")
 }
+
+
 
 model ConversationParticipant {
   id  Int @id @default(autoincrement())
@@ -86,6 +117,8 @@ model ConversationParticipant {
 
   @@map("conversation_participants")
 }
+
+
 
 model Message {
   id             Int      @id @default(autoincrement())
@@ -107,6 +140,8 @@ model Message {
   @@map("messages")
 }
 
+
+
 model UserItem {
   id        Int      @id @default(autoincrement())
 
@@ -124,6 +159,8 @@ model UserItem {
   @@unique([userId, itemId])
   @@map("user_items")
 }
+
+
 
 model Item {
   id        Int              @id @default(autoincrement())
@@ -151,11 +188,15 @@ model Item {
   @@map("items")
 }
 
+
+
 enum ContactStatus {
   CONTACT
   PENDING
   NOT_CONTACT
 }
+
+
 
 enum ItemCategory {
   AXE 
@@ -176,6 +217,8 @@ enum ItemCategory {
   WOOD
   SAWMILL
 }
+
+
 
 enum ItemState {
   GIFT

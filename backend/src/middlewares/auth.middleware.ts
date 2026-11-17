@@ -33,17 +33,17 @@ export const requireAuth = (
 
     return next();
   } catch (error : unknown) {
-    
-    if (error instanceof jwt.TokenExpiredError) {
-      console.warn("JWT expired:", error.expiredAt);
-    } else if (error instanceof jwt.JsonWebTokenError) {
-      console.warn("Invalid JWT:", error.message);
-    } else {
-      console.error("Authentication error:", error);
+   
+    if (error instanceof jwt.TokenExpiredError) {   
+      return res.status(401).json({
+        code    : "ACCESS_TOKEN_EXPIRED",
+        message : "Access token expired",
+      });
     }
 
     return res.status(401).json({
-      message: "Invalid or expired session",
+      code    : "INVALID_ACCESS_TOKEN",
+      message : "Invalid access token",
     });
   }
 }
