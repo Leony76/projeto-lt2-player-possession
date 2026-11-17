@@ -33,6 +33,7 @@ const ItemNavCard = (props:Props): React.JSX.Element => {
     CONVEYOR      : styles.conveyor,
     LOGIC         : styles.logic,
     WOOD          : styles.wood,
+    SAWMILL       : styles.sawmill,
   };
 
   const tagColorByState: Record<Exclude<ItemsState, '_'>, string> = {

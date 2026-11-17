@@ -1,0 +1,177 @@
+.conversation_view_container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  .conversation_header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    button {
+      display: flex;
+      padding: 4px;
+      background-color: transparent;
+      border: none;
+      border-radius: 4px;
+      transition: 0.25s ease;
+      color: darkgoldenrod;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(184, 135, 11, 0.142);
+      }
+      &:active {
+        background-color: rgba(184, 135, 11, 0.265);
+      }
+
+      svg {
+        scale: 1.2;
+      }
+    }
+
+    figure {
+      height: 32px;
+      width: 32px;
+      border-radius: 50%;
+      border: 1px solid darkgoldenrod;
+      padding: 2px;
+      
+      img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    strong {
+      color: rgb(142, 104, 9);
+    }
+  }
+
+  .messages_history_container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    min-height: 0;
+    max-height: 250px;
+    height: 100%;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 8px; 
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent; 
+      margin: 2px; 
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgoldenrod;
+      border-radius: 4px; 
+      border: 2px solid transparent; 
+      background-clip: padding-box;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: darkgoldenrod; 
+    }
+
+    border-bottom: 1px solid rgba(184, 135, 11, 0.466);
+    border-top: 1px solid rgba(184, 135, 11, 0.466);
+    padding: 6px 6px;
+
+    .start_conversation {
+      font-size: 14px;
+      color: darkgoldenrod;
+    }
+    
+    .my_message, .contact_message {
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+      max-width: 85%;
+      padding: 4px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+      
+      span {
+        font-size: 10px;
+        width: fit-content;
+        align-self: flex-end;
+      }
+    }
+
+    .my_message {
+      align-self: flex-end;
+      border: 1px solid rgba(255, 255, 255, 0.123);
+      color: rgb(254, 254, 254);
+      background-color: rgba(184, 135, 11, 0.913);
+
+      span {
+        color: white;
+      }
+    }
+    
+    .contact_message {
+      align-self: flex-start;
+      border: 1px solid darkgoldenrod;
+      color: darkgoldenrod;
+      background-color: rgba(184, 135, 11, 0.123);
+
+      span {
+        color: rgba(184, 135, 11, 0.63);
+      }
+    }
+  }
+
+  .input_send_button_container {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+
+    textarea {
+      flex: 1;
+      min-width: 0;
+      min-height: 20px;
+      max-height: 100px;
+
+      resize: none;
+      overflow-y: auto;
+
+      padding: 6px 7px;
+      border-radius: 4px;
+      border: 1px solid darkgoldenrod;
+
+      background-color: rgba(184, 135, 11, 0.132);
+      color: darkgoldenrod;
+
+      font-family: inherit;
+      font-size: 14px;
+
+      &::placeholder {
+        color: rgba(184, 135, 11, 0.505);
+      }
+
+      &:focus {
+        outline: none;
+        background-color: rgba(184, 135, 11, 0.21);
+      }
+    }
+  }
+
+  .message_length_indicator {
+    font-size: 12px;
+    margin-top: -6px;
+    color: darkgoldenrod;
+    
+    &[data-max="true"] {
+      color: red;
+      font-weight: 600;
+    }
+  }
+}
+

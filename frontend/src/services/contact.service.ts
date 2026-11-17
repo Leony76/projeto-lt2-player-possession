@@ -150,4 +150,16 @@ export class ContactService {
 
     return data;
   }
+
+
+
+  public static async getReceivedContactRequestsCount(
+  ): Promise<{count: number}> {
+
+    const { data } = await api.get<{count: number}>(
+      `/contact/user/received-requests-count`
+    );
+
+    return data;
+  }
 }

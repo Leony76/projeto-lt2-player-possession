@@ -7,6 +7,7 @@ export const updateUnitsSchema = z.object({
   units: z
     .number()
     .int('Units must be an integer')
+    .refine(Number.isSafeInteger, 'Units must be a safe integer')
     .min(0, 'Units cannot be negative')
     .max(2147483647, 'Units exceed the maximum allowed value'),
 });

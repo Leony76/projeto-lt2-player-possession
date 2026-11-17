@@ -15,6 +15,7 @@ import MyContacts from './pages/MyContacts';
 import ContactContacts from './pages/ContactContacts';
 import ContactItems from './pages/ContactItems';
 import type React from 'react';
+import Layout from './pages/Layout';
 
 function App(): React.JSX.Element {
   return (
@@ -31,60 +32,62 @@ function App(): React.JSX.Element {
         />
 
         <Route element={<ProtectedRoute/>}>
-          <Route 
-            path="/home" 
-            element={ <Home /> } 
-          />     
+          <Route element={<Layout/>}>
+            <Route 
+              path="/home" 
+              element={ <Home /> } 
+            />     
 
-          <Route 
-            path="/profile" 
-            element={ <Profile /> } 
-          />
+            <Route 
+              path="/profile" 
+              element={ <Profile /> } 
+            />
 
-          <Route 
-            path="/contact/:id" 
-            element={ <ContactProfile /> } 
-          />
+            <Route 
+              path="/contact/:id" 
+              element={ <ContactProfile /> } 
+            />
 
-          <Route 
-            path="/items" 
-            element={ <Items /> } 
-          /> 
+            <Route 
+              path="/items" 
+              element={ <Items /> } 
+            /> 
 
-          <Route 
-            path="/my-items" 
-            element={ <MyItems /> } 
-          /> 
+            <Route 
+              path="/my-items" 
+              element={ <MyItems /> } 
+            /> 
 
-          <Route
-            path="/item/:id"
-            element={<ItemDetails />}
-          />
+            <Route
+              path="/item/:id"
+              element={<ItemDetails />}
+            />
 
-          <Route
-            path="/contacts"
-            element={<Contacts />}
-          />
+            <Route
+              path="/contacts"
+              element={<Contacts />}
+            />
 
-          <Route
-            path="/contact/:id/contacts"
-            element={<ContactContacts />}
-          />
+            <Route
+              path="/contact/:id/contacts"
+              element={<ContactContacts />}
+            />
 
-          <Route
-            path="/contact/:id/items"
-            element={<ContactItems />}
-          />
+            <Route
+              path="/contact/:id/items"
+              element={<ContactItems />}
+            />
 
-          <Route
-            path="/my-contacts"
-            element={<MyContacts />}
-          />
+            <Route
+              path="/my-contacts"
+              element={<MyContacts />}
+            />
 
-          <Route 
-            path="/about" 
-            element={ <About /> } 
-          />
+            <Route 
+              path="/about" 
+              element={ <About /> } 
+            />
+          </Route>
         </Route>
       </Routes>
     </>

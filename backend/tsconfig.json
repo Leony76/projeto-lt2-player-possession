@@ -8,7 +8,8 @@
     "baseUrl" : ".",
     "paths"   : {
       "@backend/*": ["src/*"],
-      "@shared/*": ["../shared/*"]
+      "@shared/*": ["../shared/*"],
+      "@/*": ["../frontend/src/*"],
     },
 
     // Environment Settings

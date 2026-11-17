@@ -62,4 +62,10 @@ router.delete(
   ContactController.undoContactRequest,
 );
 
+router.get(
+  "/user/received-requests-count",
+  requireAuth,
+  ContactController.getUserReceivedContactRequestsCount
+);
+
 export default router;

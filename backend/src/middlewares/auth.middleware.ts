@@ -1,17 +1,25 @@
+
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const jwtSecret = process.env["JWT_SECRET"]!;
+import { assertJWTSecretIsConfigured } from "../config/jwt.config.js";
+
+assertJWTSecretIsConfigured();
+
+const jwtSecret = process.env.JWT_SECRET!;
 
 export const requireAuth = (
-  req  : Request, 
-  res  : Response, 
+  req  : Request,
+  res  : Response,
   next : NextFunction
 ) => {
-  const token = req.cookies?.["access_token"];
+  const token = req.cookies?.access_token;
 
   if (!token) {
-    return res.status(401).json({ message: "Not authenticated" });
+    return res.status(401).json({
+      code    : "ACCESS_TOKEN_MISSING",
+      message : "Access token not found",
+    });
   }
 
   try {
@@ -20,21 +28,32 @@ export const requireAuth = (
     });
 
     if (
-      typeof payload === "number" 
-      ||
+      typeof payload === "string" ||
+      typeof payload === "number" ||
       typeof payload.sub !== "number"
     ) {
       return res.status(401).json({
-        message: "Invalid Token",
+        code    : "INVALID_ACCESS_TOKEN",
+        message : "Invalid access token",
       });
     }
 
     req.authUserId = payload.sub;
 
     return next();
-  } catch {
+
+  } catch (error: unknown) {
+
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        code    : "ACCESS_TOKEN_EXPIRED",
+        message : "Access token expired",
+      });
+    }
+
     return res.status(401).json({
-      message: "Invalid or expired session",
+      code    : "INVALID_ACCESS_TOKEN",
+      message : "Invalid access token",
     });
   }
-}
+};

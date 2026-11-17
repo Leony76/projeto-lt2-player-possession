@@ -1,15 +1,9 @@
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 import axios from "axios";
 import { AuthService } from "../services/auth.service";
+
 import type { LoggedUserMainInfosResponse } from "@shared/dtos/loggedUserMainInfos.dto";
 import type { UserCredentials } from "@/types/userCredentials.type";
 
@@ -24,7 +18,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }): React.JSX.Element => {
 
   const [user, setUser] = useState<LoggedUserMainInfosResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,33 +33,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         error.response?.status === 401
       ) {
         setUser(null);
-      } else {
-        throw error;
+        return;
       }
+
+      throw error;
     }
   }, []);
 
 
-
-  useEffect(() => {
-    refreshUser()
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => setLoading(false));
-  }, [refreshUser]);
-
-  useEffect(() => {
-    const handleSessionExpired = () => {
-      setUser(null);
-    };
-
-    window.addEventListener("session-expired", handleSessionExpired);
-
-    return () => {
-      window.removeEventListener("session-expired", handleSessionExpired);
-    };
-  }, []);
 
   const signIn = useCallback(async (credentials: UserCredentials) => {
     setLoading(true);
@@ -93,29 +68,60 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
-
-
   const signOut = useCallback(async () => {
     setLoading(true);
 
     try {
       await AuthService.signOut();
-      setUser(null);
     } finally {
+      setUser(null);
       setLoading(false);
     }
   }, []);
 
 
 
+   useEffect(() => {
+    refreshUser()
+      .catch(() => {
+        setUser(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [refreshUser]);
+
+
+
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setUser(null);
+    };
+
+    window.addEventListener("session-expired", handleSessionExpired);
+
+    return () => {
+      window.removeEventListener("session-expired", handleSessionExpired);
+    };
+  }, []);
+
+
+
   return (
     <AuthContext.Provider
-    value={{ user, loading, signIn, signOut, refreshUser, updateUser }}
+      value={{
+        user,
+        loading,
+        signIn,
+        signOut,
+        refreshUser,
+        updateUser,
+      }}
     >
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export function useAuth() {
   const context = useContext(AuthContext);

@@ -16,7 +16,7 @@ export class ContactService {
     filters : GetContactsFilters,
   ): Promise<PaginatedResponse<ContactResponse>> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, 'User not authenticated');
     }
 
@@ -53,7 +53,7 @@ export class ContactService {
     filters   : GetContactsFilters,
   ): Promise<PaginatedResponse<ContactResponse>> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, 'User not authenticated');
     } if (!contactId || contactId === userId) {
       throw new APIError(400, 'Invalid contact ID');
@@ -89,7 +89,7 @@ export class ContactService {
     userId : number,
   ): Promise<ContactFromHomeResponse> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } 
 
@@ -142,7 +142,7 @@ export class ContactService {
     userId    : number,
   ): Promise<ContactDetailsResponse> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } if (!Number.isInteger(contactId) || contactId <= 0) {
       throw new APIError(400, 'Invalid contact ID');
@@ -164,7 +164,7 @@ export class ContactService {
     userId    : number,
   ): Promise<{requestStatus: ContactRelationStatus}> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } if (!Number.isInteger(contactId) || contactId <= 0) {
       throw new APIError(400, 'Invalid contact ID');
@@ -190,7 +190,7 @@ export class ContactService {
     userId    : number,
   ): Promise<{requestStatus: ContactRelationStatus}> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } if (!Number.isInteger(contactId) || contactId <= 0) {
       throw new APIError(400, 'Invalid contact ID');
@@ -212,7 +212,7 @@ export class ContactService {
     userId    : number,
   ): Promise<{requestStatus: ContactRelationStatus}> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } if (!Number.isInteger(contactId) || contactId <= 0) {
       throw new APIError(400, 'Invalid contact ID');
@@ -234,7 +234,7 @@ export class ContactService {
     userId    : number,
   ): Promise<{requestStatus: ContactRelationStatus}> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } if (!Number.isInteger(contactId) || contactId <= 0) {
       throw new APIError(400, 'Invalid contact ID');
@@ -258,7 +258,7 @@ export class ContactService {
     userId    : number,
   ): Promise<{requestStatus: ContactRelationStatus}> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } if (!Number.isInteger(contactId) || contactId <= 0) {
       throw new APIError(400, 'Invalid contact ID');
@@ -273,5 +273,22 @@ export class ContactService {
     return {
       requestStatus : 'NOT_CONTACT'
     };
+  }
+
+
+
+  public static async getUserReceivedContactRequestsCount(
+    userId : number,
+  ): Promise<{count : number}> {
+
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
+      throw new APIError(401, "User not authenticated");
+    } 
+
+    const count = await ContactRepository.getUserReceivedContactRequestsCount(
+      userId
+    );
+
+    return { count };
   }
 }

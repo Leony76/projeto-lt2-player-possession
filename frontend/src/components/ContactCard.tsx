@@ -23,9 +23,10 @@ type Props = UserBaseInfos & {
   isDenyingContactRequest   : boolean;
   isAddingContact          ?: boolean;
 
-  totalItems     : number;
-  relationStatus : ContactRelationStatus;
-  joinedAt       : string;
+  totalItems           : number;
+  relationStatus       : ContactRelationStatus;
+  joinedAt             : string;
+  contactRequestSentAt : string | null;
   
   onAddContact          ?: (contactId: number) => void;
   onAcceptContactRequest : (contactId: number) => void;
@@ -106,10 +107,14 @@ const ContactCard = (props: Props): React.JSX.Element => {
                 <FaClock size={16} />
                 <span>Pending</span>
               </div>
-            ) : props.relationStatus === 'REQUEST_RECEIVED' ? (
+            ) : (props.relationStatus === 'REQUEST_RECEIVED' && props.contactRequestSentAt) ? (
               <div className={styles.request_received}>
                 <span>
                   Contact request received
+                </span>
+
+                <span style={{ fontSize: '12px' }}>
+                  Sent at { toMonthDayYearTwelveHoursFormat(props.contactRequestSentAt) }
                 </span>
 
                 <div>
@@ -145,7 +150,7 @@ const ContactCard = (props: Props): React.JSX.Element => {
                       labelBorder: '#dd3845'
                     }}
                   />
-                </div>
+                </div>       
               </div>
             ) : (
               <Button

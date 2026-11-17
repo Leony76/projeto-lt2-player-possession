@@ -19,6 +19,11 @@ router.post(
 );
 
 router.post(
+  "/refresh",
+  AuthController.refresh,
+);
+
+router.post(
   "/sign-out", 
   AuthController.signOut,
 );

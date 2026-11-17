@@ -3,9 +3,11 @@ import styles from './css/IncrementDecrementButtons.module.css';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 
 type Props = {
-  onIncrement: () => void;
-  onDecrement: () => void;
-  scale     ?: number;
+  onIncrement  : () => void;
+  onDecrement  : () => void;
+  canIncrement : boolean;
+  canDecrement : boolean;
+  scale       ?: number;
 };
 
 const IncrementDecrementButtons = (props:Props): React.JSX.Element => {
@@ -16,6 +18,7 @@ const IncrementDecrementButtons = (props:Props): React.JSX.Element => {
     style={{ scale: props.scale ?? 1 }}
     >
       <button 
+      disabled={!props.canDecrement}
       className={styles.decrement} 
       onClick={props.onDecrement}
       title='Subtract Unit'
@@ -25,7 +28,8 @@ const IncrementDecrementButtons = (props:Props): React.JSX.Element => {
       
       <div className={styles.division_line}/>
 
-      <button 
+      <button
+      disabled={!props.canIncrement} 
       className={styles.increment} 
       onClick={props.onIncrement}
       title='Add Unit'

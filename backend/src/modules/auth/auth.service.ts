@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import { Prisma } from "../../generated/prisma/client.js";
 import { AuthRepository } from "./auth.repository.js";
 import { AuthMapper } from "./auth.mappers.js"; 
-import { assertJWTSecretIsConfigured, generateToken } from "../../config/jwt.config.js";
+import { assertJWTSecretIsConfigured } from "../../config/jwt.config.js";
 import { APIError } from "../../middlewares/error.middleware.js";
 
 assertJWTSecretIsConfigured();
@@ -56,11 +56,9 @@ export class AuthService {
       throw new APIError(401, "Invalid Credentials");
     }
 
-    const token = generateToken(user.id);
-
     return {
       user: AuthMapper.toPublicUser(user),
-      token,
+      userId: user.id,
     }
   }
 

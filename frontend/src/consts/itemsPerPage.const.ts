@@ -1,1 +1,1 @@
-export const ITEMS_PER_PAGE = 30;
+export const ITEMS_PER_PAGE: number = 30;

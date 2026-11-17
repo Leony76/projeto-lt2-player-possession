@@ -19,50 +19,61 @@ export class ContactRepository {
 
     let orderBy: Prisma.Sql;
 
-    switch (filters.advancedFilter) {
-      case 'AZ_NAME':
-        orderBy = Prisma.sql`u.name ASC`;
-        break;
+    if (filters.onlyMyContacts) {
+      orderBy = Prisma.sql`
+        CASE
+          WHEN c.status = 'PENDING'
+            AND c.addressee_id = ${userId}
+          THEN 0
+          ELSE 1
+        END ASC
+      `;
+    } else {
+      switch (filters.advancedFilter) {
+        case 'AZ_NAME':
+          orderBy = Prisma.sql`u.name ASC`;
+          break;
 
-      case 'ZA_NAME':
-        orderBy = Prisma.sql`u.name DESC`;
-        break;
+        case 'ZA_NAME':
+          orderBy = Prisma.sql`u.name DESC`;
+          break;
 
-      case 'MOST_RECENT_JOINS':
-        orderBy = Prisma.sql`u.created_at DESC`;
-        break;
+        case 'MOST_RECENT_JOINS':
+          orderBy = Prisma.sql`u.created_at DESC`;
+          break;
 
-      case 'LESS_RECENT_JOINS':
-        orderBy = Prisma.sql`u.created_at ASC`;
-        break;
+        case 'LESS_RECENT_JOINS':
+          orderBy = Prisma.sql`u.created_at ASC`;
+          break;
 
-      case 'MOST_ITEMS':
-        orderBy = Prisma.sql`"totalItems" DESC`;
-        break;
+        case 'MOST_ITEMS':
+          orderBy = Prisma.sql`"totalItems" DESC`;
+          break;
 
-      case 'LESS_ITEMS':
-        orderBy = Prisma.sql`"totalItems" ASC`;
-        break;
+        case 'LESS_ITEMS':
+          orderBy = Prisma.sql`"totalItems" ASC`;
+          break;
 
-      case 'MOST_LUMBER_BUCKS':
-        orderBy = Prisma.sql`u.lumber_bucks DESC`;
-        break;
+        case 'MOST_LUMBER_BUCKS':
+          orderBy = Prisma.sql`u.lumber_bucks DESC`;
+          break;
 
-      case 'LESS_LUMBER_BUCKS':
-        orderBy = Prisma.sql`u.lumber_bucks ASC`;
-        break;
+        case 'LESS_LUMBER_BUCKS':
+          orderBy = Prisma.sql`u.lumber_bucks ASC`;
+          break;
 
-      case 'MOST_CONTACTS':
-        orderBy = Prisma.sql`"totalContacts" DESC`;
-        break;
+        case 'MOST_CONTACTS':
+          orderBy = Prisma.sql`"totalContacts" DESC`;
+          break;
 
-      case 'LESS_CONTACTS':
-        orderBy = Prisma.sql`"totalContacts" ASC`;
-        break;
+        case 'LESS_CONTACTS':
+          orderBy = Prisma.sql`"totalContacts" ASC`;
+          break;
 
-      default:
-        orderBy = Prisma.sql`u.name ASC`;
-        break;
+        default:
+          orderBy = Prisma.sql`u.name ASC`;
+          break;
+      }
     }
 
     const myContactsCondition = filters.onlyMyContacts
@@ -111,10 +122,16 @@ export class ContactRepository {
           name : string;
           profileImageURL : string | null;
           joinedAt : Date;
+          contactRequestSentAt: Date | null;
           totalItems    : number;
           lumberBucks   : number;
           totalContacts : number;
-          loggedUserContactStatus : 'CONTACT' | 'PENDING' | 'NOT_CONTACT';
+          loggedUserContactStatus:
+          | 'CONTACT'
+          | 'REQUEST_SENT'
+          | 'REQUEST_RECEIVED'
+          | 'NOT_CONTACT'
+          ;
         }[]
       >(Prisma.sql`
         SELECT
@@ -123,6 +140,13 @@ export class ContactRepository {
           u.profile_image_url AS "profileImageURL",
           u.created_at AS "joinedAt",
           u.lumber_bucks AS "lumberBucks",
+
+          CASE
+            WHEN c.status = 'PENDING'
+              AND c.addressee_id = ${userId}
+            THEN c.created_at
+            ELSE NULL
+          END AS "contactRequestSentAt",
 
           COALESCE(items.total, 0)::float8 AS "totalItems",
 
@@ -146,7 +170,7 @@ export class ContactRepository {
         FROM users u
 
         LEFT JOIN LATERAL (
-          SELECT SUM(ui.units) AS total
+          SELECT COUNT(*) AS total
           FROM user_items ui
           WHERE ui.user_id = u.id
             AND ui.units > 0
@@ -237,51 +261,6 @@ export class ContactRepository {
       );
     }
 
-    // if (filters.relationStatus) {
-    //   switch (filters.relationStatus) {
-    //     case 'CONTACT':
-    //       conditions.push(
-    //         Prisma.sql`c.status = 'CONTACT'`
-    //       );
-    //       break;
-
-    //     case 'REQUEST_SENT':
-    //       conditions.push(
-    //         Prisma.sql`
-    //           c.status = 'PENDING'
-    //           AND c.requester_id = ${userId}
-    //         `
-    //       );
-    //       break;
-
-    //     case 'REQUEST_RECEIVED':
-    //       conditions.push(
-    //         Prisma.sql`
-    //           c.status = 'PENDING'
-    //           AND c.addressee_id = ${userId}
-    //         `
-    //       );
-    //       break;
-
-    //     case 'NOT_CONTACT':
-    //       conditions.push(
-    //         Prisma.sql`
-    //           (
-    //             c.id IS NULL
-    //             OR c.status = 'NOT_CONTACT'
-    //           )
-    //         `
-    //       );
-    //       break;
-    //   }
-    // }
-
-    // if (filters.onlyMyContacts) {
-    //   conditions.push(
-    //     Prisma.sql`c.status = 'CONTACT'`
-    //   );
-    // }
-
     let orderBy: Prisma.Sql;
 
     switch (filters.advancedFilter) {
@@ -338,12 +317,14 @@ export class ContactRepository {
         joinedAt        : Date;
         totalItems      : number;
         lumberBucks     : number;
+        contactRequestSentAt: Date | null;
         totalContacts   : number;
         loggedUserContactStatus:
-          | 'CONTACT'
-          | 'REQUEST_SENT'
-          | 'REQUEST_RECEIVED'
-          | 'NOT_CONTACT';
+        | 'CONTACT'
+        | 'REQUEST_SENT'
+        | 'REQUEST_RECEIVED'
+        | 'NOT_CONTACT'
+        ;
       }[]>(Prisma.sql`
         SELECT
           u.id,
@@ -351,6 +332,13 @@ export class ContactRepository {
           u.profile_image_url AS "profileImageURL",
           u.created_at AS "joinedAt",
           u.lumber_bucks AS "lumberBucks",
+
+          CASE
+            WHEN c.status = 'PENDING'
+              AND c.addressee_id = ${userId}
+            THEN c.created_at
+            ELSE NULL
+          END AS "contactRequestSentAt",
 
           COALESCE(items.total, 0)::float8 AS "totalItems",
 
@@ -766,12 +754,11 @@ export class ContactRepository {
           },
         }),
 
-        tx.userItem.aggregate({
+        tx.userItem.count({
           where: {
             userId : contactId,
             units : { gt : 0 },
           },
-          _sum: { units : true },
         }),
 
         tx.contact.count({
@@ -800,11 +787,20 @@ export class ContactRepository {
             status      : true,
             requesterId : true,
             addresseeId : true,
+            createdAt   : true,
           },
         }),
       ]);
 
       if (!contact) return null;
+
+      const contactRequestSentAt =
+        loggedUserRelation?.status === 'PENDING' 
+        &&
+        loggedUserRelation.addresseeId === userId
+          ? loggedUserRelation.createdAt.toISOString()
+          : null
+      ;
 
       const loggedUserContactStatus =
         loggedUserRelation?.status === 'CONTACT'
@@ -833,10 +829,11 @@ export class ContactRepository {
         lumberBucks     : contact.lumberBucks,
         joinedAt        : contact.createdAt,
 
-        totalItems    : itemsStats._sum.units ?? 0,
+        totalItems    : itemsStats,
         totalContacts : contactsStats,
 
         loggedUserContactStatus,
+        contactRequestSentAt,
 
         contacts : userContacts.map((user) => ({
           id              : user.id,
@@ -846,6 +843,59 @@ export class ContactRepository {
 
         items : normalizedItems,
       };
+    });
+  }
+
+
+
+  public static async getUserReceivedContactRequestsCount(
+    userId : number,
+  ) {
+    return await prisma.contact.count({
+      where: {
+        addresseeId : userId,
+        status      : 'PENDING',
+      }
+    });
+  }
+
+
+
+  public static async findAcceptedContactRelation(
+    tx          : Prisma.TransactionClient,
+    userId      : number,
+    recipientId : number,
+  ) {
+    return tx.contact.findFirst({
+      where: {
+        status: "CONTACT",
+        OR: [
+          {
+            requesterId: userId,
+            addresseeId: recipientId,
+          },
+          {
+            requesterId: recipientId,
+            addresseeId: userId,
+          },
+        ],
+      },
+    });
+  }
+
+
+
+  public static async findContactById(
+    tx     : Prisma.TransactionClient,
+    userId : number,
+  ) {
+    return tx.user.findUnique({
+      where: { id: userId },
+      select: {
+        id   : true,
+        name : true,
+        profileImageURL : true,
+      },
     });
   }
 }

@@ -1,1 +1,1 @@
-export const CONTACTS_PER_PAGE = 18;
+export const CONTACTS_PER_PAGE: number = 18;

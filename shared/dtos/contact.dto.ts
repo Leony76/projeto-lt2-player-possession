@@ -8,6 +8,7 @@ export type ContactResponse = {
   joinedAt                : string;
   totalItems              : number;
   loggedUserContactStatus : ContactRelationStatus;
+  contactRequestSentAt    : string | null;
 }
 
 export type ContactFromHomeResponse = {
@@ -31,6 +32,7 @@ export type ContactDetailsResponse = {
   totalContacts           : number;
 
   loggedUserContactStatus : ContactRelationStatus;
+  contactRequestSentAt    : string | null;
 
   contacts : {
     readonly id     : number;

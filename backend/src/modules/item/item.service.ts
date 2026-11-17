@@ -59,9 +59,9 @@ export class ItemService {
     );
 
     return ItemMapper.toPaginatedItemsResponse(
+      currentPage,
       pageSize,
-      limit,
-      data
+      data,
     )
   }
 
@@ -71,9 +71,9 @@ export class ItemService {
     itemId : number,
     userId : number,
   ): Promise<ItemDetailsResponse> {
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
-    }  if (!itemId) {
+    }  if (!Number.isInteger(itemId) || itemId <= 0) {
       throw new APIError(400, "Unable to find item details");
     }
 
@@ -93,12 +93,14 @@ export class ItemService {
     units  : number,
     userId : number,
   ): Promise<UpdateUserItemUnitsResponse> {
-     if (!userId) {
+     if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
-    } if (!itemId) {
-      throw new APIError(400, "Unable to find item details");
+    } if (!Number.isInteger(itemId) || itemId <= 0) {
+      throw new APIError(400, "Invalid item ID");
     } if (units === null) {
       throw new APIError(400, "No units was provided.");
+    } if (!Number.isSafeInteger(units) || units < 0 || units > 2147483647) {
+      throw new APIError(400, "Invalid units amount.");
     }
 
     const result = await ItemRepository.updateUserItemUnits(itemId, units, userId);
@@ -118,7 +120,7 @@ export class ItemService {
   public static async getUserItemsFromHome(
     userId : number,
   ): Promise<UserItemFromHomeResponse> {
-     if (!userId) {
+     if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     } 
 
@@ -140,7 +142,7 @@ export class ItemService {
     filters : GetItemsFilters,
   ): Promise<PaginatedResponse<UserItemResponse>> {
 
-    if (!userId) {
+    if (!userId || !Number.isInteger(userId) || userId <= 0) {
       throw new APIError(401, "User not authenticated");
     }
 

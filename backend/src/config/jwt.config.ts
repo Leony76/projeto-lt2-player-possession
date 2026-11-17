@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { createHash, randomBytes } from "node:crypto";
 
 export const assertJWTSecretIsConfigured = (): void => {
   const jwtSecret = process.env["JWT_SECRET"];
@@ -29,4 +30,19 @@ export const generateToken = (userId: number) => {
       expiresIn: "15m",
     },
   );
+};
+
+
+
+export const generateRefreshToken = () => {
+  return randomBytes(64).toString("hex");
+};
+
+
+
+export const hashRefreshToken = (token: string) => {
+  return createHash("sha256")
+    .update(token)
+    .digest("hex")
+  ;
 };

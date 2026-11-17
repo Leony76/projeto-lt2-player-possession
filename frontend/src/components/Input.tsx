@@ -7,6 +7,7 @@ import { IoClose } from 'react-icons/io5';
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   label?  : string;
   error?  : string,
+  errorHasBackgroundContrast?: boolean;
   onClear : () => void;
 };
 
@@ -15,6 +16,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(({
   label,
   id,
   type = "text",
+  errorHasBackgroundContrast,
   className,
   error,
   onClear,
@@ -91,7 +93,10 @@ const Input = React.forwardRef<HTMLInputElement, Props>(({
         )}
       </div>
 
-      {error && <ErrorMessage error={error} />}
+      {error && <ErrorMessage 
+        error={error} 
+        hasBackgroundContrast={errorHasBackgroundContrast}
+      />}
     </div>
   );
 });

@@ -1,0 +1,119 @@
+.conversations_list_container {
+  height: 100%;
+  max-height: 250px;
+  min-height: 0px;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  padding: 4px 4px 4px 0px;
+
+  border-bottom: 1px solid rgba(184, 135, 11, 0.137);
+  border-top: 1px solid rgba(184, 135, 11, 0.137);
+
+  &::-webkit-scrollbar {
+    width: 8px; 
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent; 
+    margin: 2px; 
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgoldenrod;
+    border-radius: 4px; 
+    border: 2px solid transparent; 
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: darkgoldenrod; 
+  }
+
+  .conversation_card {
+    display: flex;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid darkgoldenrod;
+    gap: 4px;
+    padding: 4px 6px;
+    background-color: rgba(184, 135, 11, 0.137);
+
+    transition: 0.25s ease;
+    cursor: pointer;
+
+    &:hover {
+      scale: 0.97;
+      filter: brightness(1.1);
+    }
+
+    figure {
+      height: 48px;
+      width: 48px;
+      border-radius: 50%;
+      border: 1px solid darkgoldenrod;
+      padding: 2px;
+      flex-shrink: 0;
+
+      img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .username_unread_messages_count_content_container {
+      display: flex;
+      flex-direction: column;
+      padding: 0px 4px;
+      justify-content: center;
+      gap: 4px;
+      flex: 1;
+
+      .username_unread_messages_count_container {
+        display: flex;
+        justify-content: space-between;
+
+        strong {
+          font-size: 15px;
+          color: rgb(142, 104, 9);
+
+          max-width: 140px;     
+          white-space: nowrap;    
+          overflow: hidden;         
+          text-overflow: ellipsis;  
+        }
+
+        span {
+          font-size: 12px;
+          color: darkgoldenrod;
+        }
+      }
+
+      .message_unread_messages_count_container {
+        display: flex;
+        justify-content: space-between;
+
+        p {
+          color: darkgoldenrod; 
+          text-align: left;
+          max-width: 170px;     
+          white-space: nowrap;    
+          overflow: hidden;         
+          text-overflow: ellipsis;  
+        }
+
+        span {
+          background-color: rgba(0, 128, 0, 0.151);
+          color: green;
+          border-radius: 10px;
+          padding: 2px 6px;
+        }
+      }
+    }
+  }
+}

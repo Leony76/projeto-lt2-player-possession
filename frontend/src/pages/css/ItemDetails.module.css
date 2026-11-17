@@ -190,7 +190,11 @@
             border-color: #8b6148;
           }
 
-
+          .sawmill {
+            background-color: #e8be9077;
+            color: #9a7e60;
+            border-color: #9a7e60;
+          }
 
           .loose {
             background-color: rgba(255, 0, 0, 0.11);

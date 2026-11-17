@@ -44,7 +44,7 @@ export class ItemMapper {
       name        : string;
       originalPrice            : number | null;
       averageMarketPrice       : number | null;
-      averageTruckloadPrice    : number;
+      averageTruckloadPrice    : number | null;
       averageTruckloadPrice1x1 : number | null;
       releaseYear : number | null;
       imageURL    : string;
@@ -59,6 +59,7 @@ export class ItemMapper {
     return {
       ...item,
       originalPrice: item.originalPrice ?? -1,
+      averageTruckloadPrice: item.averageTruckloadPrice ?? -1,
       unitsLoggedUserHas : users[0]?.units ?? 0,
     };
   }

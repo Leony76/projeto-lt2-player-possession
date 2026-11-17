@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import { AuthService } from "./auth.service.js";
-import { cookieOptions } from "../../config/cookies.config.js";
+import { accessTokenCookieOptions, refreshTokenCookieOptions } from "../../config/cookies.config.js";
+import { RefreshTokenService } from "./refreshToken.service.js";
+import { generateToken } from "@backend/config/jwt.config.js";
 
 export class AuthController {
   
@@ -31,7 +33,23 @@ export class AuthController {
       data.password,
     );
 
-    res.cookie("access_token", result.token, cookieOptions);
+    const accessToken = generateToken(result.user.id);
+
+    const refreshToken = await RefreshTokenService.create(
+      result.user.id,
+    );
+
+    res.cookie(
+      "access_token",
+      accessToken,
+      accessTokenCookieOptions,
+    );
+
+    res.cookie(
+      "refresh_token",
+      refreshToken,
+      refreshTokenCookieOptions,
+    );
 
     return res.status(200).json({
       user: result.user,
@@ -59,17 +77,79 @@ export class AuthController {
 
 
 
-  public static async signOut(
-    req: Request, 
-    res: Response
+  static async signOut(
+    req : Request, 
+    res : Response
   ) {
+    const refreshToken = req.cookies?.refresh_token;
+
+    if (refreshToken) {
+      await RefreshTokenService.revoke(refreshToken);
+    }
+
     res.clearCookie("access_token", {
-      httpOnly  : true,
-      secure    : process.env["NODE_ENV"] === "production",
-      sameSite  : "lax",
-      path      : "/",
+      ...accessTokenCookieOptions,
+      maxAge: undefined,
     });
 
-    return res.sendStatus(204);
+    res.clearCookie("refresh_token", {
+      ...refreshTokenCookieOptions,
+      maxAge: undefined,
+    });
+
+    return res.status(200).json({
+      message: "Signed out successfully",
+    });
+  }
+
+
+
+  static async refresh(
+    req : Request, 
+    res : Response
+  ) {
+    const refreshToken = req.cookies?.["refresh_token"];
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: "Refresh token not found",
+      });
+    }
+
+    const result = await RefreshTokenService.rotate(refreshToken);
+
+    if (!result) {
+      res.clearCookie("access_token", {
+        ...accessTokenCookieOptions,
+        maxAge: undefined,
+      });
+
+      res.clearCookie("refresh_token", {
+        ...refreshTokenCookieOptions,
+        maxAge: undefined,
+      });
+
+      return res.status(401).json({
+        message: "Invalid or expired refresh token",
+      });
+    }
+
+    const accessToken = generateToken(result.userId);
+
+    res.cookie(
+      "access_token",
+      accessToken,
+      accessTokenCookieOptions,
+    );
+
+    res.cookie(
+      "refresh_token",
+      result.refreshToken,
+      refreshTokenCookieOptions,
+    );
+
+    return res.status(200).json({
+      message: "Session renewed",
+    });
   }
 }

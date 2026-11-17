@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import styles from './css/Select.module.css';
 import { SELECT_CONFIG_MAP, type SelectConfig } from '@/maps/select/selectConfig.map';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
@@ -6,8 +6,13 @@ import { useMouseClickOuttaTargetDiv } from '@/hooks/useMouseClickOuttaTargetDiv
 
 type Props = {
   selectConfig : SelectConfig;
+  value       ?: string;
   onSelect     : (optionKey: string) => void;
   flex        ?: number;
+  padding     ?: {
+    X?: `${number}px`,
+    Y?: `${number}px`, 
+  }
 };
 
 const Select = (props:Props): React.JSX.Element => {
@@ -18,22 +23,39 @@ const Select = (props:Props): React.JSX.Element => {
 
   type OptionKey = keyof typeof OPTIONS_CONFIG;
 
-  const [selectedOption, setSelectedOption] = useState<OptionKey>(
-    Object.keys(OPTIONS_CONFIG)[0] as OptionKey
-  );
+  const [localSelectedOption, setLocalSelectedOption] =
+    useState<OptionKey>(
+      Object.keys(OPTIONS_CONFIG)[0] as OptionKey
+    );
+
+  const selectedOption = (
+    props.value ?? localSelectedOption
+  ) as OptionKey;
 
   const { containerRef } = useMouseClickOuttaTargetDiv(setIsOpen);
 
   return (
     <div 
     ref={containerRef} 
-    style={{ flex : props.flex ?? 1 }}
     className={styles.container}
+    style={{ 
+      flex : props.flex ?? 1,
+    }}
     >
       <button 
       onClick={() => setIsOpen(prev => !prev)}
       data-open={isOpen}
       className={styles.select_container}
+      style={{
+        ...(props.padding?.Y && {
+          paddingTop    : props.padding.Y,
+          paddingBottom : props.padding.Y,
+        }),
+        ...(props.padding?.X && {
+          paddingRight : props.padding.X,
+          paddingLeft  : props.padding.X,
+        })
+      }}
       >
         <span className={styles.selected_option}>
           { OPTIONS_CONFIG[selectedOption] }
@@ -52,7 +74,7 @@ const Select = (props:Props): React.JSX.Element => {
             className={styles.option}
             data-selected={selectedOption === key}
             onClick={() => {
-              setSelectedOption(key as OptionKey);
+              setLocalSelectedOption(key as OptionKey);
               props.onSelect(key);
               setIsOpen(false);
             }}

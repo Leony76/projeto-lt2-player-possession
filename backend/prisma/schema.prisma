@@ -8,29 +8,59 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+
+
 datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id              Int      @id @default(autoincrement())
-  name            String   @unique
 
+
+model User {
+  id  Int      @id @default(autoincrement())
+
+  name            String   @unique
   profileImageURL String?  @map("profile_image_url")
   lumberBucks     Int      @default(0) @map("lumber_bucks")
 
-  passwordHash    String   @map("password_hash")
+  passwordHash  String   @map("password_hash")
 
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
-  items                   UserItem[]
+  items  UserItem[]
 
   sentContactRequests     Contact[]  @relation("ContactRequester")
   receivedContactRequests Contact[]  @relation("ContactAddressee")
 
+  conversations           ConversationParticipant[]
+  sentMessages            Message[] @relation("MessageSender")
+
+  refreshTokens  RefreshToken[]
+
   @@map("users")
 }
+
+
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+
+  userId    Int      @map("user_id")
+  tokenHash String   @unique @map("token_hash")
+
+  expiresAt DateTime @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+
 
 model Contact {
   id Int @id @default(autoincrement())
@@ -38,7 +68,7 @@ model Contact {
   requesterId Int @map("requester_id")
   addresseeId Int @map("addressee_id")
 
-  status    ContactStatus @default(PENDING)
+  status ContactStatus @default(PENDING)
 
   requester User @relation("ContactRequester", fields: [requesterId], references: [id], onDelete: Cascade)
   addressee User @relation("ContactAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
@@ -53,6 +83,64 @@ model Contact {
 
   @@map("contacts")
 }
+
+
+
+model Conversation {
+  id        Int      @id @default(autoincrement())
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+
+
+model ConversationParticipant {
+  id  Int @id @default(autoincrement())
+
+  conversationId  Int @map("conversation_id")
+  userId          Int @map("user_id")
+
+  joinedAt        DateTime  @default(now()) @map("joined_at")
+  lastReadAt      DateTime? @map("last_read_at")
+
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+
+  @@map("conversation_participants")
+}
+
+
+
+model Message {
+  id             Int      @id @default(autoincrement())
+
+  conversationId Int      @map("conversation_id")
+  senderId       Int      @map("sender_id")
+
+  content        String
+
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  conversation   Conversation  @relation(fields: [conversationId],references: [id],onDelete: Cascade)
+  sender         User          @relation("MessageSender",fields: [senderId],references: [id],onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+
+  @@map("messages")
+}
+
+
 
 model UserItem {
   id        Int      @id @default(autoincrement())
@@ -72,37 +160,43 @@ model UserItem {
   @@map("user_items")
 }
 
-model Item {
-  id                      Int           @id @default(autoincrement())
 
-  name                    String        @unique
-  category                ItemCategory
-  state                   ItemState
+
+model Item {
+  id        Int              @id @default(autoincrement())
+
+  name      String           @unique
+  category  ItemCategory
+  state     ItemState
 
   originalPrice              Int?    @map("original_price")
   averageMarketPrice         Int?    @map("average_market_price")
   averageTruckloadPrice      Int?    @map("average_truckload_price")
   averageTruckloadPrice1x1   Int?    @map("average_truckload_price_1x1")
 
-  releaseYear             Int?       @map("release_year")
+  releaseYear   Int?       @map("release_year")
   
-  description             String? 
+  description   String? 
 
-  imageURL                String     @map("image_url")
+  imageURL      String     @map("image_url")
 
-  createdAt               DateTime   @default(now()) @map("created_at")
-  updatedAt               DateTime   @updatedAt @map("updated_at")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
 
-  users         UserItem[]           
+  users  UserItem[]           
 
   @@map("items")
 }
+
+
 
 enum ContactStatus {
   CONTACT
   PENDING
   NOT_CONTACT
 }
+
+
 
 enum ItemCategory {
   AXE 
@@ -121,7 +215,10 @@ enum ItemCategory {
   LOGIC
   CONVEYOR
   WOOD
+  SAWMILL
 }
+
+
 
 enum ItemState {
   GIFT
